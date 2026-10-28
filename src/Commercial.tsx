@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {AiMenuTransform} from './components/AiMenuTransform';
-import {BrandBackground, ConceptualTag, OrangeWipe} from './components/BrandBackground';
+import {BrandBackground, OrangeWipe} from './components/BrandBackground';
 import {Captions} from './components/Captions';
 import {LoyaltyPoints} from './components/LoyaltyPoints';
 import {MascotLayer} from './components/MascotLayer';
@@ -25,7 +25,6 @@ const ScenePos: React.FC<{caption: string}> = ({caption}) => {
       <BrandBackground glowY={52} />
       <PosTicket tapAt={38} ticketAt={62} />
       <Captions text={caption} end={d} highlightPrefixes={HIGHLIGHT} />
-      <ConceptualTag text={UI.conceptualTag} />
     </AbsoluteFill>
   );
 };
@@ -58,7 +57,6 @@ const SceneQr: React.FC<{caption: string}> = ({caption}) => {
       {frame >= readyAt ? chip(UI.waiting.staffUpdate, chipB, BRAND.colors.green) : null}
       <MascotLayer poses={[{at: 0, pose: 'thumbs-up'}, {at: 34, pose: 'phone'}]} enter={10} height={470} x={270} y={1600} />
       <Captions text={caption} end={d} highlightPrefixes={HIGHLIGHT} />
-      <ConceptualTag text={UI.conceptualTag} />
     </AbsoluteFill>
   );
 };
@@ -95,7 +93,6 @@ const SceneLoyalty: React.FC<{caption: string}> = ({caption}) => {
       </div>
       <MascotLayer poses={[{at: 0, pose: 'thumbs-up'}]} enter={14} height={560} x={250} y={1600} wiggleFrom={90} wiggleTo={130} />
       <Captions text={caption} end={d} highlightPrefixes={HIGHLIGHT} />
-      <ConceptualTag text={UI.conceptualTag} />
     </AbsoluteFill>
   );
 };
@@ -109,7 +106,6 @@ const SceneAiMenu: React.FC<{caption: string}> = ({caption}) => {
       <AiMenuTransform start={20} scanAt={62} cardsAt={100} />
       <MascotLayer poses={[{at: 0, pose: 'menu-bell'}]} enter={4} exitAt={88} height={430} x={230} y={1640} wiggleFrom={40} wiggleTo={70} />
       <Captions text={caption} end={d} highlightPrefixes={HIGHLIGHT} />
-      <ConceptualTag text={UI.conceptualTag} />
     </AbsoluteFill>
   );
 };

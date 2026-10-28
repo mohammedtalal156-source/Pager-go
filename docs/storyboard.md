@@ -1,9 +1,9 @@
 # Pager Go | بيجر گو — 30s storyboard and shot list
 
 Format: 1080×1920 (9:16), 30 fps, 900 frames. Two versions with identical visuals: **PagerGo-Iraqi** and **PagerGo-MSA**.
-The mascot is silent and only gestures. The narrator is off-screen. Product UI on screen is a conceptual mock-up and is labelled "واجهة توضيحية · Conceptual UI" until real screenshots are supplied.
+The mascot is silent and only gestures. The narrator is off-screen. Product UI on screen is a conceptual mock-up until real screenshots are supplied (the on-screen "Conceptual UI" label was removed at the founder's request).
 
-Safe areas: captions start at y=250 (below platform top bars). Key UI sits between y≈540 and y≈1500. The conceptual tag sits at y≈1620. Nothing important is placed in the bottom 280 px or the right 100 px used by TikTok/Reels/Shorts buttons.
+Safe areas: captions start at y=250 (below platform top bars). Key UI sits between y≈540 and y≈1500. Nothing important is placed in the bottom 280 px or the right 100 px used by TikTok/Reels/Shorts buttons.
 
 Each cut has a 16-frame orange diagonal wipe (right to left) centred on the cut frame.
 

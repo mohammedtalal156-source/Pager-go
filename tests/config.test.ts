@@ -85,7 +85,6 @@ test('no unverified claims in on-screen or spoken copy', () => {
   for (const banned of ['Live Activit', 'شاشة القفل', 'بدون إنترنت', 'بدون انترنت', 'offline', 'Foodics', 'Square']) {
     assert.ok(!all.includes(banned), `copy must not claim: ${banned}`);
   }
-  assert.ok(UI.conceptualTag.includes('Conceptual'), 'mock-ups are labelled conceptual');
 });
 
 test('SFX cues fall inside the timeline', () => {

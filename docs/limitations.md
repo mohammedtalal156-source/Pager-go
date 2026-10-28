@@ -3,7 +3,7 @@
 ## Placeholders and conceptual elements
 
 - **Voiceover is not recorded.** No voice-generation service is connected and no recordings were supplied. Both MP4s carry burned-in captions, music and SFX only. Drop recordings into `public/vo/…` (see `audio-script.md`) and re-render.
-- **Product UI is a conceptual mock-up.** The POS screen, waiting page, loyalty card and AI menu are designed from the founder's description, not from real screenshots or recordings. Scenes 1–4 carry the label "واجهة توضيحية · Conceptual UI". Replace with real screenshots when available.
+- **Product UI is a conceptual mock-up.** The POS screen, waiting page, loyalty card and AI menu are designed from the founder's description, not from real screenshots or recordings. The on-screen label "واجهة توضيحية · Conceptual UI" was removed from both videos at the founder's request (2026-10-28), so the mock-up status is no longer shown on screen. Replace with real screenshots when available, and keep this in mind before publishing.
 - **Demo data is invented:** waiting number 247, items and prices in IQD, +10 points per order, balance 120 → 130, menu items. Change them in `UI` in `src/config.ts`.
 - **Music and SFX are original synthesised placeholders.** They are licence-free but simple. A licensed track from a stock library can replace `public/audio/music-bed.wav`.
 

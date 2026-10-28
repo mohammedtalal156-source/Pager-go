@@ -122,7 +122,6 @@ export const VO_OFFSET = 8;
 
 // ── On-screen UI labels. Shared by both language versions (visuals are identical).
 export const UI = {
-  conceptualTag: 'واجهة توضيحية · Conceptual UI',
   pos: {
     title: 'الكاشير',
     newOrder: 'طلب جديد',

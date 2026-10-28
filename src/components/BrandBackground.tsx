@@ -84,22 +84,3 @@ export const OrangeWipe: React.FC<{at: number; length: number}> = ({at, length})
     </AbsoluteFill>
   );
 };
-
-/** Small, legible label marking product UI as a mock-up until real screenshots are supplied. */
-export const ConceptualTag: React.FC<{text: string}> = ({text}) => (
-  <div
-    style={{
-      position: 'absolute',
-      top: 1618,
-      left: 0,
-      right: 0,
-      display: 'flex',
-      justifyContent: 'center',
-      fontFamily: BRAND.font,
-    }}
-  >
-    <div dir="rtl" style={{fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.72)', padding: '6px 18px', borderRadius: 999, border: '1.5px solid rgba(255,255,255,0.25)', background: 'rgba(10,18,48,0.5)'}}>
-      {text}
-    </div>
-  </div>
-);

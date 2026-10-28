@@ -73,7 +73,7 @@ src/
   Root.tsx             compositions + font loading
   Commercial.tsx       5 scenes, wipes, soundtrack
   components/
-    BrandBackground    navy stage, glow, grid, particles, OrangeWipe, ConceptualTag
+    BrandBackground    navy stage, glow, grid, particles, OrangeWipe
     MascotLayer        official mascot cut-outs: spring entrance, squash & stretch, idle, pose swaps
     PosTicket          cashier POS + glowing ticket 247
     QrReveal           real scannable QR (pagergo.pro) with assemble + scan
