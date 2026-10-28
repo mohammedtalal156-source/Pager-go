@@ -4,3 +4,4 @@ node_modules
 out/*
 !out/pagergo-30s-iraqi.mp4
 !out/pagergo-30s-msa.mp4
+!out/pagergo-digital-pager-30s.mp4

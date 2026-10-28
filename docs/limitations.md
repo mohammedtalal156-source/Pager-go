@@ -28,6 +28,13 @@ Deliberately **not** shown or claimed:
 - Offline web push or "works without internet". Web notifications need a supported browser, permission and connectivity; restaurant Wi-Fi for customers is not shown.
 - Any specific reward tiers or free-meal promises.
 
+## Digital Pager ad
+
+- UI rebuilt from the founder's screenshots of the real merchant dashboard and customer flow; layouts are recreated, not pixel copies.
+- Restaurant name "برگر" and tagline are demo data; confirm spelling (برگر or بركر) before airing.
+- Lock-screen card and notification are shown with fine print about internet, notification permission and device differences.
+- No voiceover recording.
+
 ## Fonts
 
 Cairo (SIL Open Font License) is installed from npm (`@fontsource-variable/cairo`) at `npm install`; no font files are committed or distributed with this project.

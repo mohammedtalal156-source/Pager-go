@@ -6,8 +6,9 @@ Remotion + React + TypeScript project for the 30-second vertical Pager Go commer
 |---|---|---|
 | `PagerGo-Iraqi` | Iraqi Arabic | `out/pagergo-30s-iraqi.mp4` |
 | `PagerGo-MSA` | Modern Standard Arabic | `out/pagergo-30s-msa.mp4` |
+| `PagerGo-DigitalPager` | Iraqi Arabic, separate "Digital Pager" ad (order 7) | `out/pagergo-digital-pager-30s.mp4` |
 
-Docs: [storyboard and shot list](docs/storyboard.md) · [audio script and timings](docs/audio-script.md) · [placeholders and limits](docs/limitations.md)
+Docs: [storyboard and shot list](docs/storyboard.md) · [audio script and timings](docs/audio-script.md) · [placeholders and limits](docs/limitations.md) · [Digital Pager ad](docs/digital-pager.md)
 
 ## Install (macOS)
 
@@ -35,6 +36,7 @@ Opens Remotion Studio in the browser. Pick `PagerGo-Iraqi` or `PagerGo-MSA` in t
 npm run render         # both versions
 npm run render:iraqi   # one version
 npm run render:msa
+npm run render:digital-pager    # the Digital Pager ad (preview:digital-pager for 540x960)
 npm run verify         # ffprobe checks: 1080x1920, 30 fps, 900 frames, 30 s, AAC stereo
 npm run stills         # one review JPEG per scene per language in out/stills/
 ```

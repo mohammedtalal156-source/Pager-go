@@ -9,7 +9,7 @@ const c = BRAND.colors;
  * plate (its navy "Pager Go" wordmark would vanish on navy), with a light sweep,
  * then the CTA button and the website.
  */
-export const OutroCTA: React.FC<{logoAt: number; ctaAt: number; urlAt: number; tapAt: number; plateX?: number; plateY?: number; plate?: number}> = ({
+export const OutroCTA: React.FC<{logoAt: number; ctaAt: number; urlAt: number; tapAt: number; plateX?: number; plateY?: number; plate?: number; cta?: string}> = ({
   logoAt,
   ctaAt,
   urlAt,
@@ -17,6 +17,7 @@ export const OutroCTA: React.FC<{logoAt: number; ctaAt: number; urlAt: number; t
   plateX = 540,
   plateY = 820,
   plate = 600,
+  cta: ctaText = UI.outro.cta,
 }) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -80,7 +81,7 @@ export const OutroCTA: React.FC<{logoAt: number; ctaAt: number; urlAt: number; t
           {frame >= tapAt ? (
             <div style={{position: 'absolute', inset: -14 - ring * 30, borderRadius: 999, border: `4px solid ${c.orangeSoft}`, opacity: 1 - ring}} />
           ) : null}
-          <div style={{padding: '22px 84px', borderRadius: 999, background: orangeGradient, color: 'white', fontSize: 64, fontWeight: 1000, boxShadow: '0 24px 60px rgba(255,90,0,0.55), inset 0 3px 0 rgba(255,255,255,0.35)'}}>{UI.outro.cta}</div>
+          <div style={{padding: '22px 84px', borderRadius: 999, background: orangeGradient, color: 'white', fontSize: 64, fontWeight: 1000, boxShadow: '0 24px 60px rgba(255,90,0,0.55), inset 0 3px 0 rgba(255,255,255,0.35)'}}>{ctaText}</div>
         </div>
       </div>
 
