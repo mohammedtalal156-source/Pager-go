@@ -1,0 +1,6 @@
+node_modules
+.DS_Store
+# render output: keep only the two delivered MP4 exports
+out/*
+!out/pagergo-30s-iraqi.mp4
+!out/pagergo-30s-msa.mp4

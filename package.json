@@ -1,0 +1,30 @@
+{
+  "name": "pagergo-commercial",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pager Go | بيجر گو — Smart Restaurant Experience (30s, 1080x1920, 30fps) Remotion production",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "render:iraqi": "remotion render src/index.ts PagerGo-Iraqi out/pagergo-30s-iraqi.mp4 --codec=h264 --crf=18 --audio-codec=aac --audio-bitrate=192k",
+    "render:msa": "remotion render src/index.ts PagerGo-MSA out/pagergo-30s-msa.mp4 --codec=h264 --crf=18 --audio-codec=aac --audio-bitrate=192k",
+    "render": "npm run render:iraqi && npm run render:msa",
+    "stills": "node scripts/render-stills.mjs",
+    "audio": "python3 scripts/generate_audio.py",
+    "typecheck": "tsc --noEmit",
+    "test": "node --no-warnings --test tests/*.test.ts",
+    "verify": "node scripts/verify-output.mjs out/pagergo-30s-iraqi.mp4 out/pagergo-30s-msa.mp4"
+  },
+  "dependencies": {
+    "@fontsource-variable/cairo": "^5.3.0",
+    "@remotion/cli": "^4.0.539",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.539"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "typescript": "^5.9.3"
+  }
+}
