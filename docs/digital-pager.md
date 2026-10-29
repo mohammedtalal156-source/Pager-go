@@ -29,7 +29,7 @@ The UI is rebuilt as animated components from the founder's own screenshots of m
 
 ## Voiceover
 
-Female AI voice "Farah" (ElevenLabs, chosen by the user). Source mp3s were trimmed of silence and converted to 48 kHz WAV in `public/vo/digital-pager/` (`DP_VO_FILES`). Line 1 is sped up 1.13x and starts at frame 4; line 6 is sped up 1.05x and starts at frame 752 (`DP_VO_START`) so both finish inside their windows. With any VO file present the music ducks from 0.55 to 0.22. The mascot stays silent.
+Female AI voice "Farah" (ElevenLabs Starter plan, commercial licence; chosen by the user). Source mp3s were trimmed of silence and converted to 48 kHz WAV in `public/vo/digital-pager/` (`DP_VO_FILES`). Line 1 is sped up 1.15x and starts at frame 4; line 6 is sped up 1.05x and starts at frame 752 (`DP_VO_START`) so both finish inside their windows. With any VO file present the music ducks from 0.55 to 0.22. The mascot stays silent.
 
 Outputs: `out/pagergo-digital-pager-30s.mp4` (music and SFX only, rendered before the VO existed) and `out/pagergo-digital-pager-30s-vo.mp4` (with VO). `npm run render:digital-pager` now renders the VO version.
 
