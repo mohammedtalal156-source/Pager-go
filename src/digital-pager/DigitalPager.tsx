@@ -1,12 +1,12 @@
 import React from 'react';
-import {AbsoluteFill, Audio, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandBackground, OrangeWipe} from '../components/BrandBackground';
 import {Captions} from '../components/Captions';
 import {MascotLayer} from '../components/MascotLayer';
 import {OutroCTA} from '../components/OutroCTA';
 import {Phone} from '../components/Phone';
-import {ASSETS, BRAND, MUSIC, TRANSITION_FRAMES} from '../config';
-import {DP_CAPTIONS, DP_SCENES, DP_SFX, DP_SYNC, DP_UI, DP_VIDEO, type DpSceneId} from './config';
+import {ASSETS, BRAND, MUSIC, TRANSITION_FRAMES, VO_OFFSET} from '../config';
+import {DP_CAPTIONS, DP_SCENES, DP_SFX, DP_SYNC, DP_UI, DP_VIDEO, DP_VO_FILES, DP_VO_START, type DpSceneId} from './config';
 import {LockScreen, OldPager, ProblemChip, ScanScreen, TABLET_H, TABLET_W, TabletDashboard, WaitingPage7} from './screens';
 
 const HIGHLIGHT = ['بيجر', 'QR', 'pagergo', '7', 'جاهز…'];
@@ -142,7 +142,11 @@ const Outro: React.FC = () => (
 
 const SCENES: Record<DpSceneId, React.FC> = {problem: Problem, cashier: Cashier, scan: Scan, preparing: Preparing, ready: Ready, outro: Outro};
 
-export const DigitalPager: React.FC = () => (
+export const DigitalPager: React.FC = () => {
+  const files = new Set(getStaticFiles().map((f) => f.name));
+  const voLines = DP_SCENES.map((s) => ({scene: s, file: DP_VO_FILES[s.id]})).filter((v) => files.has(v.file));
+  const music = voLines.length > 0 ? MUSIC.duckedVolume : MUSIC.volume;
+  return (
   <AbsoluteFill style={{backgroundColor: BRAND.colors.navy}}>
     {DP_SCENES.map((s) => {
       const C = SCENES[s.id];
@@ -155,11 +159,17 @@ export const DigitalPager: React.FC = () => (
     {DP_SCENES.slice(1).map((s) => (
       <OrangeWipe key={s.id} at={s.from} length={TRANSITION_FRAMES} />
     ))}
-    <Audio src={staticFile(ASSETS.music)} volume={(f) => interpolate(f, [0, 10, DP_VIDEO.durationInFrames - 30, DP_VIDEO.durationInFrames], [0, MUSIC.volume, MUSIC.volume, 0], {extrapolateRight: 'clamp'})} />
+    <Audio src={staticFile(ASSETS.music)} volume={(f) => interpolate(f, [0, 10, DP_VIDEO.durationInFrames - 30, DP_VIDEO.durationInFrames], [0, music, music, 0], {extrapolateRight: 'clamp'})} />
     {DP_SFX.map((cue, i) => (
       <Sequence key={i} from={cue.frame} durationInFrames={90} layout="none">
         <Audio src={staticFile(ASSETS.sfx[cue.sfx])} volume={cue.volume} />
       </Sequence>
     ))}
+    {voLines.map((v) => (
+      <Sequence key={v.file} from={DP_VO_START[v.scene.id] ?? v.scene.from + VO_OFFSET} layout="none">
+        <Audio src={staticFile(v.file)} />
+      </Sequence>
+    ))}
   </AbsoluteFill>
-);
+  );
+};

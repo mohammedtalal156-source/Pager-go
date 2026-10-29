@@ -6,7 +6,7 @@ Remotion + React + TypeScript project for the 30-second vertical Pager Go commer
 |---|---|---|
 | `PagerGo-Iraqi` | Iraqi Arabic | `out/pagergo-30s-iraqi.mp4` |
 | `PagerGo-MSA` | Modern Standard Arabic | `out/pagergo-30s-msa.mp4` |
-| `PagerGo-DigitalPager` | Iraqi Arabic, separate "Digital Pager" ad (order 7) | `out/pagergo-digital-pager-30s.mp4` |
+| `PagerGo-DigitalPager` | Iraqi Arabic, separate "Digital Pager" ad (order 7) | `out/pagergo-digital-pager-30s.mp4`, with voiceover: `out/pagergo-digital-pager-30s-vo.mp4` |
 
 Docs: [storyboard and shot list](docs/storyboard.md) · [audio script and timings](docs/audio-script.md) · [placeholders and limits](docs/limitations.md) · [Digital Pager ad](docs/digital-pager.md)
 

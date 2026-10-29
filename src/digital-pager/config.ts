@@ -87,3 +87,17 @@ export const DP_SYNC = {
   lockReady: 670, //   lock-screen card switches to جاهز
   logo: 796,
 } as const;
+
+/** Recorded Iraqi voiceover, one file per scene in /public. Missing files are skipped; with any present the music ducks. */
+export const DP_VO_FILES: Record<DpSceneId, string> = {
+  problem: 'vo/digital-pager/1-problem.wav',
+  cashier: 'vo/digital-pager/2-cashier.wav',
+  scan: 'vo/digital-pager/3-scan.wav',
+  preparing: 'vo/digital-pager/4-preparing.wav',
+  ready: 'vo/digital-pager/5-ready.wav',
+  outro: 'vo/digital-pager/6-outro.wav',
+};
+
+/** Absolute start frame per VO line where it differs from scene start + VO_OFFSET:
+ * line 1 starts sooner and line 6 leads into the outro so both finish inside 30 s. */
+export const DP_VO_START: Partial<Record<DpSceneId, number>> = {problem: 4, outro: 752};

@@ -33,7 +33,7 @@ Deliberately **not** shown or claimed:
 - UI rebuilt from the founder's screenshots of the real merchant dashboard and customer flow; layouts are recreated, not pixel copies.
 - Restaurant name "برگر" and tagline are demo data; confirm spelling (برگر or بركر) before airing.
 - Lock-screen card and notification are shown with fine print about internet, notification permission and device differences.
-- No voiceover recording.
+- Voiceover is AI-generated (ElevenLabs voice "Farah") and was made on the free plan, which does not allow commercial use. Regenerate or license it on a paid plan before airing.
 
 ## Fonts
 
