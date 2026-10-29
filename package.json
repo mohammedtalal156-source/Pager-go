@@ -18,7 +18,7 @@
     "audio": "python3 scripts/generate_audio.py",
     "typecheck": "tsc --noEmit",
     "test": "node --no-warnings --test tests/*.test.ts",
-    "verify": "node scripts/verify-output.mjs out/pagergo-30s-iraqi.mp4 out/pagergo-30s-msa.mp4 out/pagergo-digital-pager-30s.mp4 out/pagergo-digital-pager-30s-vo.mp4"
+    "verify": "node scripts/verify-output.mjs out/pagergo-30s-iraqi.mp4 out/pagergo-30s-msa.mp4 out/pagergo-digital-pager-30s.mp4 out/pagergo-digital-pager-30s-vo.mp4 out/pagergo-loyalty-30s.mp4"
   },
   "dependencies": {
     "@fontsource-variable/cairo": "^5.3.0",
