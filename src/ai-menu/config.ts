@@ -32,18 +32,8 @@ export const AM_HEADLINES: Record<AmSceneId, string> = {
   outro: 'حوّل منيو مطعمك إلى تجربة رقمية ذكية',
 };
 
-/** Voiceover script, one line per scene. MSA, read by "Farah" (the owner chose فصحى over the Iraqi draft). */
+/** Voiceover script, one line per scene: Iraqi dialect from the brief, read by "Farah" on eleven_v4 with no audio tags (same voice and style as the Digital Pager ad). */
 export const AM_VO: Record<AmSceneId, string> = {
-  paper: 'هل ما زلت تستخدم قائمة طعام ورقية في مطعمك؟',
-  upload: 'فقط ارفع صورة القائمة، ودع بيجر گو يحوّلها لك!',
-  design: 'واختر التصميم والألوان التي تناسب هوية مطعمك.',
-  manage: 'وأضف أقسامك ووجباتك وأسعارك بكل سهولة.',
-  phone: 'ويفتح زبونك القائمة مباشرة من هاتفه!',
-  outro: 'طوّر قائمة مطعمك اليوم، مع بيجر گو!',
-};
-
-/** The brief's original Iraqi-dialect lines, kept for an Iraqi voice version. */
-export const AM_VO_IRAQI: Record<AmSceneId, string> = {
   paper: 'بعدك تستخدم منيو ورقي بمطعمك؟',
   upload: 'بس ارفع صورة المنيو، وخلّي بيجر گو يحوّلها إلك!',
   design: 'واختار التصميم والألوان اللي تناسب هوية مطعمك.',

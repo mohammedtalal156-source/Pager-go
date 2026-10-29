@@ -27,7 +27,7 @@ Scenes cross-dissolve over 12 frames (`AM_XFADE`).
 
 ## Audio
 
-Music bed and SFX are the project's own synthesised files (`scripts/generate_audio.py`), no third-party audio. Voiceover: female voice "Farah" (ElevenLabs, voice_id 4wf10lgibMnboGJGCLrP, paid plan), reading the MSA lines in `AM_VO` (the owner chose فصحى; the brief's Iraqi lines stay in `AM_VO_IRAQI`), one ElevenLabs v3 generation per line, converted to 48 kHz WAV in `public/vo/ai-menu/1-paper.wav … 6-outro.wav` (`AM_VO_FILES`). Each line starts 8 frames into its scene (line 1 at frame 6) and ends before the next cut; the music ducks while VO files are present.
+Music bed and SFX are the project's own synthesised files (`scripts/generate_audio.py`), no third-party audio. Voiceover: female voice "Farah" (ElevenLabs, voice_id 4wf10lgibMnboGJGCLrP, paid plan), reading the brief's Iraqi lines in `AM_VO` on model eleven_v4 with plain text and no audio tags (same voice and style as the Digital Pager ad), one generation per line, converted to 48 kHz WAV in `public/vo/ai-menu/1-paper.wav … 6-outro.wav` (`AM_VO_FILES`). Each line starts 8 frames into its scene (line 1 at frame 6) and ends before the next cut; the music ducks while VO files are present.
 
 ## Commands
 
