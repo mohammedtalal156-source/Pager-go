@@ -11,6 +11,8 @@
     "preview:digital-pager": "remotion render src/index.ts PagerGo-DigitalPager out/preview/pagergo-digital-pager-PREVIEW-540x960.mp4 --scale=0.5 --crf=26 --audio-codec=aac",
     "render:ai-menu": "remotion render src/index.ts PagerGo-AiMenu out/pagergo-ai-menu-30s.mp4 --codec=h264 --crf=18 --audio-codec=aac --audio-bitrate=192k",
     "preview:ai-menu": "remotion render src/index.ts PagerGo-AiMenu out/preview/pagergo-ai-menu-PREVIEW-540x960.mp4 --scale=0.5 --crf=26 --audio-codec=aac",
+    "render:loyalty": "remotion render src/index.ts PagerGo-Loyalty out/pagergo-loyalty-30s.mp4 --codec=h264 --crf=18 --audio-codec=aac --audio-bitrate=192k",
+    "preview:loyalty": "remotion render src/index.ts PagerGo-Loyalty out/preview/pagergo-loyalty-PREVIEW-540x960.mp4 --scale=0.5 --crf=26 --audio-codec=aac",
     "render": "npm run render:iraqi && npm run render:msa",
     "stills": "node scripts/render-stills.mjs",
     "audio": "python3 scripts/generate_audio.py",
