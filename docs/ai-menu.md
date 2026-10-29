@@ -27,7 +27,7 @@ Scenes cross-dissolve over 12 frames (`AM_XFADE`).
 
 ## Audio
 
-Music bed and SFX are the project's own synthesised files (`scripts/generate_audio.py`), no third-party audio. Voiceover: none yet (the owner asked for a version without voice first). Drop WAVs at `public/vo/ai-menu/1-paper.wav … 6-outro.wav` (`AM_VO_FILES`) and they play automatically and duck the music.
+Music bed and SFX are the project's own synthesised files (`scripts/generate_audio.py`), no third-party audio. Voiceover: female voice "Farah" (ElevenLabs, voice_id 4wf10lgibMnboGJGCLrP, paid plan), reading the Iraqi-dialect lines in `AM_VO`, one ElevenLabs v3 generation per line, converted to 48 kHz WAV in `public/vo/ai-menu/1-paper.wav … 6-outro.wav` (`AM_VO_FILES`). Each line starts 8 frames into its scene (line 1 at frame 6) and ends before the next cut; the music ducks while VO files are present.
 
 ## Commands
 
