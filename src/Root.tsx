@@ -5,6 +5,8 @@ import {Commercial} from './Commercial';
 import {VIDEO} from './config';
 import {DigitalPager} from './digital-pager/DigitalPager';
 import {DP_VIDEO} from './digital-pager/config';
+import {AiMenuAd} from './ai-menu/AiMenuAd';
+import {AM_VIDEO} from './ai-menu/config';
 
 // Block rendering until Cairo is actually loaded, so no frame falls back to a system font.
 const fontHandle = delayRender('Loading Cairo');
@@ -21,6 +23,9 @@ export const RemotionRoot: React.FC = () => (
     </Folder>
     <Folder name="DigitalPager">
       <Composition id="PagerGo-DigitalPager" component={DigitalPager} durationInFrames={DP_VIDEO.durationInFrames} fps={DP_VIDEO.fps} width={DP_VIDEO.width} height={DP_VIDEO.height} />
+    </Folder>
+    <Folder name="AiMenu">
+      <Composition id="PagerGo-AiMenu" component={AiMenuAd} durationInFrames={AM_VIDEO.durationInFrames} fps={AM_VIDEO.fps} width={AM_VIDEO.width} height={AM_VIDEO.height} />
     </Folder>
   </>
 );
