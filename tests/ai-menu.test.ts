@@ -1,7 +1,7 @@
 // Run with: npm test   (Node 22+ strips TypeScript types natively)
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {AM_DEMO, AM_HEADLINES, AM_OUTRO, AM_SCENES, AM_SFX, AM_SYNC, AM_UI, AM_VIDEO, AM_VO} from '../src/ai-menu/config.ts';
+import {AM_DEMO, AM_HEADLINES, AM_OUTRO, AM_SCENES, AM_SFX, AM_SYNC, AM_UI, AM_VIDEO, AM_VO, AM_VO_IRAQI} from '../src/ai-menu/config.ts';
 
 test('AI menu ad is 1080x1920, 30 fps, 30 s', () => {
   assert.deepEqual(AM_VIDEO, {width: 1080, height: 1920, fps: 30, durationInFrames: 900});
@@ -43,7 +43,8 @@ test('sync points fall inside their scenes', () => {
 
 test('copy matches the brief and the real dashboard', () => {
   assert.equal(AM_HEADLINES.paper, 'منيو مطعمك بعده ورقي؟');
-  assert.equal(AM_VO.outro, 'طوّر منيو مطعمك اليوم، ويا بيجر گو!');
+  assert.equal(AM_VO_IRAQI.outro, 'طوّر منيو مطعمك اليوم، ويا بيجر گو!');
+  assert.equal(AM_VO.outro, 'طوّر قائمة مطعمك اليوم، مع بيجر گو!');
   assert.deepEqual(AM_OUTRO, {headline: 'حوّل منيو مطعمك إلى تجربة رقمية ذكية', sub: 'المنيو الإلكتروني بالذكاء الاصطناعي من بيجر گو', cta: 'ابدأ الآن'});
   assert.equal(AM_UI.templates.length, 20);
   assert.equal(AM_UI.templates[AM_UI.pickedTemplate].name, 'طازج وطبيعي');
@@ -55,7 +56,7 @@ test('copy matches the brief and the real dashboard', () => {
 });
 
 test('brand name uses the Persian gaf (گ)', () => {
-  for (const line of [...Object.values(AM_VO), ...Object.values(AM_HEADLINES), AM_OUTRO.sub]) {
+  for (const line of [...Object.values(AM_VO), ...Object.values(AM_VO_IRAQI), ...Object.values(AM_HEADLINES), AM_OUTRO.sub]) {
     if (line.includes('بيجر')) assert.ok(line.includes('بيجر گو'), line);
   }
 });
