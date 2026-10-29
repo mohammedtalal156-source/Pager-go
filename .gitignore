@@ -1,8 +1,9 @@
 node_modules
 .DS_Store
-# render output: keep only the two delivered MP4 exports
+# render output: keep only the delivered MP4 exports
 out/*
 !out/pagergo-30s-iraqi.mp4
 !out/pagergo-30s-msa.mp4
 !out/pagergo-digital-pager-30s.mp4
 !out/pagergo-digital-pager-30s-vo.mp4
+!out/pagergo-ai-menu-30s.mp4
