@@ -1,3 +1,5 @@
+import { toWhatsAppNumber } from "./whatsapp";
+
 /**
  * Mirror of public.normalize_ar() in the database, so what the user types
  * matches subscribers.search_text (أ/إ/آ → ا, ة → ه, ى → ي, no harakat,
@@ -22,15 +24,6 @@ export function searchTerm(q: string) {
   return t;
 }
 
-/** 07701234567 → 9647701234567 (wa.me needs the international number). */
-export function toWhatsAppNumber(phone: string) {
-  const p = phone.replace(/[^\d+]/g, "");
-  if (p.startsWith("+")) return p.slice(1);
-  if (p.startsWith("00")) return p.slice(2);
-  if (p.startsWith("964")) return p;
-  if (p.startsWith("0")) return "964" + p.slice(1);
-  return p;
-}
 
 /** Business "today" in Asia/Baghdad as YYYY-MM-DD. */
 export function todayBaghdad() {
@@ -61,5 +54,6 @@ export function whatsappReminder(opts: {
   }
   if (opts.balance > 0) msg += `\nالمبلغ المتبقي بذمتكم: ${n.format(opts.balance)} دينار.`;
   msg += "\nشكراً لكم.";
-  return `https://wa.me/${toWhatsAppNumber(opts.phone)}?text=${encodeURIComponent(msg)}`;
+  const number = toWhatsAppNumber(opts.phone);
+  return number ? `https://wa.me/${number}?text=${encodeURIComponent(msg)}` : null;
 }

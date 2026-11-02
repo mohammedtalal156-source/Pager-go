@@ -354,11 +354,17 @@ export function SubscriberQuickActions({
           <Phone />
         </a>
       </Button>
-      <Button size={compact ? "icon-sm" : "icon"} variant="outline" asChild className="text-success">
-        <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="واتساب">
+      {wa ? (
+        <Button size={compact ? "icon-sm" : "icon"} variant="outline" asChild className="text-success">
+          <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="رسالة تذكير واتساب" title="رسالة تذكير واتساب">
+            <MessageCircle />
+          </a>
+        </Button>
+      ) : (
+        <Button size={compact ? "icon-sm" : "icon"} variant="outline" disabled aria-label="رقم غير صالح لواتساب" title="رقم غير صالح لواتساب">
           <MessageCircle />
-        </a>
-      </Button>
+        </Button>
+      )}
       {renewOpen && <RenewDialog sub={sub} packages={packages} isAdmin={perms.admin} open={renewOpen} onOpenChange={setRenewOpen} />}
       {collectOpen && <CollectDialog sub={sub} open={collectOpen} onOpenChange={setCollectOpen} />}
     </div>

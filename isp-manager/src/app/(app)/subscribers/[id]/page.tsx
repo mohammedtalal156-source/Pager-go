@@ -9,6 +9,7 @@ import { cn, formatDate, formatDateTime, formatIQD } from "@/lib/utils";
 import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow, type Tower } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/app/status-badge";
+import { WhatsAppPhone } from "@/components/app/whatsapp-phone";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubscriberQuickActions } from "../quick-dialogs";
@@ -124,13 +125,12 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
             </div>
             <p className="flex items-center gap-2">
               <Phone className="size-4 text-muted-foreground" />
-              <a href={`tel:${sub.phone}`} className="text-primary" dir="ltr">
-                {sub.phone}
-              </a>
+              <WhatsAppPhone phone={sub.phone} />
               {sub.phone2 && (
-                <a href={`tel:${sub.phone2}`} className="text-primary" dir="ltr">
-                  · {sub.phone2}
-                </a>
+                <>
+                  <span className="text-muted-foreground">·</span>
+                  <WhatsAppPhone phone={sub.phone2} />
+                </>
               )}
             </p>
             <p className="flex items-center gap-2">

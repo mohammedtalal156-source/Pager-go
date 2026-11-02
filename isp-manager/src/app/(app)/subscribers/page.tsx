@@ -7,6 +7,7 @@ import { searchTerm } from "@/lib/arabic";
 import { formatDate, formatIQD } from "@/lib/utils";
 import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow, type Tower } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
+import { WhatsAppPhone } from "@/components/app/whatsapp-phone";
 import { StatusBadge } from "@/components/app/status-badge";
 import { EmptyState } from "@/components/app/empty-state";
 import { Alert } from "@/components/ui/alert";
@@ -118,15 +119,19 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
           <div className="grid gap-2 md:hidden">
             {subs.map((s) => (
               <div key={s.id} className="rounded-xl border bg-card p-3 shadow-sm">
-                <Link href={`/subscribers/${s.id}`} className="flex items-start justify-between gap-2">
+                <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate font-semibold">{s.full_name}</p>
+                    <Link href={`/subscribers/${s.id}`} className="block truncate font-semibold">
+                      {s.full_name}
+                    </Link>
                     <p className="text-xs text-muted-foreground">
-                      #{s.code} · {s.tower_name} · <span dir="ltr">{s.phone}</span>
+                      #{s.code} · {s.tower_name} · <WhatsAppPhone phone={s.phone} />
                     </p>
                   </div>
-                  <StatusBadge status={s.status} daysLeft={s.days_left} />
-                </Link>
+                  <Link href={`/subscribers/${s.id}`} className="shrink-0">
+                    <StatusBadge status={s.status} daysLeft={s.days_left} />
+                  </Link>
+                </div>
                 <div className="mt-2 flex items-center justify-between text-xs">
                   <span>ينتهي: {formatDate(s.end_date)}</span>
                   {s.balance > 0 && <span className="font-semibold text-danger">دين {formatIQD(s.balance)}</span>}
@@ -164,8 +169,8 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
                       </div>
                     </td>
                     <td className="p-3">{s.tower_name}</td>
-                    <td className="p-3" dir="ltr" style={{ textAlign: "right" }}>
-                      {s.phone}
+                    <td className="p-3">
+                      <WhatsAppPhone phone={s.phone} />
                     </td>
                     <td className="p-3">{formatDate(s.end_date)}</td>
                     <td className="p-3">
