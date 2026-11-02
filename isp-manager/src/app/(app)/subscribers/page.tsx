@@ -47,6 +47,12 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
     case "debt":
       query = query.gt("balance", 0);
       break;
+    case "today":
+      query = query.eq("days_left", 0);
+      break;
+    case "tomorrow":
+      query = query.eq("days_left", 1);
+      break;
   }
   query =
     sp.status === "expiring" || sp.status === "expired"

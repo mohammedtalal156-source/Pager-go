@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   AlarmClock,
   Banknote,
+  BellRing,
   CalendarClock,
   CalendarX2,
   CircleCheck,
@@ -58,7 +59,9 @@ export default async function DashboardPage() {
   const staff = await requireStaff();
   const supabase = await createClient();
 
-  const [statsRes, renewalsRes, paymentsRes, expiringRes] = await Promise.all([
+  const countDays = (d: number) =>
+    supabase.from("subscriber_overview").select("id", { count: "exact", head: true }).eq("is_archived", false).eq("days_left", d);
+  const [statsRes, renewalsRes, paymentsRes, expiringRes, todayRes, tomorrowRes] = await Promise.all([
     supabase.rpc("dashboard_stats"),
     supabase
       .from("renewals")
@@ -81,6 +84,8 @@ export default async function DashboardPage() {
       .order("end_date", { ascending: true })
       .limit(10)
       .returns<ExpiringRow[]>(),
+    countDays(0),
+    countDays(1),
   ]);
 
   const s = (statsRes.data ?? null) as DashboardStats | null;
@@ -109,6 +114,34 @@ export default async function DashboardPage() {
           <StatCard label="المقبوضات هذا الشهر" value={formatIQD(s.collected_month)} icon={TrendingUp} tone="success" />
           <StatCard label="إجمالي الديون المستحقة" value={formatIQD(s.debt)} icon={HandCoins} tone="danger" sub={`${n.format(s.debtors)} مشترك مدين`} href="/subscribers?status=debt" />
         </div>
+      )}
+
+      {s && (
+        <Card className="mt-4 gap-2 py-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <BellRing className="size-4 text-warning" /> التنبيهات
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            {[
+              { label: "تنتهي اليوم", n: todayRes.count ?? 0, href: "/subscribers?status=today", cls: "border-danger/40 text-danger" },
+              { label: "تنتهي غداً", n: tomorrowRes.count ?? 0, href: "/subscribers?status=tomorrow", cls: "border-warning/50 text-warning" },
+              { label: "خلال 3 أيام", n: s.expiring, href: "/subscribers?status=expiring", cls: "border-warning/50 text-warning" },
+              { label: "منتهية", n: s.expired, href: "/subscribers?status=expired", cls: "border-danger/40 text-danger" },
+              { label: "عليهم ديون", n: s.debtors, href: "/subscribers?status=debt", cls: "border-danger/40 text-danger" },
+            ].map((a) => (
+              <Link
+                key={a.label}
+                href={a.href}
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm hover:bg-accent ${a.n > 0 ? a.cls : "text-muted-foreground"}`}
+              >
+                {a.label}
+                <b className="tabular-nums">{n.format(a.n)}</b>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
       )}
 
       <div className="mt-4 grid grid-cols-3 gap-2">

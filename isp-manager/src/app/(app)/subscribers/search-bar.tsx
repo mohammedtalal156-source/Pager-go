@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 
 const STATUSES = [
   ["", "الكل"],
+  ["today", "تنتهي اليوم"],
+  ["tomorrow", "غداً"],
   ["active", "فعال"],
   ["expiring", "قريب الانتهاء"],
   ["expired", "منتهي"],
