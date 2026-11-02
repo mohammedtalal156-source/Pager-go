@@ -1,0 +1,43 @@
+\set QUIET on
+\o /dev/null
+set client_min_messages = warning;
+begin;
+create schema tests;
+grant usage on schema tests to public;
+create function tests.ok(cond boolean, msg text) returns void language plpgsql as $$
+begin if cond is not true then raise exception 'FAIL: %', msg; end if; raise warning 'ok - %', msg; end $$;
+create function tests.throws(q text, msg text, state text default null) returns void language plpgsql as $$
+begin
+  begin execute q;
+  exception when others then
+    if state is not null and sqlstate <> state then
+      raise exception 'FAIL: % (expected %, got %: %)', msg, state, sqlstate, sqlerrm; end if;
+    raise warning 'ok - % [%]', msg, sqlstate; return;
+  end;
+  raise exception 'FAIL: % (statement succeeded)', msg;
+end $$;
+grant execute on all functions in schema tests to public;
+
+insert into auth.users (id) values
+  ('00000000-0000-0000-0000-0000000000b0'),
+  ('00000000-0000-0000-0000-0000000000b1');
+
+set role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000000b0', false);
+select tests.throws($$select public.bootstrap_first_admin('00000000-0000-0000-0000-0000000000b0', 'owner', 'المالك')$$,
+  'authenticated users cannot call bootstrap', '42501');
+reset role;
+set role anon;
+select tests.throws($$select public.system_has_staff()$$, 'anon cannot call system_has_staff', '42501');
+reset role;
+
+set role service_role;
+select tests.ok(not public.system_has_staff(), 'empty system has no staff');
+select public.bootstrap_first_admin('00000000-0000-0000-0000-0000000000b0', 'owner', 'المالك');
+select tests.ok((select role from public.profiles where id = '00000000-0000-0000-0000-0000000000b0') = 'admin',
+  'first admin created on empty system');
+select tests.ok(public.system_has_staff(), 'system now reports staff');
+select tests.throws($$select public.bootstrap_first_admin('00000000-0000-0000-0000-0000000000b1', 'owner2', 'شخص آخر')$$,
+  'second bootstrap refused', 'P0001');
+reset role;
+rollback;
