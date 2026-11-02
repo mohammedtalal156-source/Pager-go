@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: { default: "إدارة الأبراج", template: "%s · إدارة الأبراج" },
   description: "نظام داخلي لإدارة أبراج الإنترنت والمشتركين والحسابات",
   robots: { index: false, follow: false },
+  appleWebApp: { capable: true, title: "الأبراج", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

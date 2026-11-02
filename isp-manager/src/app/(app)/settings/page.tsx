@@ -5,6 +5,7 @@ import type { Profile } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
 import { OwnPasswordCard } from "./own-password-card";
 import { StaffManager } from "./staff-manager";
+import { BackupCard, ImportCard } from "./data-tools";
 
 export const metadata: Metadata = { title: "الإعدادات" };
 
@@ -27,9 +28,11 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="الإعدادات" description={me.role === "admin" ? "حسابك وإدارة الموظفين والصلاحيات" : "إعدادات حسابك"} />
+      <PageHeader title="الإعدادات" description={me.role === "admin" ? "الموظفون والصلاحيات، الاستيراد، النسخ الاحتياطي، وحسابك" : "إعدادات حسابك"} />
       <div className="grid gap-6">
         {me.role === "admin" && <StaffManager staff={staff} meId={me.id} loadError={loadError} />}
+        {me.role === "admin" && <ImportCard />}
+        {me.role === "admin" && <BackupCard />}
         <OwnPasswordCard />
       </div>
     </>
