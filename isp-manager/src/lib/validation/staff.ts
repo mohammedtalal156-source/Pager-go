@@ -1,12 +1,8 @@
 import { z } from "zod";
 import { passwordSchema, usernameSchema } from "./auth";
+import { optionalPhone } from "./common";
 
-const phone = z
-  .string()
-  .trim()
-  .transform((v) => v.replace(/[\s-]/g, ""))
-  .refine((v) => v === "" || /^\+?[0-9]{7,15}$/.test(v), "رقم الهاتف غير صحيح")
-  .transform((v) => (v === "" ? null : v));
+const phone = optionalPhone;
 
 const permissions = {
   can_create_subscribers: z.boolean(),

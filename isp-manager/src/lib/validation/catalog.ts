@@ -1,24 +1,8 @@
 import { z } from "zod";
+import { money, optionalPhone, optionalText } from "./common";
 
-const optionalText = (max: number) =>
-  z
-    .string()
-    .trim()
-    .max(max, "النص طويل جداً")
-    .transform((v) => (v === "" ? null : v));
-
-const optionalPhone = z
-  .string()
-  .trim()
-  .transform((v) => v.replace(/[\s-]/g, "").replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)))
-  .refine((v) => v === "" || /^\+?[0-9]{7,15}$/.test(v), "رقم الهاتف غير صحيح")
-  .transform((v) => (v === "" ? null : v));
-
-/** Accepts "25,000", "25000", "٢٥٠٠٠" → 25000 */
-const money = z
-  .union([z.string(), z.number()])
-  .transform((v) => Number(String(v).replace(/[,\s،]/g, "").replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))))
-  .refine((v) => Number.isInteger(v) && v >= 0 && v <= 100_000_000, "أدخل مبلغاً صحيحاً بالدينار");
+/** Package price: same parsing as money, capped lower. */
+const price = money.refine((v) => v <= 100_000_000, "أدخل مبلغاً صحيحاً بالدينار");
 
 export const towerSchema = z.object({
   id: z.uuid().optional(),
@@ -35,7 +19,7 @@ export type TowerOutput = z.output<typeof towerSchema>;
 export const packageSchema = z.object({
   id: z.uuid().optional(),
   name: z.string().trim().min(1, "اسم الباقة مطلوب").max(100),
-  price: money,
+  price,
   duration_days: z
     .union([z.string(), z.number()])
     .transform((v) => Number(v))

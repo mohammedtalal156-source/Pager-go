@@ -76,6 +76,11 @@ select tests.ok((select active from ts where tower_id = '10000000-0000-0000-0000
 select tests.ok((select expired from ts where tower_id = '10000000-0000-0000-0000-000000000002') = 1, 'tower B: 1 expired (archived excluded)');
 select tests.ok((select debt from ts where tower_id = '10000000-0000-0000-0000-000000000002') = 19000, 'tower B: debt 19,000');
 select tests.ok((select collected_month from ts where tower_id = '10000000-0000-0000-0000-000000000002') = 10000, 'tower B: month cash 10,000');
+-- regression: the tower form sends only a name; every optional column arrives as null
+insert into public.towers (name, area, address, manager_name, manager_phone, notes)
+  values ('برج بالاسم فقط', null, null, null, null, null);
+select tests.ok((select area is null and manager_phone is null and notes is null from public.towers where name = 'برج بالاسم فقط'),
+  'admin: tower with only a name and null optionals is saved');
 reset role;
 
 -- Collector: only the assigned subscriber is counted

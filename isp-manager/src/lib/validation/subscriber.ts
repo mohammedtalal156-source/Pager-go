@@ -1,53 +1,19 @@
 import { z } from "zod";
+import { money, optionalDate, optionalPhone, optionalText, optionalUuid, requiredPhone } from "./common";
 
-const latin = (v: string) => v.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
-
-export const phoneRequired = z
-  .string()
-  .trim()
-  .transform((v) => latin(v).replace(/[\s-]/g, ""))
-  .refine((v) => /^\+?[0-9]{7,15}$/.test(v), "رقم الهاتف غير صحيح");
-
-const phoneOptional = z
-  .string()
-  .trim()
-  .transform((v) => latin(v).replace(/[\s-]/g, ""))
-  .refine((v) => v === "" || /^\+?[0-9]{7,15}$/.test(v), "رقم الهاتف غير صحيح")
-  .transform((v) => (v === "" ? null : v));
-
-const text = (max: number) =>
-  z
-    .string()
-    .trim()
-    .max(max, "النص طويل جداً")
-    .transform((v) => (v === "" ? null : v));
-
-export const money = z
-  .union([z.string(), z.number()])
-  .transform((v) => (String(v).trim() === "" ? 0 : Number(latin(String(v)).replace(/[,\s،]/g, ""))))
-  .refine((v) => Number.isInteger(v) && v >= 0 && v <= 1_000_000_000, "أدخل مبلغاً صحيحاً بالدينار");
-
-const optionalUuid = z
-  .string()
-  .transform((v) => (v === "" ? null : v))
-  .pipe(z.uuid().nullable());
-
-const optionalDate = z
-  .string()
-  .transform((v) => (v === "" ? null : v))
-  .pipe(z.iso.date().nullable());
+export { money };
 
 const base = {
   full_name: z.string().trim().min(2, "الاسم مطلوب").max(150),
-  phone: phoneRequired,
-  phone2: phoneOptional,
+  phone: requiredPhone,
+  phone2: optionalPhone,
   tower_id: z.uuid({ message: "اختر البرج" }),
-  area: text(100),
-  address: text(200),
+  area: optionalText(100),
+  address: optionalText(200),
   package_id: optionalUuid,
-  price: money,
+  price: money.refine((v) => v <= 100_000_000, "أدخل مبلغاً صحيحاً بالدينار"),
   collector_id: optionalUuid,
-  notes: text(1000),
+  notes: optionalText(1000),
 };
 
 export const createSubscriberSchema = z
@@ -83,7 +49,7 @@ export const renewSchema = z.object({
 export const paymentSchema = z.object({
   subscriber_id: z.uuid(),
   amount: money.refine((v) => v > 0, "أدخل مبلغاً أكبر من صفر"),
-  notes: text(300),
+  notes: optionalText(300),
   request_id: z.uuid(),
 });
 
