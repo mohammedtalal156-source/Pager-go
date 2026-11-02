@@ -70,6 +70,8 @@ insert into public.subscribers (id, full_name, phone, tower_id, package_id, pric
 -- ------------------------------------------------------------------------
 -- Helpers & normalisation
 -- ------------------------------------------------------------------------
+select tests.ok(to_regprocedure('public.is_admin()') is null and to_regprocedure('public.has_permission(text)') is null,
+  'RLS helpers are not in the API-exposed public schema');
 select tests.ok(public.normalize_ar('أحمد') = 'احمد', 'normalize: hamza alef');
 select tests.ok(public.normalize_ar('فاطمة') = 'فاطمه', 'normalize: taa marbuta');
 select tests.ok(public.normalize_ar('مُحَمَّد') = 'محمد', 'normalize: harakat removed');
@@ -149,14 +151,14 @@ set role authenticated;
 select tests.ok(tests.cnt('select 1 from public.subscribers') = 0, 'user without profile sees no subscribers');
 select tests.ok(tests.cnt('select 1 from public.towers') = 0, 'user without profile sees no towers');
 select tests.ok(tests.cnt('select 1 from public.payments') = 0, 'user without profile sees no payments');
-select tests.ok(not public.is_staff(), 'user without profile is not staff');
+select tests.ok(not private.is_staff(), 'user without profile is not staff');
 reset role;
 
 -- inactive employee
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000001', false);
 set role authenticated;
 select tests.ok(tests.cnt('select 1 from public.subscribers') = 0, 'deactivated employee sees nothing');
-select tests.ok(not public.has_permission('edit_subscribers'), 'deactivated employee has no permissions');
+select tests.ok(not private.has_permission('edit_subscribers'), 'deactivated employee has no permissions');
 reset role;
 
 -- employee with default permissions
@@ -164,8 +166,8 @@ select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000e
 set role authenticated;
 select tests.ok(tests.cnt('select 1 from public.subscribers') = 2, 'employee sees all subscribers');
 select tests.ok(tests.cnt('select 1 from public.payments') = 2, 'employee sees payments');
-select tests.ok(public.has_permission('renew') and public.has_permission('collect'), 'employee can renew & collect by default');
-select tests.ok(not public.has_permission('view_finance'), 'employee has no finance access by default');
+select tests.ok(private.has_permission('renew') and private.has_permission('collect'), 'employee can renew & collect by default');
+select tests.ok(not private.has_permission('view_finance'), 'employee has no finance access by default');
 select tests.ok(tests.cnt('select 1 from public.expenses') = 0, 'employee cannot read expenses');
 select tests.ok(tests.cnt('select 1 from public.audit_logs') = 0, 'employee cannot read audit log');
 select tests.throws($$insert into public.towers (name) values ('برج جديد')$$, 'employee cannot add towers', '42501');
@@ -180,7 +182,7 @@ select tests.ok(tests.cnt($$update public.subscribers set notes = 'x' returning 
   'employee without edit permission cannot update subscribers');
 select tests.ok(tests.cnt($$update public.profiles set role = 'admin' where id = '00000000-0000-0000-0000-00000000000e' returning 1$$) = 0,
   'employee cannot promote self to admin');
-select tests.ok(public.current_staff_role() = 'employee', 'role unchanged after escalation attempt');
+select tests.ok(private.current_staff_role() = 'employee', 'role unchanged after escalation attempt');
 select tests.throws($$insert into public.expenses (category, amount) values ('rent', 1000)$$, 'employee cannot record expenses', '42501');
 reset role;
 
@@ -193,7 +195,7 @@ select tests.throws($$update public.subscribers set end_date = current_date + 36
   'cannot extend subscription by editing end_date directly', '42501');
 select tests.throws($$update public.subscribers set total_paid = 999999 where id = '30000000-0000-0000-0000-000000000001'$$,
   'cannot change balance directly', '42501');
-select tests.ok(public.has_permission('view_finance'), 'finance permission granted by admin works');
+select tests.ok(private.has_permission('view_finance'), 'finance permission granted by admin works');
 reset role;
 
 -- collector 1: only assigned subscriber
@@ -204,8 +206,8 @@ select tests.ok(tests.cnt($$select 1 from public.subscribers where id = '3000000
   'collector cannot see unassigned subscriber');
 select tests.ok(tests.cnt('select 1 from public.payments') = 2, 'collector sees payments of assigned subscriber');
 select tests.ok(tests.cnt('select 1 from public.subscriptions') = 1, 'collector sees subscription of assigned subscriber');
-select tests.ok(not public.has_permission('renew'), 'collector cannot renew');
-select tests.ok(public.has_permission('collect'), 'collector can collect');
+select tests.ok(not private.has_permission('renew'), 'collector cannot renew');
+select tests.ok(private.has_permission('collect'), 'collector can collect');
 select tests.ok(tests.cnt($$update public.subscribers set notes = 'x' returning 1$$) = 0, 'collector cannot edit subscribers');
 reset role;
 
