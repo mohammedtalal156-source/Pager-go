@@ -6,6 +6,7 @@ import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/validation/auth";
 import {
+  adjustDebtSchema,
   correctPaymentSchema,
   createSubscriberSchema,
   datesSchema,
@@ -203,4 +204,30 @@ export async function subscriberHistoryAction(subscriberId: string): Promise<Act
   const { data, error } = await supabase.rpc("subscriber_history", { p_subscriber_id: subscriberId });
   if (error) return { ok: false, error: error.message };
   return { ok: true, data: (data ?? []) as HistoryEntry[] };
+}
+
+export async function adjustDebtAction(
+  input: unknown,
+): Promise<ActionResult<{ previous_balance: number; new_balance: number; amount: number; balance: number }>> {
+  await requireStaff();
+  const parsed = adjustDebtSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: issue(parsed.error) };
+  const v = parsed.data;
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("adjust_debt", {
+    p_subscriber_id: v.subscriber_id,
+    p_new_balance: v.new_balance,
+    p_expected_balance: v.expected_balance,
+    p_reason: v.reason,
+    p_request_id: v.request_id,
+  });
+  if (error) return { ok: false, error: error.message };
+  refresh(v.subscriber_id);
+  revalidatePath("/finance");
+  revalidatePath("/reports");
+  return {
+    ok: true,
+    data: data as { previous_balance: number; new_balance: number; amount: number; balance: number },
+    message: "تم تعديل الدين",
+  };
 }

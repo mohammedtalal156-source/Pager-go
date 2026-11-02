@@ -69,3 +69,12 @@ export const correctPaymentSchema = z.object({
   reason: z.string().trim().min(3, "اكتب سبب التصحيح").max(300),
   request_id: z.uuid(),
 });
+
+/** Admin: set the remaining debt to an exact amount (recorded as a debt adjustment, never as a payment). */
+export const adjustDebtSchema = z.object({
+  subscriber_id: z.uuid(),
+  new_balance: money,
+  expected_balance: z.number().int(),
+  reason: z.string().trim().min(3, "اكتب سبب تعديل الدين").max(300),
+  request_id: z.uuid(),
+});

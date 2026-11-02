@@ -137,6 +137,18 @@ export function describeHistory(rows: AuditRow[], lookups: Lookups = {}): Histor
       continue;
     }
 
+    if (r.table_name === "debt_adjustments" && r.action === "INSERT") {
+      const amt = Number(nw.amount ?? 0);
+      out.push({
+        ...base,
+        title: `تعديل الدين: ${money(nw.previous_balance)} ← ${money(nw.new_balance)} (${amt > 0 ? "+" : "−"}${money(Math.abs(amt))})`,
+        tone: "money",
+        changes: [],
+        reason: (nw.reason as string) ?? r.reason,
+      });
+      continue;
+    }
+
     if (r.table_name === "renewals" && r.action === "INSERT") {
       out.push({ ...base, title: `تجديد حتى ${nw.new_end_date} (المستلم ${money(nw.amount_received)})`, tone: "date", changes: [] });
     }

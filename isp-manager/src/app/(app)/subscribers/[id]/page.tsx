@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Banknote, CalendarRange, MapPin, Phone, StickyNote } from "lucide-react";
+import { ArrowRight, Banknote, CalendarRange, HandCoins, MapPin, Phone, StickyNote } from "lucide-react";
 import { z } from "zod";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubscriberQuickActions } from "../quick-dialogs";
 import { EditSubscriberButton } from "../subscriber-form";
-import { ArchiveSubscriberButton, CorrectPaymentButton, DatesButton, HistoryButton, VoidButton } from "./controls";
+import { AdjustDebtButton, ArchiveSubscriberButton, CorrectPaymentButton, DatesButton, HistoryButton, VoidButton } from "./controls";
 
 export const metadata: Metadata = { title: "تفاصيل المشترك" };
 
@@ -45,6 +45,15 @@ type Pay = {
   corrects_payment_id: string | null;
   receiver: { full_name: string } | null;
 };
+type Adjustment = {
+  id: string;
+  amount: number;
+  previous_balance: number;
+  new_balance: number;
+  reason: string;
+  created_at: string;
+  admin: { full_name: string } | null;
+};
 
 const KIND = { new: "اشتراك جديد", renewal: "تجديد", import: "مستورد" } as const;
 const PAY_KIND = { new_subscription: "اشتراك جديد", renewal: "تجديد", collection: "تحصيل دين" } as const;
@@ -55,7 +64,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
   if (!z.uuid().safeParse(id).success) notFound();
   const supabase = await createClient();
 
-  const [subRes, periodsRes, paysRes, towersRes, packagesRes, collectorsRes] = await Promise.all([
+  const [subRes, periodsRes, paysRes, towersRes, packagesRes, collectorsRes, adjRes] = await Promise.all([
     supabase.from("subscriber_overview").select(COLUMNS).eq("id", id).maybeSingle<SubscriberRow>(),
     supabase
       .from("subscriptions")
@@ -72,8 +81,15 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
     supabase.from("towers").select("id, name, area").eq("is_archived", false).order("name").returns<Pick<Tower, "id" | "name" | "area">[]>(),
     supabase.from("packages").select("id, name, price, duration_days, description, is_active").order("price").returns<Package[]>(),
     supabase.rpc("list_collectors"),
+    supabase
+      .from("debt_adjustments")
+      .select("id, amount, previous_balance, new_balance, reason, created_at, admin:profiles!debt_adjustments_created_by_fkey(full_name)")
+      .eq("subscriber_id", id)
+      .order("created_at", { ascending: false })
+      .returns<Adjustment[]>(),
   ]);
   const sub = subRes.data;
+  const adjustments = adjRes.data ?? [];
   if (!sub) notFound();
   const periods = periodsRes.data ?? [];
   const pays = paysRes.data ?? [];
@@ -120,6 +136,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
       {(canEdit || isAdmin) && (
         <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl border bg-card p-2 sm:flex sm:flex-wrap">
           {canEdit && <EditSubscriberButton sub={sub} lists={lists} className="h-11" />}
+          {isAdmin && <AdjustDebtButton subscriberId={sub.id} balance={sub.balance} className="h-11" />}
           {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} className="h-11" />}
           {isAdmin && <HistoryButton subscriberId={sub.id} lookups={lookups} className="h-11" />}
           {(perms.edit || isAdmin) && <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} className="h-11" />}
@@ -202,6 +219,34 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
               ))}
             </CardContent>
           </Card>
+
+          {adjustments.length > 0 && (
+            <Card className="gap-3">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <HandCoins className="size-4 text-warning" /> تسويات الدين
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-2">
+                {adjustments.map((a) => (
+                  <div key={a.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border p-2.5 text-sm">
+                    <div>
+                      <p className="font-medium tabular-nums">
+                        {formatIQD(a.previous_balance)} ← {formatIQD(a.new_balance)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDateTime(a.created_at)} · {a.admin?.full_name ?? "—"} · {a.reason}
+                      </p>
+                    </div>
+                    <Badge variant="secondary" className={cn("tabular-nums", a.amount > 0 ? "text-danger" : "text-success")}>
+                      {a.amount > 0 ? "زيادة +" : "تخفيض −"}
+                      {formatIQD(Math.abs(a.amount))}
+                    </Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
 
           <Card className="gap-3">
             <CardHeader>

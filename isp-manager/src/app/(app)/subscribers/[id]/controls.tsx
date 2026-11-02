@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Archive, ArchiveRestore, CalendarCog, History, Loader2, PenLine, Undo2 } from "lucide-react";
+import { Archive, ArchiveRestore, CalendarCog, HandCoins, History, Loader2, PenLine, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { addDays, todayBaghdad } from "@/lib/arabic";
 import { daysBetween, describeHistory, parseManualDate, type HistoryItem, type Lookups } from "@/lib/corrections";
 import { cn, formatDate, formatDateTime, formatIQD } from "@/lib/utils";
 import {
+  adjustDebtAction,
   correctPaymentAction,
   setDatesAction,
   setSubscriberArchivedAction,
@@ -165,6 +166,101 @@ export function CorrectPaymentButton({
           <Button size="lg" className="h-12" disabled={pending || !valid} onClick={submit}>
             {pending && <Loader2 className="animate-spin" />}
             تأكيد التصحيح
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+/** Admin: set the remaining debt to an exact amount. Recorded as a debt adjustment, never as cash. */
+export function AdjustDebtButton({ subscriberId, balance, className }: { subscriberId: string; balance: number; className?: string }) {
+  const [open, setOpen] = useState(false);
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+  const [value, setValue] = useState("");
+  const [reason, setReason] = useState("");
+  const [error, setError] = useState<string>();
+  const [pending, startTransition] = useTransition();
+  const newBalance = toDigits(value) === "" ? null : Number(toDigits(value));
+  const diff = newBalance === null ? 0 : newBalance - balance;
+  const valid = newBalance !== null && diff !== 0 && newBalance <= 1_000_000_000 && reason.trim().length >= 3;
+
+  const submit = () =>
+    startTransition(async () => {
+      setError(undefined);
+      const res = await adjustDebtAction({
+        subscriber_id: subscriberId,
+        new_balance: newBalance,
+        expected_balance: balance,
+        reason,
+        request_id: requestId,
+      });
+      if (res.ok) {
+        toast.success(`تم تعديل الدين إلى ${formatIQD(res.data?.balance ?? newBalance ?? 0)}`);
+        setOpen(false);
+      } else setError(res.error);
+    });
+
+  return (
+    <>
+      <Button
+        variant="outline"
+        className={className}
+        onClick={() => {
+          setRequestId(crypto.randomUUID());
+          setValue("");
+          setReason("");
+          setError(undefined);
+          setOpen(true);
+        }}
+      >
+        <HandCoins /> تعديل الدين
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>تعديل الدين</DialogTitle>
+            <DialogDescription>
+              تُسجَّل تسوية دين منفصلة باسمك مع السبب. لا تتغيّر المدفوعات القديمة ولا تُحسب التسوية كإيراد أو دفعة نقدية.
+            </DialogDescription>
+          </DialogHeader>
+          {error && <Alert variant="destructive">{error}</Alert>}
+          <div className="rounded-lg bg-muted px-3 py-2">
+            <p className="text-[11px] text-muted-foreground">الدين الحالي</p>
+            <p className="text-lg font-bold tabular-nums">{formatIQD(balance)}</p>
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="ad-new">الدين الجديد (المبلغ النهائي المطلوب)</Label>
+            <Input
+              id="ad-new"
+              inputMode="numeric"
+              dir="ltr"
+              autoFocus
+              placeholder="0"
+              className="h-12 text-lg font-semibold tabular-nums"
+              value={value === "" ? "" : fmt.format(Number(toDigits(value)))}
+              onChange={(e) => setValue(toDigits(e.target.value))}
+            />
+          </div>
+          {newBalance !== null && (
+            <div className="grid grid-cols-2 gap-2 rounded-xl border p-3 text-sm">
+              <span className="text-muted-foreground">الفرق</span>
+              <span className={cn("font-bold tabular-nums", diff > 0 ? "text-danger" : diff < 0 ? "text-success" : "")}>
+                {diff === 0 ? "لا يوجد فرق" : `${diff > 0 ? "+" : "−"}${formatIQD(Math.abs(diff))}`}
+              </span>
+              <span className="text-muted-foreground">نوع التسوية</span>
+              <span className="font-semibold">{diff > 0 ? "زيادة الدين" : diff < 0 ? "تخفيض الدين" : "—"}</span>
+              <span className="text-muted-foreground">الدين بعد الحفظ</span>
+              <span className="font-bold tabular-nums">{formatIQD(newBalance)}</span>
+            </div>
+          )}
+          <div className="grid gap-1.5">
+            <Label htmlFor="ad-reason">سبب التعديل (إجباري)</Label>
+            <Input id="ad-reason" placeholder="مثال: دين سابق غير مسجل" value={reason} onChange={(e) => setReason(e.target.value)} />
+          </div>
+          <Button size="lg" className="h-12" disabled={pending || !valid} onClick={submit}>
+            {pending && <Loader2 className="animate-spin" />}
+            حفظ التعديل
           </Button>
         </DialogContent>
       </Dialog>

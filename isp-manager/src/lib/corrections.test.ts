@@ -71,3 +71,19 @@ test("history: readable entries; balance-only updates hidden", () => {
   assert.equal(items[3].title, "تعديل تواريخ الاشتراك");
   assert.equal(items[3].reason, "تصحيح");
 });
+
+test("debt adjustment: form values and history entry", async () => {
+  const { adjustDebtSchema } = await import("./validation/subscriber");
+  const v = adjustDebtSchema.parse({ subscriber_id: UUID, new_balance: "70,000", expected_balance: 35000, reason: " دين سابق ", request_id: UUID });
+  assert.equal(v.new_balance, 70000);
+  assert.deepEqual(adjustDebtSchema.parse(v), v);
+  assert.equal(adjustDebtSchema.parse({ ...v, new_balance: "0" }).new_balance, 0, "zero debt allowed");
+  assert.equal(adjustDebtSchema.safeParse({ ...v, new_balance: "-5" }).success, false, "negative rejected");
+  assert.equal(adjustDebtSchema.safeParse({ ...v, reason: "ab" }).success, false, "reason required");
+  const items = describeHistory([
+    { id: 1, occurred_at: "t", actor_name: "المدير", action: "INSERT", table_name: "debt_adjustments", old_data: null,
+      new_data: { amount: -50000, previous_balance: 70000, new_balance: 20000, reason: "خصم" }, reason: "تعديل الدين" },
+  ]);
+  assert.match(items[0].title, /70,000.*20,000.*−50,000/);
+  assert.equal(items[0].reason, "خصم");
+});
