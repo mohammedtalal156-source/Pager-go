@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { assertAdmin, ForbiddenError, requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { callStaffAdmin } from "@/lib/staff-admin";
 import { usernameToEmail } from "@/lib/env";
 import type { ActionResult } from "@/lib/validation/auth";
 import {
@@ -12,8 +12,6 @@ import {
   resetPasswordSchema,
   updateStaffSchema,
 } from "@/lib/validation/staff";
-
-const BANNED_FOREVER = "876000h"; // ~100 years
 
 function firstIssue(e: { issues: { message: string }[] }) {
   return e.issues[0]?.message ?? "بيانات غير صالحة";
@@ -43,20 +41,19 @@ export async function createStaff(input: unknown) {
     if (!parsed.success) return { ok: false, error: firstIssue(parsed.error) };
     const { password, ...v } = parsed.data;
 
-    const admin = createAdminClient();
-    const { data: created, error } = await admin.auth.admin.createUser({
-      email: usernameToEmail(v.username),
-      password,
-      email_confirm: true,
-      user_metadata: { full_name: v.full_name, username: v.username },
-    });
-    if (error || !created.user) return { ok: false, error: dbError(error?.message ?? "تعذر إنشاء الحساب") };
+    const created = await callStaffAdmin<{ user_id: string }>(
+      "create_user",
+      { email: usernameToEmail(v.username), password, username: v.username, full_name: v.full_name },
+      { asUser: true },
+    );
+    if (!created.ok) return { ok: false, error: dbError(created.error) };
+    const userId = created.data.user_id;
 
     // Insert the profile as the admin user, so RLS (is_admin) is enforced in the DB too.
     const supabase = await createClient();
-    const { error: profileError } = await supabase.from("profiles").insert({ id: created.user.id, ...v, is_active: true });
+    const { error: profileError } = await supabase.from("profiles").insert({ id: userId, ...v, is_active: true });
     if (profileError) {
-      await admin.auth.admin.deleteUser(created.user.id);
+      await callStaffAdmin("delete_unlinked_user", { user_id: userId }, { asUser: true });
       return { ok: false, error: dbError(profileError.message) };
     }
     revalidatePath("/settings");
@@ -80,7 +77,7 @@ export async function updateStaff(input: unknown) {
     if (!data?.length) return { ok: false, error: "لم يتم العثور على الحساب أو لا تملك صلاحية تعديله" };
 
     // Defense in depth: block sign-in for deactivated staff (RLS already blocks data access).
-    await createAdminClient().auth.admin.updateUserById(id, { ban_duration: v.is_active ? "none" : BANNED_FOREVER });
+    await callStaffAdmin("set_banned", { user_id: id, banned: !v.is_active }, { asUser: true });
 
     revalidatePath("/settings");
     return { ok: true, message: "تم حفظ التعديلات" };
@@ -92,10 +89,12 @@ export async function resetStaffPassword(input: unknown) {
     await assertAdmin();
     const parsed = resetPasswordSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: firstIssue(parsed.error) };
-    const { error } = await createAdminClient().auth.admin.updateUserById(parsed.data.id, {
-      password: parsed.data.password,
-    });
-    if (error) return { ok: false, error: error.message };
+    const res = await callStaffAdmin(
+      "set_password",
+      { user_id: parsed.data.id, password: parsed.data.password },
+      { asUser: true },
+    );
+    if (!res.ok) return { ok: false, error: res.error };
     return { ok: true, message: "تم تغيير كلمة المرور" };
   });
 }

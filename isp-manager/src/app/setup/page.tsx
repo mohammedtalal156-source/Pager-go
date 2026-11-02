@@ -5,7 +5,7 @@ import { AlertTriangle } from "lucide-react";
 import { AuthShell } from "@/components/app/auth-shell";
 import { Alert } from "@/components/ui/alert";
 import { getPublicEnv } from "@/lib/env";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { callStaffAdmin } from "@/lib/staff-admin";
 import { SetupForm } from "./setup-form";
 
 export const metadata: Metadata = { title: "الإعداد الأولي" };
@@ -32,21 +32,19 @@ export default async function SetupPage() {
   await connection();
   const missing: string[] = [];
   if (!getPublicEnv()) missing.push("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
-  if (!process.env.SUPABASE_SECRET_KEY) missing.push("SUPABASE_SECRET_KEY");
-  if ((process.env.SETUP_TOKEN ?? "").length < 16) missing.push("SETUP_TOKEN (16 حرفاً على الأقل)");
   if (missing.length) return <Missing items={missing} />;
 
-  const { data: hasStaff, error } = await createAdminClient().rpc("system_has_staff");
-  if (error) {
+  const status = await callStaffAdmin<{ has_staff: boolean }>("status");
+  if (!status.ok) {
     return (
       <AuthShell title="الإعداد الأولي">
         <Alert variant="destructive">
-          تعذر الاتصال بقاعدة البيانات أو أن المخطط (migrations) لم يُطبّق بعد: {error.message}
+          تعذر الاتصال بقاعدة البيانات أو بخدمة الحسابات: {status.error}
         </Alert>
       </AuthShell>
     );
   }
-  if (hasStaff) redirect("/login");
+  if (status.data.has_staff) redirect("/login");
 
   return (
     <AuthShell title="الإعداد الأولي" subtitle="إنشاء حساب المدير الأول — تظهر هذه الصفحة مرة واحدة فقط">

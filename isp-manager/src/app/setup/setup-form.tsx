@@ -31,7 +31,7 @@ export function SetupForm() {
   return (
     <form onSubmit={onSubmit} className="grid gap-4" noValidate>
       {error && <Alert variant="destructive">{error}</Alert>}
-      <Field label="رمز الإعداد (SETUP_TOKEN)" htmlFor="token" error={err.token?.message} required>
+      <Field label="رمز الإعداد" htmlFor="token" error={err.token?.message} required>
         <Input id="token" type="password" dir="ltr" className="text-left" autoComplete="off" {...form.register("token")} />
       </Field>
       <Field label="الاسم الكامل" htmlFor="full_name" error={err.full_name?.message} required>

@@ -8,6 +8,7 @@ grant anon, authenticated, service_role to authenticator;
 
 create schema auth;
 create schema extensions;
+create extension pgcrypto with schema extensions;
 create table auth.users (
   id uuid primary key default gen_random_uuid(),
   email text unique
