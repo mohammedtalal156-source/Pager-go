@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubscriberQuickActions } from "../quick-dialogs";
 import { EditSubscriberButton } from "../subscriber-form";
-import { ArchiveSubscriberButton, DatesButton, VoidButton } from "./controls";
+import { ArchiveSubscriberButton, CorrectPaymentButton, DatesButton, HistoryButton, VoidButton } from "./controls";
 
 export const metadata: Metadata = { title: "تفاصيل المشترك" };
 
@@ -42,6 +42,7 @@ type Pay = {
   notes: string | null;
   is_voided: boolean;
   void_reason: string | null;
+  corrects_payment_id: string | null;
   receiver: { full_name: string } | null;
 };
 
@@ -64,7 +65,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
       .returns<Period[]>(),
     supabase
       .from("payments")
-      .select("id, receipt_no, kind, amount, paid_at, notes, is_voided, void_reason, receiver:profiles!payments_received_by_fkey(full_name)")
+      .select("id, receipt_no, kind, amount, paid_at, notes, is_voided, void_reason, corrects_payment_id, receiver:profiles!payments_received_by_fkey(full_name)")
       .eq("subscriber_id", id)
       .order("paid_at", { ascending: false })
       .returns<Pay[]>(),
@@ -92,6 +93,14 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
     .sort((a, b) => b.seq - a.seq)[0];
   const collector = collectors.find((c) => c.id === sub.collector_id);
   const paidTotal = pays.filter((p) => !p.is_voided).reduce((s, p) => s + p.amount, 0);
+  const receiptById = new Map(pays.map((p) => [p.id, p.receipt_no]));
+  const correctedBy = new Map(pays.filter((p) => p.corrects_payment_id).map((p) => [p.corrects_payment_id!, p.receipt_no]));
+  const lookups = {
+    towers: Object.fromEntries([[sub.tower_id, sub.tower_name], ...lists.towers.map((t) => [t.id, t.name])]),
+    packages: Object.fromEntries(lists.packages.map((p) => [p.id, p.name])),
+    staff: Object.fromEntries(collectors.map((c) => [c.id, c.full_name])),
+  };
+  const canEdit = perms.edit && !sub.is_archived;
 
   return (
     <>
@@ -104,9 +113,18 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
         actions={<StatusBadge status={sub.status} daysLeft={sub.days_left} />}
       />
 
-      <div className="mb-4">
+      <div className="mb-3">
         <SubscriberQuickActions sub={sub} packages={lists.packages} perms={perms} />
       </div>
+
+      {(canEdit || isAdmin) && (
+        <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl border bg-card p-2 sm:flex sm:flex-wrap">
+          {canEdit && <EditSubscriberButton sub={sub} lists={lists} className="h-11" />}
+          {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} className="h-11" />}
+          {isAdmin && <HistoryButton subscriberId={sub.id} lookups={lookups} className="h-11" />}
+          {(perms.edit || isAdmin) && <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} className="h-11" />}
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-1">
@@ -150,13 +168,6 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
               </p>
             )}
             <p className="text-xs text-muted-foreground">إجمالي المدفوع: {formatIQD(paidTotal)}</p>
-            {(perms.edit || isAdmin) && (
-              <div className="flex flex-wrap gap-2 border-t pt-3">
-                {!sub.is_archived && <EditSubscriberButton sub={sub} lists={lists} />}
-                {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} />}
-                <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} />
-              </div>
-            )}
           </CardContent>
         </Card>
 
@@ -205,6 +216,11 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
                   <div>
                     <p className="font-medium">
                       {PAY_KIND[p.kind]} · وصل #{p.receipt_no}
+                      {p.corrects_payment_id && (
+                        <Badge variant="secondary" className="ms-2">
+                          تصحيح للوصل #{receiptById.get(p.corrects_payment_id) ?? "—"}
+                        </Badge>
+                      )}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {formatDateTime(p.paid_at)} · استلمها {p.receiver?.full_name ?? "—"}
@@ -214,9 +230,14 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={cn("font-semibold tabular-nums", !p.is_voided && "text-success")}>{formatIQD(p.amount)}</span>
-                    {p.is_voided && <Badge variant="secondary">ملغاة</Badge>}
+                    {p.is_voided && (
+                      <Badge variant="secondary">{correctedBy.has(p.id) ? `صُحّحت بالوصل #${correctedBy.get(p.id)}` : "ملغاة"}</Badge>
+                    )}
                     {isAdmin && !p.is_voided && (
-                      <VoidButton kind="payment" id={p.id} subscriberId={sub.id} label={`الدفعة ${formatIQD(p.amount)} — وصل #${p.receipt_no}`} />
+                      <>
+                        <CorrectPaymentButton id={p.id} subscriberId={sub.id} receiptNo={p.receipt_no} amount={p.amount} balance={sub.balance} />
+                        <VoidButton kind="payment" id={p.id} subscriberId={sub.id} label={`الدفعة ${formatIQD(p.amount)} — وصل #${p.receipt_no}`} />
+                      </>
                     )}
                   </div>
                 </div>

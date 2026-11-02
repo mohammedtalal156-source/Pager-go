@@ -13,6 +13,7 @@ import { addDays, todayBaghdad, whatsappReminder } from "@/lib/arabic";
 import { cn, formatDate, formatIQD } from "@/lib/utils";
 import type { Package, SubscriberPerms, SubscriberRow } from "@/lib/types";
 import { collectAction, renewAction } from "./actions";
+import { EditSubscriberButton, type Lists } from "./subscriber-form";
 
 const digits = (v: string) =>
   v.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[^\d]/g, "");
@@ -313,17 +314,19 @@ function CollectForm({ sub, onDone }: { sub: SubscriberRow; onDone: () => void }
   );
 }
 
-/** Row buttons: renew · collect · call · WhatsApp. */
+/** Row buttons: renew · collect · edit (when lists are given) · call · WhatsApp. */
 export function SubscriberQuickActions({
   sub,
   packages,
   perms,
   compact = false,
+  lists,
 }: {
   sub: SubscriberRow;
   packages: Package[];
   perms: SubscriberPerms;
   compact?: boolean;
+  lists?: Lists;
 }) {
   const [renewOpen, setRenewOpen] = useState(false);
   const [collectOpen, setCollectOpen] = useState(false);
@@ -349,6 +352,7 @@ export function SubscriberQuickActions({
           <Banknote /> تحصيل
         </Button>
       )}
+      {lists && perms.edit && !sub.is_archived && <EditSubscriberButton sub={sub} lists={lists} compact={compact} />}
       <Button size={compact ? "icon-sm" : "icon"} variant="outline" asChild>
         <a href={`tel:${sub.phone}`} aria-label="اتصال">
           <Phone />

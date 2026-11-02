@@ -31,6 +31,7 @@ type RenewalRow = {
   new_end_date: string;
   price: number;
   amount_received: number;
+  subscriptions: { payments: { amount: number; is_voided: boolean }[] } | null;
   subscribers: { full_name: string; code: number } | null;
   profiles: { full_name: string } | null;
 };
@@ -65,7 +66,7 @@ export default async function DashboardPage() {
     supabase.rpc("dashboard_stats"),
     supabase
       .from("renewals")
-      .select("id, created_at, new_end_date, price, amount_received, subscribers(full_name, code), profiles(full_name)")
+      .select("id, created_at, new_end_date, price, amount_received, subscriptions(payments(amount, is_voided)), subscribers(full_name, code), profiles(full_name)")
       .order("created_at", { ascending: false })
       .limit(10)
       .returns<RenewalRow[]>(),
@@ -212,7 +213,10 @@ export default async function DashboardPage() {
                       حتى {formatDate(r.new_end_date)} · {r.profiles?.full_name ?? ""}
                     </p>
                   </div>
-                  <span className="shrink-0 text-sm font-semibold tabular-nums">{formatIQD(r.amount_received)}</span>
+                  <span className="shrink-0 text-sm font-semibold tabular-nums">
+                    {/* live payments of this period, so corrected amounts show correctly */}
+                    {formatIQD(r.subscriptions ? r.subscriptions.payments.filter((p) => !p.is_voided).reduce((a, p) => a + p.amount, 0) : r.amount_received)}
+                  </span>
                 </div>
               ))
             )}

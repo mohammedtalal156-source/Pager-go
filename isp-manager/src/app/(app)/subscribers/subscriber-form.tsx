@@ -26,7 +26,7 @@ import {
 } from "@/lib/validation/subscriber";
 import { createSubscriberAction, updateSubscriberAction } from "./actions";
 
-type Lists = { towers: Pick<Tower, "id" | "name" | "area">[]; packages: Package[]; collectors: Collector[] };
+export type Lists = { towers: Pick<Tower, "id" | "name" | "area">[]; packages: Package[]; collectors: Collector[] };
 
 export function AddSubscriberButton({ lists, autoOpen = false }: { lists: Lists; autoOpen?: boolean }) {
   const [open, setOpen] = useState(autoOpen);
@@ -198,12 +198,22 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
   );
 }
 
-export function EditSubscriberButton({ sub, lists }: { sub: SubscriberRow; lists: Lists }) {
+export function EditSubscriberButton({
+  sub,
+  lists,
+  compact = false,
+  className,
+}: {
+  sub: SubscriberRow;
+  lists: Lists;
+  compact?: boolean;
+  className?: string;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
-        <Pencil /> تعديل البيانات
+      <Button variant="outline" size={compact ? "sm" : "default"} className={className} onClick={() => setOpen(true)}>
+        <Pencil /> {compact ? "تعديل" : "تعديل المشترك"}
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-2xl">
@@ -252,7 +262,9 @@ function EditForm({ sub, lists, onDone }: { sub: SubscriberRow; lists: Lists; on
   return (
     <form onSubmit={onSubmit} className="grid gap-4" noValidate>
       {error && <Alert variant="destructive">{error}</Alert>}
-      <p className="text-xs text-muted-foreground">التواريخ والمبالغ تتغير فقط عبر التجديد والتحصيل (أو تعديل المدير من صفحة المشترك).</p>
+      <p className="text-xs text-muted-foreground">
+        التعديل هنا لا يغيّر الرصيد أو سجل المدفوعات. تغيير السعر يُطبَّق على التجديدات القادمة. التواريخ وتصحيح المبالغ من أزرار المدير في صفحة المشترك.
+      </p>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="الاسم الكامل" htmlFor="e-name" error={err.full_name?.message} required>
           <Input id="e-name" {...form.register("full_name")} />
@@ -265,6 +277,7 @@ function EditForm({ sub, lists, onDone }: { sub: SubscriberRow; lists: Lists; on
         </Field>
         <Field label="البرج" htmlFor="e-tower" error={err.tower_id?.message} required>
           <NativeSelect id="e-tower" {...form.register("tower_id")}>
+            {!lists.towers.some((t) => t.id === sub.tower_id) && <option value={sub.tower_id}>{sub.tower_name}</option>}
             {lists.towers.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
@@ -292,9 +305,12 @@ function EditForm({ sub, lists, onDone }: { sub: SubscriberRow; lists: Lists; on
         <Field label="العنوان" htmlFor="e-address" error={err.address?.message}>
           <Input id="e-address" {...form.register("address")} />
         </Field>
-        <Field label="المحصّل المسؤول" htmlFor="e-collector">
+        <Field label="الجابي المسؤول" htmlFor="e-collector">
           <NativeSelect id="e-collector" {...form.register("collector_id")}>
             <option value="">بدون</option>
+            {sub.collector_id && !lists.collectors.some((c) => c.id === sub.collector_id) && (
+              <option value={sub.collector_id}>الجابي الحالي (غير فعّال)</option>
+            )}
             {lists.collectors.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.full_name}

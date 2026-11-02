@@ -137,7 +137,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
                   {s.balance > 0 && <span className="font-semibold text-danger">دين {formatIQD(s.balance)}</span>}
                 </div>
                 <div className="mt-2 border-t pt-2">
-                  <SubscriberQuickActions sub={s} packages={lists.packages} perms={perms} compact />
+                  <SubscriberQuickActions sub={s} packages={lists.packages} perms={perms} lists={lists} compact />
                 </div>
               </div>
             ))}
@@ -177,7 +177,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
                       <StatusBadge status={s.status} daysLeft={s.days_left} />
                     </td>
                     <td className="p-3">
-                      <SubscriberQuickActions sub={s} packages={lists.packages} perms={perms} compact />
+                      <SubscriberQuickActions sub={s} packages={lists.packages} perms={perms} lists={lists} compact />
                     </td>
                   </tr>
                 ))}

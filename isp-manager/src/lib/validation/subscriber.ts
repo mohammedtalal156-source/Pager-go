@@ -61,3 +61,11 @@ export const datesSchema = z.object({
   end_date: optionalDate,
   reason: z.string().trim().min(3, "اكتب سبب التعديل").max(300),
 });
+
+/** Admin: replace a wrongly-entered payment amount (void + correct payment, atomic). */
+export const correctPaymentSchema = z.object({
+  id: z.uuid(),
+  amount: money.refine((v) => v > 0, "أدخل المبلغ الصحيح"),
+  reason: z.string().trim().min(3, "اكتب سبب التصحيح").max(300),
+  request_id: z.uuid(),
+});

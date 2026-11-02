@@ -6,6 +6,7 @@ import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/validation/auth";
 import {
+  correctPaymentSchema,
   createSubscriberSchema,
   datesSchema,
   editSubscriberSchema,
@@ -160,4 +161,46 @@ export async function setDatesAction(input: unknown): Promise<ActionResult> {
   if (error) return { ok: false, error: error.message };
   refresh(v.id);
   return { ok: true, message: "تم تعديل التواريخ" };
+}
+
+export async function correctPaymentAction(
+  input: unknown,
+  subscriberId: string,
+): Promise<ActionResult<{ receipt_no: number; balance: number; old_amount?: number; amount: number }>> {
+  await requireStaff();
+  const parsed = correctPaymentSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: issue(parsed.error) };
+  const v = parsed.data;
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("correct_payment", {
+    p_payment_id: v.id,
+    p_amount: v.amount,
+    p_reason: v.reason,
+    p_request_id: v.request_id,
+  });
+  if (error) return { ok: false, error: error.message };
+  refresh(subscriberId);
+  revalidatePath("/finance");
+  revalidatePath("/reports");
+  return { ok: true, data: data as { receipt_no: number; balance: number; old_amount?: number; amount: number }, message: "تم تصحيح الدفعة" };
+}
+
+export type HistoryEntry = {
+  id: number;
+  occurred_at: string;
+  actor_name: string | null;
+  action: string;
+  table_name: string;
+  old_data: Record<string, unknown> | null;
+  new_data: Record<string, unknown> | null;
+  reason: string | null;
+};
+
+export async function subscriberHistoryAction(subscriberId: string): Promise<ActionResult<HistoryEntry[]>> {
+  await requireStaff();
+  if (!z.uuid().safeParse(subscriberId).success) return { ok: false, error: "طلب غير صالح" };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("subscriber_history", { p_subscriber_id: subscriberId });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, data: (data ?? []) as HistoryEntry[] };
 }
