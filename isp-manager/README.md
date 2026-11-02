@@ -27,7 +27,15 @@ npm run dev
 ### مشروع Supabase الحالي
 
 - المشروع: **TAJIR** (`iqzicolbbrrsrhykipif`) أُعيد استخدامه لهذا النظام. تطبيق TAJIR السابق نُقل كما هو إلى المخطط `tajir` (غير مكشوف للـ API)، ونسخة من تاريخ ترحيلاته وحسابه في `tajir_backup`. لم يُحذف شيء.
-- الترحيلات المطبّقة: `core_schema`, `staff_bootstrap`, `private_rls_helpers` (بالإضافة إلى `move_tajir_out_of_public`).
+- الترحيلات المطبّقة: `core_schema`, `staff_bootstrap`, `private_rls_helpers`, `setup_token` (بالإضافة إلى `move_tajir_out_of_public`).
+- **لا يحتاج الموقع أي مفتاح سري.** إنشاء حسابات الموظفين وتغيير كلمات المرور وإيقاف الدخول تتم عبر Edge Function اسمها `staff-admin` (`supabase/functions/staff-admin`) تعمل داخل Supabase وتتحقق بنفسها أن المستدعي مدير فعّال.
+- رمز صفحة `/setup` محفوظ كـ SHA-256 فقط في `private.app_settings`، ويتوقف تلقائياً بعد إنشاء أول موظف. لتغييره: `select private.set_setup_token('<رمز جديد>');`
+
+### النشر (Vercel)
+
+- المشروع: `isp-manager` على Vercel، المنطقة `sin1` (قرب قاعدة البيانات في سنغافورة).
+- متغيرات البيئة: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (قيم عامة)، و `STAFF_EMAIL_DOMAIN` اختياري.
+- لتفعيل النشر التلقائي مع كل تحديث: Vercel → المشروع → Settings → Git → ربط مستودع GitHub `Pager-go` وفرع `isp-manager`.
 
 ### ربط Supabase (لمشروع جديد)
 
