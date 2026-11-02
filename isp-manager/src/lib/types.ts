@@ -104,3 +104,37 @@ export type DashboardStats = {
   debt: number;
   debtors: number;
 };
+
+export type SubscriberRow = {
+  id: string;
+  code: number;
+  full_name: string;
+  phone: string;
+  phone2: string | null;
+  tower_id: string;
+  tower_name: string;
+  area: string | null;
+  address: string | null;
+  package_id: string | null;
+  package_name: string | null;
+  price: number;
+  start_date: string | null;
+  end_date: string | null;
+  days_left: number | null;
+  status: SubscriptionStatus;
+  balance: number;
+  collector_id: string | null;
+  notes: string | null;
+  is_archived: boolean;
+};
+
+export type Collector = { id: string; full_name: string; role: StaffRole };
+
+/** Permissions the subscriber screens need on the client (UI only; DB enforces). */
+export type SubscriberPerms = {
+  create: boolean;
+  edit: boolean;
+  renew: boolean;
+  collect: boolean;
+  admin: boolean;
+};

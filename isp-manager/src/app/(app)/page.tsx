@@ -9,12 +9,14 @@ import {
   RadioTower,
   RefreshCw,
   TrendingUp,
+  UserPlus,
   Users,
 } from "lucide-react";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatDateTime, formatIQD } from "@/lib/utils";
-import type { DashboardStats, SubscriptionStatus } from "@/lib/types";
+import { can, type DashboardStats, type SubscriptionStatus } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import { StatCard } from "@/components/app/stat-card";
 import { StatusBadge } from "@/components/app/status-badge";
@@ -98,16 +100,40 @@ export default async function DashboardPage() {
 
       {s && (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <StatCard label="إجمالي المشتركين" value={n.format(s.total)} icon={Users} sub={s.no_subscription ? `${n.format(s.no_subscription)} بدون اشتراك` : undefined} />
-          <StatCard label="المشتركين الفعالين" value={n.format(s.active)} icon={CircleCheck} tone="success" />
-          <StatCard label="الاشتراكات المنتهية" value={n.format(s.expired)} icon={CalendarX2} tone="danger" />
-          <StatCard label="تنتهي خلال 3 أيام" value={n.format(s.expiring)} icon={AlarmClock} tone="warning" />
+          <StatCard label="إجمالي المشتركين" value={n.format(s.total)} icon={Users} href="/subscribers" sub={s.no_subscription ? `${n.format(s.no_subscription)} بدون اشتراك` : undefined} />
+          <StatCard label="المشتركين الفعالين" value={n.format(s.active)} icon={CircleCheck} tone="success" href="/subscribers?status=active" />
+          <StatCard label="الاشتراكات المنتهية" value={n.format(s.expired)} icon={CalendarX2} tone="danger" href="/subscribers?status=expired" />
+          <StatCard label="تنتهي خلال 3 أيام" value={n.format(s.expiring)} icon={AlarmClock} tone="warning" href="/subscribers?status=expiring" />
           <StatCard label="عدد الأبراج" value={n.format(s.towers)} icon={RadioTower} href={staff.role !== "collector" ? "/towers" : undefined} />
           <StatCard label="المقبوضات اليوم" value={formatIQD(s.collected_today)} icon={Banknote} tone="success" />
           <StatCard label="المقبوضات هذا الشهر" value={formatIQD(s.collected_month)} icon={TrendingUp} tone="success" />
-          <StatCard label="إجمالي الديون المستحقة" value={formatIQD(s.debt)} icon={HandCoins} tone="danger" sub={`${n.format(s.debtors)} مشترك مدين`} />
+          <StatCard label="إجمالي الديون المستحقة" value={formatIQD(s.debt)} icon={HandCoins} tone="danger" sub={`${n.format(s.debtors)} مشترك مدين`} href="/subscribers?status=debt" />
         </div>
       )}
+
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {can(staff, "create_subscribers") && (
+          <Button asChild size="lg" className="h-14">
+            <Link href="/subscribers?new=1">
+              <UserPlus /> إضافة مشترك
+            </Link>
+          </Button>
+        )}
+        {can(staff, "renew") && (
+          <Button asChild size="lg" variant="outline" className="h-14">
+            <Link href="/subscribers">
+              <RefreshCw /> تجديد اشتراك
+            </Link>
+          </Button>
+        )}
+        {can(staff, "collect") && (
+          <Button asChild size="lg" variant="outline" className="h-14">
+            <Link href="/subscribers?status=debt">
+              <Banknote /> تسجيل دفعة
+            </Link>
+          </Button>
+        )}
+      </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         <Card className="gap-3">
@@ -121,7 +147,7 @@ export default async function DashboardPage() {
               <EmptyState icon={CalendarClock} title="لا توجد اشتراكات تنتهي خلال 3 أيام" />
             ) : (
               expiringRes.data!.map((r) => (
-                <div key={r.id} className="flex items-center justify-between gap-2 rounded-lg border p-2.5">
+                <Link key={r.id} href={`/subscribers/${r.id}`} className="flex items-center justify-between gap-2 rounded-lg border p-2.5 hover:bg-accent/40">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{r.full_name}</p>
                     <p className="truncate text-xs text-muted-foreground">
@@ -129,7 +155,7 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   <StatusBadge status={r.status} daysLeft={r.days_left} />
-                </div>
+                </Link>
               ))
             )}
           </CardContent>
