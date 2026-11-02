@@ -52,3 +52,55 @@ export function can(profile: Pick<Profile, "role" | "is_active" | Exclude<keyof 
       return profile.role === "employee" && profile.can_view_finance;
   }
 }
+
+export type SubscriptionStatus = "active" | "expiring" | "expired" | "none";
+
+export const STATUS_LABELS: Record<SubscriptionStatus, string> = {
+  active: "فعال",
+  expiring: "قريب الانتهاء",
+  expired: "منتهي",
+  none: "بدون اشتراك",
+};
+
+export type Tower = {
+  id: string;
+  name: string;
+  area: string | null;
+  address: string | null;
+  manager_name: string | null;
+  manager_phone: string | null;
+  notes: string | null;
+  is_archived: boolean;
+};
+
+export type TowerStats = {
+  tower_id: string;
+  subscribers: number;
+  active: number;
+  expiring: number;
+  expired: number;
+  debt: number;
+  collected_month: number;
+};
+
+export type Package = {
+  id: string;
+  name: string;
+  price: number;
+  duration_days: number;
+  description: string | null;
+  is_active: boolean;
+};
+
+export type DashboardStats = {
+  total: number;
+  active: number;
+  expired: number;
+  expiring: number;
+  no_subscription: number;
+  towers: number;
+  collected_today: number;
+  collected_month: number;
+  debt: number;
+  debtors: number;
+};
