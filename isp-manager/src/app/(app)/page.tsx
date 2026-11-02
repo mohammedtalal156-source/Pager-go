@@ -113,21 +113,21 @@ export default async function DashboardPage() {
 
       <div className="mt-4 grid grid-cols-3 gap-2">
         {can(staff, "create_subscribers") && (
-          <Button asChild size="lg" className="h-14">
+          <Button asChild size="lg" className="h-16 flex-col gap-1 text-xs sm:flex-row sm:text-sm">
             <Link href="/subscribers?new=1">
               <UserPlus /> إضافة مشترك
             </Link>
           </Button>
         )}
         {can(staff, "renew") && (
-          <Button asChild size="lg" variant="outline" className="h-14">
+          <Button asChild size="lg" variant="outline" className="h-16 flex-col gap-1 text-xs sm:flex-row sm:text-sm">
             <Link href="/subscribers">
               <RefreshCw /> تجديد اشتراك
             </Link>
           </Button>
         )}
         {can(staff, "collect") && (
-          <Button asChild size="lg" variant="outline" className="h-14">
+          <Button asChild size="lg" variant="outline" className="h-16 flex-col gap-1 text-xs sm:flex-row sm:text-sm">
             <Link href="/subscribers?status=debt">
               <Banknote /> تسجيل دفعة
             </Link>
