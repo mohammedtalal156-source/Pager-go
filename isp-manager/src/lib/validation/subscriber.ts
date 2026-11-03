@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { money, optionalDate, optionalPhone, optionalText, optionalUuid, requiredPhone } from "./common";
+import { normalizePole } from "../pole";
 
 export { money };
 
@@ -8,6 +9,7 @@ const base = {
   phone: requiredPhone,
   phone2: optionalPhone,
   tower_id: z.uuid({ message: "اختر البرج" }),
+  pole: optionalText(60).transform((v) => normalizePole(v)).refine((v) => v == null || v.length <= 50, "رقم العامود طويل جداً"),
   area: optionalText(100),
   address: optionalText(200),
   package_id: optionalUuid,

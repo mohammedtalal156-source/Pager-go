@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { searchWords } from "@/lib/arabic";
+import { extractPole } from "@/lib/pole";
 import { formatDate, formatIQD } from "@/lib/utils";
 import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow, type Tower } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
@@ -19,7 +20,7 @@ export const metadata: Metadata = { title: "المشتركين" };
 
 const PAGE_SIZE = 50;
 const COLUMNS =
-  "id, code, full_name, phone, phone2, tower_id, tower_name, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived";
+  "id, code, full_name, phone, phone2, tower_id, tower_name, pole, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived";
 
 type Search = { q?: string; status?: string; tower?: string; page?: string; archived?: string; new?: string };
 
@@ -33,9 +34,12 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
     .from("subscriber_overview")
     .select(COLUMNS, { count: "exact" })
     .eq("is_archived", sp.archived === "1");
-  const words = sp.q ? searchWords(sp.q) : [];
+  // «عامود 47»: the pole field, or (older subscribers) «عامود 47» written in the name
+  const { pole, rest } = extractPole(sp.q ?? "");
+  if (pole) query = query.or(`pole.eq."${pole}",search_text.ilike."%عامود ${pole} %"`);
+  const words = rest ? searchWords(rest) : [];
   for (const w of words) query = query.ilike("search_text", `%${w}%`);
-  const term = words.join(" ");
+  const term = [pole, ...words].filter(Boolean).join(" ");
   if (sp.tower) query = query.eq("tower_id", sp.tower);
   switch (sp.status) {
     case "active":
@@ -130,7 +134,8 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
                       {s.full_name}
                     </Link>
                     <p className="text-xs text-muted-foreground">
-                      #{s.code} · {s.tower_name} · <WhatsAppPhone phone={s.phone} />
+                      #{s.code} · {s.tower_name}
+                      {s.pole && ` · عامود ${s.pole}`} · <WhatsAppPhone phone={s.phone} />
                     </p>
                   </div>
                   <Link href={`/subscribers/${s.id}`} className="shrink-0">
@@ -173,7 +178,10 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
                         {s.balance > 0 && <span className="ms-2 font-semibold text-danger">دين {formatIQD(s.balance)}</span>}
                       </div>
                     </td>
-                    <td className="p-3">{s.tower_name}</td>
+                    <td className="p-3">
+                      {s.tower_name}
+                      {s.pole && <div className="text-xs text-muted-foreground">عامود {s.pole}</div>}
+                    </td>
                     <td className="p-3">
                       <WhatsAppPhone phone={s.phone} />
                     </td>

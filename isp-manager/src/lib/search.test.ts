@@ -39,3 +39,30 @@ test("subscriber number and edge cases", () => {
   assert.equal(phoneCore("964"), "964");
   assert.deepEqual(searchWords("a%b_c"), ["a", "b", "c"], "LIKE wildcards stripped");
 });
+
+test("pole: stored without the word, found by «عامود N» exactly", async () => {
+  const { normalizePole, extractPole } = await import("./pole");
+  assert.equal(normalizePole("47"), "47");
+  assert.equal(normalizePole(" عامود 47 "), "47");
+  assert.equal(normalizePole("العامود ٤٧"), "47");
+  assert.equal(normalizePole("عمود47"), "47");
+  assert.equal(normalizePole(""), null);
+  assert.equal(normalizePole(null), null);
+  assert.deepEqual(extractPole("عامود 47"), { pole: "47", rest: "" });
+  assert.deepEqual(extractPole("علي عامود ٤٧"), { pole: "47", rest: "علي" });
+  assert.deepEqual(extractPole("عمود47"), { pole: "47", rest: "" });
+  assert.deepEqual(extractPole("علي"), { pole: null, rest: "علي" });
+  assert.deepEqual(extractPole("عامود"), { pole: null, rest: "عامود" }, "the word alone is a normal search");
+});
+
+test("pole in forms: browser and server agree", async () => {
+  const { editSubscriberSchema } = await import("./validation/subscriber");
+  const UUID = "3f1c1d8e-6a0b-4c55-9a8e-2b7d0f2c1a11";
+  const base = { id: UUID, full_name: "علي", phone: "07701234567", phone2: "", tower_id: UUID, area: "", address: "",
+    package_id: "", price: "25000", collector_id: "", notes: "" };
+  const a = editSubscriberSchema.parse({ ...base, pole: "عامود 47" });
+  assert.equal(a.pole, "47");
+  assert.deepEqual(editSubscriberSchema.parse(a), a);
+  assert.equal(editSubscriberSchema.parse({ ...base, pole: "" }).pole, null);
+  assert.equal(editSubscriberSchema.parse(base).pole, null, "old forms without pole still valid");
+});

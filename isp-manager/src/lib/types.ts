@@ -113,6 +113,7 @@ export type SubscriberRow = {
   phone2: string | null;
   tower_id: string;
   tower_name: string;
+  pole: string | null;
   area: string | null;
   address: string | null;
   package_id: string | null;

@@ -19,7 +19,7 @@ import { AdjustDebtButton, ArchiveSubscriberButton, CorrectPaymentButton, DatesB
 export const metadata: Metadata = { title: "تفاصيل المشترك" };
 
 const COLUMNS =
-  "id, code, full_name, phone, phone2, tower_id, tower_name, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived";
+  "id, code, full_name, phone, phone2, tower_id, tower_name, pole, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived";
 
 type Period = {
   id: string;
@@ -172,6 +172,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
             <p className="flex items-center gap-2">
               <MapPin className="size-4 text-muted-foreground" />
               {sub.tower_name}
+              {sub.pole && ` · عامود ${sub.pole}`}
               {sub.area && ` · ${sub.area}`}
               {sub.address && ` · ${sub.address}`}
             </p>

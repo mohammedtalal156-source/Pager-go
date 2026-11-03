@@ -66,6 +66,7 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
       phone: "",
       phone2: "",
       tower_id: lists.towers.length === 1 ? lists.towers[0].id : "",
+      pole: "",
       area: "",
       address: "",
       package_id: firstPkg?.id ?? "",
@@ -174,6 +175,9 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
               </option>
             ))}
           </NativeSelect>
+        </Field>
+        <Field label="العامود" htmlFor="n-pole" error={err.pole?.message}>
+          <Input id="n-pole" inputMode="text" placeholder="مثال: 47" {...form.register("pole")} />
         </Field>
         <Field label="الباقة" htmlFor="n-pkg" error={err.package_id?.message}>
           <NativeSelect id="n-pkg" {...form.register("package_id")}>
@@ -289,6 +293,7 @@ function EditForm({ sub, lists, onDone }: { sub: SubscriberRow; lists: Lists; on
       phone: sub.phone,
       phone2: sub.phone2 ?? "",
       tower_id: sub.tower_id,
+      pole: sub.pole ?? "",
       area: sub.area ?? "",
       address: sub.address ?? "",
       package_id: sub.package_id ?? "",
@@ -335,6 +340,9 @@ function EditForm({ sub, lists, onDone }: { sub: SubscriberRow; lists: Lists; on
               </option>
             ))}
           </NativeSelect>
+        </Field>
+        <Field label="العامود" htmlFor="e-pole" error={err.pole?.message}>
+          <Input id="e-pole" placeholder="مثال: 47" {...form.register("pole")} />
         </Field>
         <Field label="الباقة" htmlFor="e-pkg">
           <NativeSelect id="e-pkg" {...form.register("package_id")}>

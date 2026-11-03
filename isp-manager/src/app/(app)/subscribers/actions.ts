@@ -35,10 +35,11 @@ export async function createSubscriberAction(input: unknown): Promise<ActionResu
   if (!parsed.success) return { ok: false, error: issue(parsed.error) };
   const v = parsed.data;
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("create_subscriber", {
+  const { data, error } = await supabase.rpc("create_subscriber_with_pole", {
     p_full_name: v.full_name,
     p_phone: v.phone,
     p_tower_id: v.tower_id,
+    p_pole: v.pole,
     p_package_id: v.package_id,
     p_price: v.price,
     p_start_date: v.start_date,

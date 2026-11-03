@@ -64,6 +64,7 @@ const FIELD_LABELS: Record<string, string> = {
   phone: "الهاتف",
   phone2: "الهاتف الثاني",
   tower_id: "البرج",
+  pole: "العامود",
   area: "المنطقة",
   address: "العنوان",
   package_id: "الباقة",
