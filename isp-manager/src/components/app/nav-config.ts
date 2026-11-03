@@ -1,12 +1,13 @@
 import { can, type Profile } from "@/lib/types";
 
-export type NavKey = "home" | "subscribers" | "towers" | "packages" | "finance" | "reports" | "settings";
+export type NavKey = "home" | "subscribers" | "cabinets" | "towers" | "packages" | "finance" | "reports" | "settings";
 
 export type NavItem = { key: NavKey; href: string; label: string };
 
 export const NAV_ITEMS: NavItem[] = [
   { key: "home", href: "/", label: "الرئيسية" },
   { key: "subscribers", href: "/subscribers", label: "المشتركين" },
+  { key: "cabinets", href: "/cabinets", label: "الكابينات" },
   { key: "towers", href: "/towers", label: "الأبراج" },
   { key: "packages", href: "/packages", label: "الباقات" },
   { key: "finance", href: "/finance", label: "الحسابات" },
@@ -19,6 +20,7 @@ export function canOpen(profile: Profile, key: NavKey): boolean {
   switch (key) {
     case "home":
     case "subscribers":
+    case "cabinets":
     case "settings":
       return true;
     case "towers":

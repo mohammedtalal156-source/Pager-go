@@ -66,3 +66,22 @@ test("pole in forms: browser and server agree", async () => {
   assert.equal(editSubscriberSchema.parse({ ...base, pole: "" }).pole, null);
   assert.equal(editSubscriberSchema.parse(base).pole, null, "old forms without pole still valid");
 });
+
+test("cabinets: subscribers grouped by pole (field first, else name)", async () => {
+  const { groupByPole, poleOf } = await import("./pole");
+  assert.equal(poleOf({ pole: "12", search_text: "علي عامود 47 077" }), "12", "field wins");
+  assert.equal(poleOf({ pole: null, search_text: "ابا الحسن علي عامود 47 9647807444064  1030" }), "47");
+  assert.equal(poleOf({ pole: null, search_text: "سامر 07701234567  1001" }), null);
+  assert.equal(poleOf({ pole: null, search_text: "العامودي حسن 077" }), null, "not a pole word");
+  const rows = [
+    { pole: null, search_text: "a عامود 47 077", status: "active", balance: 0, tower_name: "برج أ" },
+    { pole: "47", search_text: "b 077", status: "expired", balance: 25000, tower_name: "برج أ" },
+    { pole: null, search_text: "c عامود 2 077", status: "expiring", balance: 0, tower_name: "برج ب" },
+    { pole: "10", search_text: "d 077", status: "none", balance: 0, tower_name: "برج ب" },
+    { pole: null, search_text: "e 077", status: "active", balance: 0, tower_name: "برج أ" },
+  ];
+  const { poles, withoutPole } = groupByPole(rows);
+  assert.deepEqual(poles.map((p) => p.pole), ["2", "10", "47"], "numeric order");
+  assert.deepEqual(poles[2], { pole: "47", count: 2, active: 1, expired: 1, debt: 25000, towers: ["برج أ"] });
+  assert.equal(withoutPole, 1);
+});

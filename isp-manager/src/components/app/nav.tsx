@@ -12,6 +12,7 @@ import {
   RadioTower,
   Settings,
   Users,
+  UtilityPole,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
@@ -24,6 +25,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 const ICONS: Record<NavKey, LucideIcon> = {
   home: Home,
   subscribers: Users,
+  cabinets: UtilityPole,
   towers: RadioTower,
   packages: Package,
   finance: Wallet,
@@ -85,7 +87,7 @@ export function Sidebar({ items, userName, roleLabel }: { items: NavItem[]; user
   );
 }
 
-const PRIMARY_MOBILE: NavKey[] = ["home", "subscribers", "towers", "finance"];
+const PRIMARY_MOBILE: NavKey[] = ["home", "subscribers", "cabinets", "towers", "finance"];
 
 export function MobileNav({ items, userName, roleLabel }: { items: NavItem[]; userName: string; roleLabel: string }) {
   const pathname = usePathname();
