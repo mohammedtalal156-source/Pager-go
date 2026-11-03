@@ -231,3 +231,17 @@ export async function adjustDebtAction(
     message: "تم تعديل الدين",
   };
 }
+
+/** Admin: permanently delete a subscriber with their periods, payments and adjustments. */
+export async function deleteSubscriberAction(id: string, confirm: string): Promise<ActionResult<{ code: number; full_name: string }>> {
+  await requireStaff();
+  if (!z.uuid().safeParse(id).success) return { ok: false, error: "طلب غير صالح" };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("delete_subscriber", { p_subscriber_id: id, p_confirm: confirm.trim() });
+  if (error) return { ok: false, error: error.message };
+  refresh();
+  revalidatePath("/finance");
+  revalidatePath("/reports");
+  revalidatePath("/towers");
+  return { ok: true, data: data as { code: number; full_name: string }, message: "تم حذف المشترك" };
+}

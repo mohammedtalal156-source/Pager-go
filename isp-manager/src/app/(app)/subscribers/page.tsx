@@ -55,12 +55,13 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
       query = query.eq("days_left", 1);
       break;
     case "in3":
-      query = query.eq("days_left", 3);
+      // today, tomorrow, in 2 days and in 3 days
+      query = query.gte("days_left", 0).lte("days_left", 3);
       break;
   }
   query =
-    sp.status === "expiring" || sp.status === "expired"
-      ? query.order("end_date", { ascending: sp.status === "expiring" })
+    sp.status === "expiring" || sp.status === "expired" || sp.status === "in3"
+      ? query.order("end_date", { ascending: sp.status !== "expired" })
       : sp.status === "debt"
         ? query.order("balance", { ascending: false })
         : query.order("full_name");

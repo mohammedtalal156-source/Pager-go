@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubscriberQuickActions } from "../quick-dialogs";
 import { EditSubscriberButton } from "../subscriber-form";
-import { AdjustDebtButton, ArchiveSubscriberButton, CorrectPaymentButton, DatesButton, HistoryButton, VoidButton } from "./controls";
+import { AdjustDebtButton, ArchiveSubscriberButton, CorrectPaymentButton, DatesButton, DeleteSubscriberButton, HistoryButton, VoidButton } from "./controls";
 
 export const metadata: Metadata = { title: "تفاصيل المشترك" };
 
@@ -140,6 +140,7 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
           {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} className="h-11" />}
           {isAdmin && <HistoryButton subscriberId={sub.id} lookups={lookups} className="h-11" />}
           {(perms.edit || isAdmin) && <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} className="h-11" />}
+          {isAdmin && <DeleteSubscriberButton id={sub.id} name={sub.full_name} paidTotal={paidTotal} className="h-11" />}
         </div>
       )}
 

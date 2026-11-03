@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Archive, ArchiveRestore, CalendarCog, HandCoins, History, Loader2, PenLine, Undo2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Archive, ArchiveRestore, CalendarCog, HandCoins, History, Loader2, PenLine, Trash2, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import { cn, formatDate, formatDateTime, formatIQD } from "@/lib/utils";
 import {
   adjustDebtAction,
   correctPaymentAction,
+  deleteSubscriberAction,
   setDatesAction,
   setSubscriberArchivedAction,
   subscriberHistoryAction,
@@ -485,5 +487,69 @@ export function ArchiveSubscriberButton({ id, archived, className }: { id: strin
       {pending ? <Loader2 className="animate-spin" /> : archived ? <ArchiveRestore /> : <Archive />}
       {archived ? "استعادة" : "أرشفة"}
     </Button>
+  );
+}
+
+/** Admin: delete the subscriber with all periods and payments (asks to type «حذف»). */
+export function DeleteSubscriberButton({
+  id,
+  name,
+  paidTotal,
+  className,
+}: {
+  id: string;
+  name: string;
+  paidTotal: number;
+  className?: string;
+}) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState<string>();
+  const [pending, startTransition] = useTransition();
+  const submit = () =>
+    startTransition(async () => {
+      setError(undefined);
+      const res = await deleteSubscriberAction(id, confirm);
+      if (res.ok) {
+        toast.success(`تم حذف ${name}`);
+        setOpen(false);
+        router.replace("/subscribers");
+      } else setError(res.error);
+    });
+  return (
+    <>
+      <Button
+        variant="ghost"
+        className={cn("text-danger hover:text-danger", className)}
+        onClick={() => {
+          setConfirm("");
+          setError(undefined);
+          setOpen(true);
+        }}
+      >
+        <Trash2 /> حذف المشترك
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>حذف {name}؟</DialogTitle>
+            <DialogDescription>
+              يُحذف المشترك نهائياً مع كل اشتراكاته وتجديداته ومدفوعاته{paidTotal > 0 ? ` (${formatIQD(paidTotal)})` : ""}، وتنقص هذه المبالغ من
+              المقبوضات والتقارير. لا يمكن التراجع. إذا تريد إخفاءه فقط مع بقاء حساباته استخدم «أرشفة».
+            </DialogDescription>
+          </DialogHeader>
+          {error && <Alert variant="destructive">{error}</Alert>}
+          <div className="grid gap-1.5">
+            <Label htmlFor="del-confirm">اكتب «حذف» للتأكيد</Label>
+            <Input id="del-confirm" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="off" />
+          </div>
+          <Button variant="destructive" size="lg" className="h-12" disabled={pending || confirm.trim() !== "حذف"} onClick={submit}>
+            {pending ? <Loader2 className="animate-spin" /> : <Trash2 />}
+            حذف نهائي
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
