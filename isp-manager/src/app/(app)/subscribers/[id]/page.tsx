@@ -134,15 +134,15 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
         <SubscriberQuickActions sub={sub} packages={lists.packages} perms={perms} />
       </div>
 
-        <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl border bg-card p-2 sm:flex sm:flex-wrap">
-          <SubscriberLinkButton id={sub.id} name={sub.full_name} phone={sub.phone} endDate={sub.end_date} className="h-11" />
-          {canEdit && <EditSubscriberButton sub={sub} lists={lists} className="h-11" />}
-          {isAdmin && <AdjustDebtButton subscriberId={sub.id} balance={sub.balance} className="h-11" />}
-          {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} className="h-11" />}
-          {isAdmin && <HistoryButton subscriberId={sub.id} lookups={lookups} className="h-11" />}
-          {(perms.edit || isAdmin) && <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} className="h-11" />}
-          {isAdmin && <DeleteSubscriberButton id={sub.id} name={sub.full_name} paidTotal={paidTotal} className="h-11" />}
-        </div>
+      <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl border bg-card p-2 sm:flex sm:flex-wrap">
+        <SubscriberLinkButton id={sub.id} name={sub.full_name} phone={sub.phone} endDate={sub.end_date} className="h-11" />
+        {canEdit && <EditSubscriberButton sub={sub} lists={lists} className="h-11" />}
+        {isAdmin && <AdjustDebtButton subscriberId={sub.id} balance={sub.balance} className="h-11" />}
+        {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} className="h-11" />}
+        {isAdmin && <HistoryButton subscriberId={sub.id} lookups={lookups} className="h-11" />}
+        {(perms.edit || isAdmin) && <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} className="h-11" />}
+        {isAdmin && <DeleteSubscriberButton id={sub.id} name={sub.full_name} paidTotal={paidTotal} className="h-11" />}
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-1">
