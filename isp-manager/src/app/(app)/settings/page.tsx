@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/app/page-header";
 import { OwnPasswordCard } from "./own-password-card";
 import { StaffManager } from "./staff-manager";
 import { BackupCard, ImportCard } from "./data-tools";
+import { ContactPhoneCard } from "./contact-phone-card";
 
 export const metadata: Metadata = { title: "الإعدادات" };
 
@@ -13,8 +14,11 @@ export default async function SettingsPage() {
   const me = await requireStaff();
   let staff: Profile[] = [];
   let loadError: string | null = null;
+  let contactPhone: string | null = null;
   if (me.role === "admin") {
     const supabase = await createClient();
+    const { data: phone } = await supabase.rpc("get_contact_phone");
+    contactPhone = (phone as string | null) ?? null;
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -31,6 +35,7 @@ export default async function SettingsPage() {
       <PageHeader title="الإعدادات" description={me.role === "admin" ? "الموظفون والصلاحيات، الاستيراد، النسخ الاحتياطي، وحسابك" : "إعدادات حسابك"} />
       <div className="grid gap-6">
         {me.role === "admin" && <StaffManager staff={staff} meId={me.id} loadError={loadError} />}
+        {me.role === "admin" && <ContactPhoneCard phone={contactPhone} />}
         {me.role === "admin" && <ImportCard />}
         {me.role === "admin" && <BackupCard />}
         <OwnPasswordCard />

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CalendarRange, RadioTower, Receipt, Wallet } from "lucide-react";
+import { CalendarRange, MessageCircle, Phone, RadioTower, Receipt, Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isLinkToken } from "@/lib/subscriber-link";
+import { toWhatsAppNumber } from "@/lib/whatsapp";
 import { formatDate, formatIQD } from "@/lib/utils";
 import type { SubscriptionStatus } from "@/lib/types";
 import { StatusBadge } from "@/components/app/status-badge";
@@ -25,6 +26,7 @@ type View = {
   status: SubscriptionStatus;
   balance: number;
   tower_name: string;
+  contact_phone: string | null;
   payments: { receipt_no: number; amount: number; paid_at: string }[];
 };
 
@@ -38,6 +40,11 @@ export default async function SubscriberPublicPage({ params }: { params: Promise
 
   const left =
     v.days_left == null ? null : v.days_left < 0 ? `منتهي منذ ${-v.days_left} يوم` : v.days_left === 0 ? "ينتهي اليوم" : `باقي ${v.days_left} يوم`;
+
+  const managerWa = toWhatsAppNumber(v.contact_phone);
+  const managerWaUrl = managerWa
+    ? `https://wa.me/${managerWa}?text=${encodeURIComponent(`مرحباً، أنا المشترك ${v.full_name} (رقم #${v.code})`)}`
+    : null;
 
   return (
     <main className="relative min-h-dvh bg-gradient-to-b from-primary/10 via-background to-background px-4 py-8">
@@ -101,6 +108,32 @@ export default async function SubscriberPublicPage({ params }: { params: Promise
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+        {v.contact_phone && (
+          <section className="rounded-2xl border bg-card p-4 shadow-sm">
+            <h2 className="mb-2 font-semibold">للتواصل مع المدير</h2>
+            {managerWaUrl ? (
+              <a
+                href={managerWaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-14 items-center justify-center gap-2 rounded-xl bg-[#25D366] text-lg font-bold text-white shadow-sm hover:bg-[#1ebe5b]"
+              >
+                <MessageCircle className="size-5" />
+                <span dir="ltr">{v.contact_phone}</span>
+              </a>
+            ) : (
+              <p dir="ltr" className="text-center text-lg font-bold">
+                {v.contact_phone}
+              </p>
+            )}
+            <a
+              href={`tel:${v.contact_phone}`}
+              className="mt-2 flex h-11 items-center justify-center gap-2 rounded-xl border text-sm font-medium hover:bg-accent/40"
+            >
+              <Phone className="size-4" /> اتصال
+            </a>
           </section>
         )}
         <p className="mt-2 text-center text-xs text-muted-foreground">{v.tower_name}</p>

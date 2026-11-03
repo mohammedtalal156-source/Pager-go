@@ -114,3 +114,19 @@ export async function changeOwnPassword(input: unknown): Promise<ActionResult> {
   if (error) return { ok: false, error: error.message };
   return { ok: true, message: "تم تغيير كلمة المرور" };
 }
+
+/** Admin: the manager phone shown on subscribers' private pages (empty hides it). */
+export async function setContactPhone(phone: unknown): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+  } catch (e) {
+    if (e instanceof ForbiddenError) return { ok: false, error: e.message };
+    throw e;
+  }
+  if (typeof phone !== "string" || phone.length > 30) return { ok: false, error: "رقم الهاتف غير صحيح" };
+  const digits = phone.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("set_contact_phone", { p_phone: digits });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, message: data ? "تم حفظ رقم المدير" : "تم إخفاء الرقم من صفحة المشترك" };
+}
