@@ -82,3 +82,16 @@ test("reminder button: uses the normalised number and refuses invalid ones", () 
   assert.ok(whatsappReminder({ ...base, phone: "07701234567" })!.startsWith("https://wa.me/9647701234567?text="));
   assert.equal(whatsappReminder({ ...base, phone: "12345" }), null);
 });
+
+test("reminder message: date, price, debt and the subscriber link", () => {
+  const base = { name: "علي", phone: "07701234567", endDate: "2026-12-01", expired: false, balance: 15000, formattedDate: "2026/12/01" };
+  const text = (u: string) => decodeURIComponent(u.split("text=")[1]);
+  const full = text(whatsappReminder({ ...base, price: 25000, link: "https://x/s/abc" })!);
+  assert.match(full, /ينتهي بتاريخ 2026\/12\/01/);
+  assert.match(full, /سعر الاشتراك: 25,000 دينار/);
+  assert.match(full, /المبلغ المتبقي بذمتكم: 15,000 دينار/);
+  assert.match(full, /https:\/\/x\/s\/abc/);
+  const noDebt = text(whatsappReminder({ ...base, balance: 0 })!);
+  assert.match(noDebt, /لا يوجد مبلغ متبقٍ/);
+  assert.doesNotMatch(noDebt, /رابط/, "no link when it could not be fetched");
+});

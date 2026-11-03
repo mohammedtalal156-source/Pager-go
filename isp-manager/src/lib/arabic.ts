@@ -68,6 +68,10 @@ export function whatsappReminder(opts: {
   expired: boolean;
   balance: number;
   formattedDate: string;
+  /** Subscription price (shown when above zero). */
+  price?: number;
+  /** «رابط المشترك» page, added at the end when given. */
+  link?: string | null;
 }) {
   let msg = `مرحباً ${opts.name}،\n`;
   if (opts.endDate) {
@@ -75,7 +79,9 @@ export function whatsappReminder(opts: {
       ? `نود إعلامكم بأن اشتراك الإنترنت الخاص بكم انتهى بتاريخ ${opts.formattedDate}. يرجى التجديد لاستمرار الخدمة.`
       : `نود تذكيركم بأن اشتراك الإنترنت الخاص بكم ينتهي بتاريخ ${opts.formattedDate}.`;
   }
-  if (opts.balance > 0) msg += `\nالمبلغ المتبقي بذمتكم: ${n.format(opts.balance)} دينار.`;
+  if (opts.price && opts.price > 0) msg += `\nسعر الاشتراك: ${n.format(opts.price)} دينار.`;
+  msg += opts.balance > 0 ? `\nالمبلغ المتبقي بذمتكم: ${n.format(opts.balance)} دينار.` : "\nلا يوجد مبلغ متبقٍ بذمتكم.";
+  if (opts.link) msg += `\nتفاصيل اشتراككم ودفعاتكم على هذا الرابط:\n${opts.link}`;
   msg += "\nشكراً لكم.";
   const number = toWhatsAppNumber(opts.phone);
   return number ? `https://wa.me/${number}?text=${encodeURIComponent(msg)}` : null;
