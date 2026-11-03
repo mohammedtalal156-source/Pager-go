@@ -59,7 +59,7 @@ export const STATUS_LABELS: Record<SubscriptionStatus, string> = {
   active: "فعال",
   expiring: "قريب الانتهاء",
   expired: "منتهي",
-  none: "بدون اشتراك",
+  none: "غير فعّال",
 };
 
 export type Tower = {

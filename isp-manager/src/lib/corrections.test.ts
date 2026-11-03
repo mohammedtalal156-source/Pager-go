@@ -87,3 +87,18 @@ test("debt adjustment: form values and history entry", async () => {
   assert.match(items[0].title, /70,000.*20,000.*−50,000/);
   assert.equal(items[0].reason, "خصم");
 });
+
+test("add subscriber as inactive: what the form sends passes browser and server validation", async () => {
+  const { createSubscriberSchema } = await import("./validation/subscriber");
+  const browser = createSubscriberSchema.parse({
+    full_name: "علي", phone: "07701234567", phone2: "", tower_id: UUID, area: "", address: "", package_id: UUID,
+    price: "25,000", start_date: "2026-11-03", end_date: "2026-12-03", amount_paid: "0", collector_id: "", notes: "",
+    request_id: UUID,
+  });
+  const sent = { ...browser, start_date: null, end_date: null, amount_paid: 0 };
+  const server = createSubscriberSchema.parse(sent);
+  assert.equal(server.start_date, null);
+  assert.equal(server.end_date, null);
+  assert.equal(server.amount_paid, 0);
+  assert.equal(server.price, 25000);
+});

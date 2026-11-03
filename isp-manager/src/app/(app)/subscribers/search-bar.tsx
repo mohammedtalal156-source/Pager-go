@@ -14,6 +14,7 @@ const STATUSES = [
   ["active", "فعال"],
   ["expiring", "قريب الانتهاء"],
   ["expired", "منتهي"],
+  ["none", "غير فعّال"],
   ["debt", "عليهم ديون"],
 ] as const;
 

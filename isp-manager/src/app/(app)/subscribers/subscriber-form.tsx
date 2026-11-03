@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Pencil, UserPlus } from "lucide-react";
+import { CircleCheck, CirclePause, Loader2, Pencil, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { Alert } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addDays, todayBaghdad } from "@/lib/arabic";
-import { formatIQD } from "@/lib/utils";
+import { cn, formatIQD } from "@/lib/utils";
 import type { Collector, Package, SubscriberRow, Tower } from "@/lib/types";
 import {
   createSubscriberSchema,
@@ -53,6 +53,9 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
+  // Active: first period starts now and the payment is recorded.
+  // Inactive: saved without a subscription period, payment or debt (activate later with «تجديد»).
+  const [active, setActive] = useState(true);
   const activePkgs = lists.packages.filter((p) => p.is_active);
   const firstPkg = activePkgs[0];
   const today = todayBaghdad();
@@ -86,7 +89,7 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
     const p = lists.packages.find((x) => x.id === pkgId);
     if (!p) return;
     form.setValue("price", String(p.price));
-    form.setValue("amount_paid", String(p.price));
+    form.setValue("amount_paid", active ? String(p.price) : "0");
     if (startDate) form.setValue("end_date", addDays(String(startDate), p.duration_days));
   }, [pkgId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -103,7 +106,7 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
   const onSubmit = form.handleSubmit((values) =>
     startTransition(async () => {
       setError(undefined);
-      const res = await createSubscriberAction(values);
+      const res = await createSubscriberAction(active ? values : { ...values, start_date: null, end_date: null, amount_paid: 0 });
       if (res.ok) {
         toast.success(res.message);
         onDone();
@@ -119,6 +122,42 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
   return (
     <form onSubmit={onSubmit} className="grid gap-4" noValidate>
       {error && <Alert variant="destructive">{error}</Alert>}
+      <div className="grid gap-1.5">
+        <span className="text-sm font-medium">حالة المشترك</span>
+        <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="حالة المشترك">
+          {[
+            { value: true, icon: CircleCheck, title: "فعّال", hint: "يبدأ اشتراكه ويُسجَّل المبلغ" },
+            { value: false, icon: CirclePause, title: "غير فعّال", hint: "بدون اشتراك ولا مبلغ" },
+          ].map((o) => (
+            <button
+              key={o.title}
+              type="button"
+              role="radio"
+              aria-checked={active === o.value}
+              onClick={() => {
+                setActive(o.value);
+                // Hidden fields must stay valid: no payment while inactive.
+                form.setValue("amount_paid", o.value ? String(form.getValues("price") ?? "0") : "0");
+                form.clearErrors(["amount_paid", "start_date", "end_date"]);
+              }}
+              className={cn(
+                "flex items-start gap-2 rounded-xl border p-3 text-start transition-colors",
+                active === o.value
+                  ? o.value
+                    ? "border-success bg-success-soft ring-2 ring-success"
+                    : "border-primary bg-primary/10 ring-2 ring-primary"
+                  : "bg-card hover:bg-accent",
+              )}
+            >
+              <o.icon className={cn("mt-0.5 size-5 shrink-0", o.value ? "text-success" : "text-muted-foreground")} />
+              <span>
+                <span className="block font-semibold">{o.title}</span>
+                <span className="block text-xs text-muted-foreground">{o.hint}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="الاسم الكامل" htmlFor="n-name" error={err.full_name?.message} required>
           <Input id="n-name" autoFocus {...form.register("full_name")} />
@@ -146,23 +185,35 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
             ))}
           </NativeSelect>
         </Field>
-        <Field label="تاريخ البداية" htmlFor="n-start" error={err.start_date?.message}>
-          <Input id="n-start" type="date" dir="ltr" {...form.register("start_date")} />
-        </Field>
-        <Field label="تاريخ الانتهاء" htmlFor="n-end" error={err.end_date?.message}>
-          <Input id="n-end" type="date" dir="ltr" {...form.register("end_date")} />
-        </Field>
-        <Field label="سعر الاشتراك (دينار)" htmlFor="n-price" error={err.price?.message}>
+        {active && (
+          <>
+            <Field label="تاريخ البداية" htmlFor="n-start" error={err.start_date?.message}>
+              <Input id="n-start" type="date" dir="ltr" {...form.register("start_date")} />
+            </Field>
+            <Field label="تاريخ الانتهاء" htmlFor="n-end" error={err.end_date?.message}>
+              <Input id="n-end" type="date" dir="ltr" {...form.register("end_date")} />
+            </Field>
+          </>
+        )}
+        <Field label={active ? "سعر الاشتراك (دينار)" : "سعر الاشتراك عند التفعيل (دينار)"} htmlFor="n-price" error={err.price?.message}>
           <Input id="n-price" inputMode="numeric" dir="ltr" {...form.register("price")} />
         </Field>
-        <Field label="المبلغ المدفوع" htmlFor="n-paid" error={err.amount_paid?.message}>
-          <Input id="n-paid" inputMode="numeric" dir="ltr" {...form.register("amount_paid")} />
-        </Field>
+        {active && (
+          <Field label="المبلغ المدفوع" htmlFor="n-paid" error={err.amount_paid?.message}>
+            <Input id="n-paid" inputMode="numeric" dir="ltr" {...form.register("amount_paid")} />
+          </Field>
+        )}
       </div>
-      <p className="rounded-lg bg-muted px-3 py-2 text-sm">
-        المبلغ المتبقي:{" "}
-        <b className={remaining > 0 ? "text-danger" : "text-success"}>{remaining < 0 ? "المدفوع أكبر من السعر" : formatIQD(remaining)}</b>
-      </p>
+      {active ? (
+        <p className="rounded-lg bg-muted px-3 py-2 text-sm">
+          المبلغ المتبقي:{" "}
+          <b className={remaining > 0 ? "text-danger" : "text-success"}>{remaining < 0 ? "المدفوع أكبر من السعر" : formatIQD(remaining)}</b>
+        </p>
+      ) : (
+        <p className="rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground">
+          يُحفظ المشترك بدون تاريخ اشتراك ولا مبلغ ولا دين. عند التفعيل اضغط «تجديد» من صفحته: يبدأ الاشتراك من يوم التفعيل ويُسجَّل المبلغ.
+        </p>
+      )}
       <details className="rounded-xl border p-3">
         <summary className="cursor-pointer text-sm font-medium">بيانات إضافية (اختياري)</summary>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">

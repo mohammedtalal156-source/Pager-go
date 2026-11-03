@@ -106,7 +106,7 @@ export default async function DashboardPage() {
 
       {s && (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <StatCard label="إجمالي المشتركين" value={n.format(s.total)} icon={Users} href="/subscribers" sub={s.no_subscription ? `${n.format(s.no_subscription)} بدون اشتراك` : undefined} />
+          <StatCard label="إجمالي المشتركين" value={n.format(s.total)} icon={Users} href="/subscribers" sub={s.no_subscription ? `${n.format(s.no_subscription)} غير فعّال` : undefined} />
           <StatCard label="المشتركين الفعالين" value={n.format(s.active)} icon={CircleCheck} tone="success" href="/subscribers?status=active" />
           <StatCard label="الاشتراكات المنتهية" value={n.format(s.expired)} icon={CalendarX2} tone="danger" href="/subscribers?status=expired" />
           <StatCard label="تنتهي خلال 3 أيام" value={n.format(s.expiring)} icon={AlarmClock} tone="warning" href="/subscribers?status=expiring" />
