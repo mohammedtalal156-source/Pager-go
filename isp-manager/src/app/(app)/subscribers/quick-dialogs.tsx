@@ -11,10 +11,8 @@ import { Alert } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addDays, todayBaghdad, whatsappReminder } from "@/lib/arabic";
 import { cn, formatDate, formatIQD } from "@/lib/utils";
-import { subscriberLinkUrl } from "@/lib/subscriber-link";
-import { isMobileDevice } from "@/lib/whatsapp";
 import type { Package, SubscriberPerms, SubscriberRow } from "@/lib/types";
-import { collectAction, renewAction, subscriberLinkAction } from "./actions";
+import { collectAction, renewAction } from "./actions";
 import { EditSubscriberButton, type Lists } from "./subscriber-form";
 
 const digits = (v: string) =>
@@ -332,42 +330,15 @@ export function SubscriberQuickActions({
 }) {
   const [renewOpen, setRenewOpen] = useState(false);
   const [collectOpen, setCollectOpen] = useState(false);
-  const reminder = (link: string | null) =>
-    whatsappReminder({
-      name: sub.full_name,
-      phone: sub.phone,
-      endDate: sub.end_date,
-      expired: sub.status === "expired",
-      balance: sub.balance,
-      price: sub.price,
-      formattedDate: formatDate(sub.end_date),
-      link,
-    });
-  const wa = reminder(null);
-  const [sending, setSending] = useState(false);
-  // Fetches the subscriber's private link, then opens WhatsApp with the full message.
-  // Falls back to the message without the link if it cannot be fetched.
-  async function sendReminder(e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (sending) return;
-    const mobile = isMobileDevice(navigator.userAgent, navigator.maxTouchPoints);
-    const win = mobile ? null : window.open("", "_blank");
-    setSending(true);
-    let url = wa;
-    try {
-      const res = await subscriberLinkAction(sub.id);
-      if (res.ok && res.data) url = reminder(subscriberLinkUrl(window.location.origin, res.data.token));
-      else toast.error("تعذّر تجهيز رابط المشترك، ستُرسل الرسالة بدونه");
-    } catch {
-      toast.error("تعذّر تجهيز رابط المشترك، ستُرسل الرسالة بدونه");
-    } finally {
-      setSending(false);
-    }
-    if (!url) return win?.close();
-    if (win) win.location.href = url;
-    else window.location.href = url;
-  }
+  const wa = whatsappReminder({
+    name: sub.full_name,
+    phone: sub.phone,
+    endDate: sub.end_date,
+    expired: sub.status === "expired",
+    balance: sub.balance,
+    price: sub.price,
+    formattedDate: formatDate(sub.end_date),
+  });
   const size = compact ? "sm" : "default";
 
   return (
@@ -390,8 +361,8 @@ export function SubscriberQuickActions({
       </Button>
       {wa ? (
         <Button size={compact ? "icon-sm" : "icon"} variant="outline" asChild className="text-success">
-          <a href={wa} onClick={sendReminder} target="_blank" rel="noopener noreferrer" aria-label="رسالة تذكير واتساب" title="رسالة تذكير واتساب">
-            {sending ? <Loader2 className="animate-spin" /> : <MessageCircle />}
+          <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="رسالة تذكير واتساب" title="رسالة تذكير واتساب">
+            <MessageCircle />
           </a>
         </Button>
       ) : (
