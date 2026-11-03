@@ -114,4 +114,3 @@ export async function changeOwnPassword(input: unknown): Promise<ActionResult> {
   if (error) return { ok: false, error: error.message };
   return { ok: true, message: "تم تغيير كلمة المرور" };
 }
-

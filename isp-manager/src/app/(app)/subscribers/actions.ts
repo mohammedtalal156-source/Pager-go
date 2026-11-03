@@ -246,4 +246,3 @@ export async function deleteSubscriberAction(id: string, confirm: string): Promi
   revalidatePath("/towers");
   return { ok: true, data: data as { code: number; full_name: string }, message: "تم حذف المشترك" };
 }
-
