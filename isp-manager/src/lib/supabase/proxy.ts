@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { getPublicEnv } from "@/lib/env";
 
-const PUBLIC_PATHS = ["/login", "/setup"];
+const PUBLIC_PATHS = ["/login", "/setup", "/s/"];
 
 /** Refreshes the auth session cookie and redirects anonymous users to /login. */
 export async function updateSession(request: NextRequest) {

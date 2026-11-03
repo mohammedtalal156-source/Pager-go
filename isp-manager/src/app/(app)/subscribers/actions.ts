@@ -246,3 +246,13 @@ export async function deleteSubscriberAction(id: string, confirm: string): Promi
   revalidatePath("/towers");
   return { ok: true, data: data as { code: number; full_name: string }, message: "تم حذف المشترك" };
 }
+
+/** The subscriber's private link token (created on first use). */
+export async function subscriberLinkAction(id: string, reset = false): Promise<ActionResult<{ token: string }>> {
+  await requireStaff();
+  if (!z.uuid().safeParse(id).success) return { ok: false, error: "طلب غير صالح" };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc(reset ? "reset_subscriber_link" : "subscriber_link", { p_subscriber_id: id });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, data: { token: data as string }, message: reset ? "تم تغيير الرابط، والرابط القديم لم يعد يعمل" : undefined };
+}

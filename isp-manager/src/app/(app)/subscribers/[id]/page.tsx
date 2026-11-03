@@ -13,6 +13,7 @@ import { WhatsAppPhone } from "@/components/app/whatsapp-phone";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubscriberQuickActions } from "../quick-dialogs";
+import { SubscriberLinkButton } from "./link-button";
 import { EditSubscriberButton } from "../subscriber-form";
 import { AdjustDebtButton, ArchiveSubscriberButton, CorrectPaymentButton, DatesButton, DeleteSubscriberButton, HistoryButton, VoidButton } from "./controls";
 
@@ -133,8 +134,8 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
         <SubscriberQuickActions sub={sub} packages={lists.packages} perms={perms} />
       </div>
 
-      {(canEdit || isAdmin) && (
         <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl border bg-card p-2 sm:flex sm:flex-wrap">
+          <SubscriberLinkButton id={sub.id} name={sub.full_name} phone={sub.phone} endDate={sub.end_date} className="h-11" />
           {canEdit && <EditSubscriberButton sub={sub} lists={lists} className="h-11" />}
           {isAdmin && <AdjustDebtButton subscriberId={sub.id} balance={sub.balance} className="h-11" />}
           {isAdmin && <DatesButton id={sub.id} start={sub.start_date} end={sub.end_date} className="h-11" />}
@@ -142,7 +143,6 @@ export default async function SubscriberPage({ params }: { params: Promise<{ id:
           {(perms.edit || isAdmin) && <ArchiveSubscriberButton id={sub.id} archived={sub.is_archived} className="h-11" />}
           {isAdmin && <DeleteSubscriberButton id={sub.id} name={sub.full_name} paidTotal={paidTotal} className="h-11" />}
         </div>
-      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-1">
