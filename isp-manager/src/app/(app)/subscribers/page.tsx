@@ -54,6 +54,9 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
     case "tomorrow":
       query = query.eq("days_left", 1);
       break;
+    case "in3":
+      query = query.eq("days_left", 3);
+      break;
   }
   query =
     sp.status === "expiring" || sp.status === "expired"
