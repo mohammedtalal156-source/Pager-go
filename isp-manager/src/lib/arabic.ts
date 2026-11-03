@@ -24,6 +24,29 @@ export function searchTerm(q: string) {
   return t;
 }
 
+/**
+ * Phones are stored as 07…, 9647… or +9647…. Searching by the part after the
+ * country code / leading zero finds the number in every format.
+ */
+export function phoneCore(digits: string) {
+  let d = digits.replace(/^\+/, "");
+  if (d.startsWith("00964")) d = d.slice(5);
+  else if (d.startsWith("964")) d = d.slice(3);
+  else if (d.startsWith("0")) d = d.slice(1);
+  return d.length >= 3 ? d : digits.replace(/^\+/, "");
+}
+
+/**
+ * Words to match (each must appear, in any order). «علي عامود» finds
+ * «ابا الحسن علي عامود 47»; «07807444064» finds «9647807444064».
+ */
+export function searchWords(q: string): string[] {
+  const t = searchTerm(q);
+  if (!t) return [];
+  if (/^\+?\d+$/.test(t)) return [phoneCore(t)];
+  return [...new Set(t.split(" ").filter(Boolean).map((w) => (/^\+?\d{4,}$/.test(w) ? phoneCore(w) : w)))];
+}
+
 
 /** Business "today" in Asia/Baghdad as YYYY-MM-DD. */
 export function todayBaghdad() {

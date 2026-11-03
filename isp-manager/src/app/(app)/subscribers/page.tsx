@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { searchTerm } from "@/lib/arabic";
+import { searchWords } from "@/lib/arabic";
 import { formatDate, formatIQD } from "@/lib/utils";
 import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow, type Tower } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
@@ -33,8 +33,9 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
     .from("subscriber_overview")
     .select(COLUMNS, { count: "exact" })
     .eq("is_archived", sp.archived === "1");
-  const term = sp.q ? searchTerm(sp.q) : "";
-  if (term) query = query.ilike("search_text", `%${term}%`);
+  const words = sp.q ? searchWords(sp.q) : [];
+  for (const w of words) query = query.ilike("search_text", `%${w}%`);
+  const term = words.join(" ");
   if (sp.tower) query = query.eq("tower_id", sp.tower);
   switch (sp.status) {
     case "active":
