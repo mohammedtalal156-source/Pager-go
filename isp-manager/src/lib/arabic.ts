@@ -59,27 +59,37 @@ export function addDays(isoDate: string, days: number) {
   return d.toISOString().slice(0, 10);
 }
 
-const n = new Intl.NumberFormat("en-US");
+/** Office name and e-payment numbers printed at the end of every reminder. */
+export const REMINDER_FOOTER = [
+  "مكتب الرؤيا",
+  "",
+  "يتوفر الدفع الالكتروني عن طريق",
+  " الماستر : 7119171481 ",
+  "او الزين كاش : 07704593597",
+  "",
+  "مع الشكر والتقدير",
+].join("\n");
 
+/** WhatsApp reminder in the office template (end date, activation date, payment numbers). */
 export function whatsappReminder(opts: {
   name: string;
   phone: string;
   endDate: string | null;
   expired: boolean;
-  balance: number;
   formattedDate: string;
-  /** Subscription price (shown when above zero). */
-  price?: number;
+  /** Activation (start) date, already formatted. */
+  formattedStart?: string | null;
 }) {
-  let msg = `مرحباً ${opts.name}،\n`;
+  const lines = [`مرحباً ${opts.name}`];
   if (opts.endDate) {
-    msg += opts.expired
-      ? `نود إعلامكم بأن اشتراك الإنترنت الخاص بكم انتهى بتاريخ ${opts.formattedDate}. يرجى التجديد لاستمرار الخدمة.`
-      : `نود تذكيركم بأن اشتراك الإنترنت الخاص بكم ينتهي بتاريخ ${opts.formattedDate}.`;
+    lines.push(
+      opts.expired
+        ? `نود إعلامكم بأن اشتراك الإنترنت الخاص بكم انتهى بتاريخ ${opts.formattedDate}.`
+        : `نود تذكيركم بأن اشتراك الإنترنت الخاص بكم ينتهي بتاريخ ${opts.formattedDate}.`,
+    );
   }
-  if (opts.price && opts.price > 0) msg += `\nسعر الاشتراك: ${n.format(opts.price)} دينار.`;
-  msg += opts.balance > 0 ? `\nالمبلغ المتبقي بذمتكم: ${n.format(opts.balance)} دينار.` : "\nلا يوجد مبلغ متبقٍ بذمتكم.";
-  msg += "\nشكراً لكم.";
+  if (opts.formattedStart) lines.push(`علماً ان تاريخ التفعيل هو ${opts.formattedStart}`);
+  const msg = `${lines.join("\n")}\n${REMINDER_FOOTER}`;
   const number = toWhatsAppNumber(opts.phone);
   return number ? `https://wa.me/${number}?text=${encodeURIComponent(msg)}` : null;
 }

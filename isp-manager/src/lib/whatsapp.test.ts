@@ -78,19 +78,40 @@ test("device detection: phones use the app, computers use WhatsApp Web", () => {
 });
 
 test("reminder button: uses the normalised number and refuses invalid ones", () => {
-  const base = { name: "علي", endDate: "2026-12-01", expired: false, balance: 0, formattedDate: "2026/12/01" };
+  const base = { name: "علي", endDate: "2026-12-01", expired: false, formattedDate: "2026/12/01" };
   assert.ok(whatsappReminder({ ...base, phone: "07701234567" })!.startsWith("https://wa.me/9647701234567?text="));
   assert.equal(whatsappReminder({ ...base, phone: "12345" }), null);
 });
 
-test("reminder message: date, price and debt", () => {
-  const base = { name: "علي", phone: "07701234567", endDate: "2026-12-01", expired: false, balance: 15000, formattedDate: "2026/12/01" };
+test("reminder message: office template", () => {
   const text = (u: string) => decodeURIComponent(u.split("text=")[1]);
-  const full = text(whatsappReminder({ ...base, price: 25000 })!);
-  assert.match(full, /ينتهي بتاريخ 2026\/12\/01/);
-  assert.match(full, /سعر الاشتراك: 25,000 دينار/);
-  assert.match(full, /المبلغ المتبقي بذمتكم: 15,000 دينار/);
-  const noDebt = text(whatsappReminder({ ...base, balance: 0 })!);
-  assert.match(noDebt, /لا يوجد مبلغ متبقٍ/);
-  assert.doesNotMatch(full, /https:\/\/[^w]/, "no subscriber link in the message");
+  const msg = text(
+    whatsappReminder({
+      name: "امنه عصام عامود 47",
+      phone: "07701234567",
+      endDate: "2026-11-16",
+      expired: false,
+      formattedDate: "16/11/2026",
+      formattedStart: "2026/11/15",
+    })!,
+  );
+  assert.equal(
+    msg,
+    [
+      "مرحباً امنه عصام عامود 47",
+      "نود تذكيركم بأن اشتراك الإنترنت الخاص بكم ينتهي بتاريخ 16/11/2026.",
+      "علماً ان تاريخ التفعيل هو 2026/11/15",
+      "مكتب الرؤيا",
+      "",
+      "يتوفر الدفع الالكتروني عن طريق",
+      " الماستر : 7119171481 ",
+      "او الزين كاش : 07704593597",
+      "",
+      "مع الشكر والتقدير",
+    ].join("\n"),
+  );
+  const expired = text(whatsappReminder({ name: "علي", phone: "07701234567", endDate: "2026-01-01", expired: true, formattedDate: "01/01/2026" })!);
+  assert.match(expired, /انتهى بتاريخ 01\/01\/2026/);
+  assert.doesNotMatch(expired, /تاريخ التفعيل/, "no activation line without a start date");
+  assert.match(expired, /الزين كاش : 07704593597/);
 });

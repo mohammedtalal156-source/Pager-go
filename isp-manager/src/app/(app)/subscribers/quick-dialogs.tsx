@@ -335,9 +335,8 @@ export function SubscriberQuickActions({
     phone: sub.phone,
     endDate: sub.end_date,
     expired: sub.status === "expired",
-    balance: sub.balance,
-    price: sub.price,
     formattedDate: formatDate(sub.end_date),
+    formattedStart: sub.start_date ? formatDate(sub.start_date) : null,
   });
   const size = compact ? "sm" : "default";
 
