@@ -535,8 +535,9 @@ export function DeleteSubscriberButton({
           <DialogHeader>
             <DialogTitle>حذف {name}؟</DialogTitle>
             <DialogDescription>
-              يُحذف المشترك نهائياً مع كل اشتراكاته وتجديداته ومدفوعاته{paidTotal > 0 ? ` (${formatIQD(paidTotal)})` : ""}، وتنقص هذه المبالغ من
-              المقبوضات والتقارير. لا يمكن التراجع. إذا تريد إخفاءه فقط مع بقاء حساباته استخدم «أرشفة».
+              يختفي المشترك من القوائم ولوحة التحكم والتقارير، وتُلغى كل اشتراكاته ومدفوعاته{paidTotal > 0 ? ` (${formatIQD(paidTotal)})` : ""}
+              وتنقص من المقبوضات، ويصير دينه صفراً. تبقى نسخة محفوظة في قاعدة البيانات لاسترجاعها عند الخطأ. إذا تريد إخفاءه فقط مع بقاء
+              حساباته استخدم «أرشفة».
             </DialogDescription>
           </DialogHeader>
           {error && <Alert variant="destructive">{error}</Alert>}

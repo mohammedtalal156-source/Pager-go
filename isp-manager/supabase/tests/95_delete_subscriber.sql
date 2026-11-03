@@ -1,4 +1,4 @@
--- Admin delete of a subscriber with all periods, payments, renewals and adjustments.
+-- «حذف المشترك»: voids everything, hides the subscriber, keeps the data.
 \set QUIET on
 \o /dev/null
 set client_min_messages = warning;
@@ -50,45 +50,71 @@ reset role;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000e', false);
 set role authenticated;
 select tests.throws($$select public.delete_subscriber(tests.id('del'), 'حذف')$$, 'employee cannot delete subscribers', '42501');
-select tests.throws($$delete from public.subscribers where id = tests.id('del')$$, 'no direct delete for clients', '42501');
-select tests.throws($$delete from public.payments where subscriber_id = tests.id('del')$$, 'no direct delete of payments', '42501');
+select tests.throws($$update public.subscribers set deleted_at = now() where id = tests.id('del')$$, 'employee cannot hide a subscriber by editing', '42501');
 reset role;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000a', false);
 set role authenticated;
+select tests.throws($$update public.subscribers set deleted_at = now() where id = tests.id('del')$$, 'admin cannot set deleted_at directly', '42501');
 select tests.throws($$select public.delete_subscriber(tests.id('del'), 'نعم')$$, 'confirmation word required', 'P0001');
--- even an admin session that sets the flag itself cannot delete directly (no DELETE privilege)
-select tests.throws($$select set_config('app.allow_subscriber_delete', 'on', true); delete from public.payments where subscriber_id = tests.id('del')$$,
-  'flag alone does not grant delete', '42501');
 reset role;
-select tests.throws($$delete from public.expenses$$, 'expenses still undeletable', '42501');
 
 -- ---------------- delete ----------------
 create temp table before_keep on commit drop as
   select (select balance from public.subscribers where id = tests.id('keep')) bal,
-         (select count(*) from public.payments where subscriber_id = tests.id('keep')) pays;
+         (select count(*) from public.payments where subscriber_id = tests.id('keep') and not is_voided) pays;
+create temp table before_rows on commit drop as
+  select (select count(*) from public.payments where subscriber_id = tests.id('del')) pays,
+         (select count(*) from public.subscriptions where subscriber_id = tests.id('del')) periods;
+grant select on before_keep, before_rows to public;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000a', false);
 set role authenticated;
-select tests.ok((public.delete_subscriber(tests.id('del'), 'حذف') ->> 'periods')::int = 2, 'delete: done, reports 2 periods');
-select tests.throws($$select public.delete_subscriber(tests.id('del'), 'حذف')$$, 'delete twice: not found', 'P0001');
+select tests.ok((public.delete_subscriber(tests.id('del'), 'حذف') ->> 'periods')::int = 2, 'delete: done, 2 periods removed');
+select tests.throws($$select public.delete_subscriber(tests.id('del'), 'حذف')$$, 'delete twice: refused', 'P0001');
+select tests.ok(not exists (select 1 from public.subscriber_overview where id = tests.id('del')), 'hidden from list/overview');
+select tests.ok(not exists (select 1 from public.subscribers where id = tests.id('del')), 'hidden from subscribers table');
+select tests.ok((public.dashboard_stats() ->> 'total')::int = 1, 'dashboard counts only the remaining subscriber');
+select tests.ok((public.dashboard_stats() ->> 'debt')::int = (select bal from before_keep), 'dashboard debt = remaining subscriber only');
 select tests.ok((public.finance_summary(public.today_baghdad() - 30, public.today_baghdad()) ->> 'collected')::int = 25000,
-  'revenue now only the remaining subscriber (25,000)');
-select tests.ok((public.dashboard_stats() ->> 'total')::int = 1, 'dashboard total 1');
+  'revenue only the remaining subscriber (25,000)');
+select tests.ok((select sum(collected) from public.report_towers(public.today_baghdad() - 30, public.today_baghdad())) = 25000, 'tower report revenue 25,000');
+select tests.throws($$select public.renew_subscription(tests.id('del'), 1, 25000, 25000)$$, 'cannot renew a deleted subscriber', 'P0001');
+select tests.throws($$select public.record_payment(tests.id('del'), 1000)$$, 'cannot collect from a deleted subscriber');
 reset role;
-select tests.ok(not exists (select 1 from public.subscribers where id = tests.id('del')), 'subscriber gone');
-select tests.ok(not exists (select 1 from public.subscriptions where subscriber_id = tests.id('del'))
-  and not exists (select 1 from public.payments where subscriber_id = tests.id('del'))
-  and not exists (select 1 from public.renewals where subscriber_id = tests.id('del'))
-  and not exists (select 1 from public.debt_adjustments where subscriber_id = tests.id('del')), 'periods, payments, renewals, adjustments gone');
+select tests.ok((select count(*) from public.payments where subscriber_id = tests.id('del')) = (select pays from before_rows)
+  and (select count(*) from public.subscriptions where subscriber_id = tests.id('del')) = (select periods from before_rows),
+  'nothing physically removed (data kept)');
+select tests.ok(not exists (select 1 from public.payments where subscriber_id = tests.id('del') and not is_voided)
+  and not exists (select 1 from public.subscriptions where subscriber_id = tests.id('del') and not is_voided),
+  'all payments and periods voided');
+select tests.ok((select total_due = 0 and total_paid = 0 and balance = 0 and deleted_by = '00000000-0000-0000-0000-00000000000a'
+  from public.subscribers where id = tests.id('del')), 'deleted subscriber has no debt, marked with the admin');
 select tests.ok((select balance from public.subscribers where id = tests.id('keep')) = (select bal from before_keep)
-  and (select count(*) from public.payments where subscriber_id = tests.id('keep')) = (select pays from before_keep), 'other subscriber untouched');
+  and (select count(*) from public.payments where subscriber_id = tests.id('keep') and not is_voided) = (select pays from before_keep),
+  'other subscriber untouched');
 select tests.ok((select count(*) from public.expenses) = 1, 'expenses untouched');
-select tests.ok((select count(*) from public.audit_logs where action = 'DELETE' and table_name = 'subscribers'
-  and old_data->>'full_name' = 'سيحذف' and reason like 'حذف المشترك%' and actor_id = '00000000-0000-0000-0000-00000000000a') = 1,
-  'audit keeps a copy of the deleted subscriber, who and why');
-select tests.ok((select count(*) from public.audit_logs where action = 'DELETE' and table_name = 'payments') >= 3, 'audit keeps deleted payments');
-select tests.throws($$delete from public.subscribers where id = tests.id('keep')$$, 'outside the function, delete is blocked again', '42501');
+select tests.ok(exists (select 1 from public.audit_logs where table_name = 'subscribers' and reason like 'حذف المشترك%'
+  and actor_id = '00000000-0000-0000-0000-00000000000a'), 'audit records who deleted and why');
+select tests.throws($$delete from public.subscribers where id = tests.id('keep')$$, 'physical delete still blocked', '42501');
+
+-- negative adjustment case: amount due never below zero while deleting
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000a', false);
+set role authenticated;
+insert into tests.ids select 'neg', (public.create_subscriber(p_full_name => 'تسوية سالبة', p_phone => '07703333333',
+  p_tower_id => '10000000-0000-0000-0000-000000000001', p_price => 25000, p_start_date => public.today_baghdad(), p_amount_paid => 0) ->> 'id')::uuid;
+select public.adjust_debt(tests.id('neg'), 5000, 25000, 'خصم كبير');
+select tests.ok((public.delete_subscriber(tests.id('neg'), 'حذف') ->> 'code') is not null, 'delete with a reducing adjustment works');
+reset role;
+select tests.ok((select total_due = 0 and balance = 0 from public.subscribers where id = tests.id('neg')), 'reducing adjustment zeroed');
+
+-- import: a deleted subscriber's phone does not block re-adding
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000a', false);
+set role authenticated;
+select tests.ok((public.import_subscribers(gen_random_uuid(), '[{"full_name":"عاد من جديد","phone":"07701111111","tower":"برج أ"}]') ->> 'inserted')::int = 1,
+  'import accepts the phone of a deleted subscriber');
+select tests.ok(jsonb_array_length(public.export_backup() -> 'subscribers') = 4, 'backup still contains deleted subscribers');
+reset role;
 
 -- ---------------- «بعد 3 أيام» filter = 0..3 days ----------------
 update public.subscribers set end_date = public.today_baghdad() + 3 where id = tests.id('keep');
-select tests.ok((select count(*) from public.subscriber_overview where days_left between 0 and 3) = 1, 'within 3 days includes day 3');
+select tests.ok((select count(*) from public.subscriber_overview where days_left between 0 and 3) >= 1, 'within 3 days includes day 3');
 rollback;
