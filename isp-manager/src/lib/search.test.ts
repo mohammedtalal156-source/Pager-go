@@ -85,3 +85,19 @@ test("cabinets: subscribers grouped by pole (field first, else name)", async () 
   assert.deepEqual(poles[2], { pole: "47", count: 2, active: 1, expired: 1, debt: 25000, towers: ["برج أ"] });
   assert.equal(withoutPole, 1);
 });
+
+test("cabinets: listed poles 1..50 show even when empty; used poles always shown", async () => {
+  const { mergePoles } = await import("./pole");
+  const listed = Array.from({ length: 50 }, (_, i) => String(i + 1)).filter((p) => p !== "3");
+  const used = [
+    { pole: "7", count: 2, active: 2, expired: 0, debt: 0, towers: ["برج أ"] },
+    { pole: "75", count: 1, active: 0, expired: 1, debt: 5000, towers: ["برج ب"] },
+  ];
+  const cards = mergePoles(listed, used);
+  assert.equal(cards.length, 50, "49 listed + pole 75 in use");
+  assert.deepEqual(cards.slice(0, 3).map((c) => c.pole), ["1", "2", "4"]);
+  assert.equal(cards.at(-1)!.pole, "75");
+  assert.equal(cards.find((c) => c.pole === "7")!.removable, false, "pole with subscribers cannot be removed");
+  assert.equal(cards.find((c) => c.pole === "8")!.removable, true, "empty pole can be removed");
+  assert.equal(cards.find((c) => c.pole === "75")!.removable, false);
+});

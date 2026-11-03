@@ -56,3 +56,19 @@ export function groupByPole(
   const poles = [...map.values()].sort((a, b) => a.pole.localeCompare(b.pole, "en", { numeric: true }));
   return { poles, withoutPole };
 }
+
+/**
+ * Cards for «الكابينات»: every listed pole (even with no subscribers) plus any
+ * pole a subscriber uses that is not in the list. `removable` = listed and empty.
+ */
+export function mergePoles(listed: string[], used: PoleSummary[]): (PoleSummary & { removable: boolean })[] {
+  const byName = new Map(used.map((p) => [p.pole, p]));
+  const names = new Set([...listed, ...byName.keys()]);
+  const inList = new Set(listed);
+  return [...names]
+    .map((pole) => {
+      const s = byName.get(pole) ?? { pole, count: 0, active: 0, expired: 0, debt: 0, towers: [] };
+      return { ...s, removable: inList.has(pole) && s.count === 0 };
+    })
+    .sort((a, b) => a.pole.localeCompare(b.pole, "en", { numeric: true }));
+}
