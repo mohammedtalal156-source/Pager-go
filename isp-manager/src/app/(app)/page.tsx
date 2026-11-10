@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   AlarmClock,
+  ArrowRightLeft,
   Banknote,
   BellRing,
   CalendarClock,
@@ -13,6 +14,7 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
+import { z } from "zod";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatDateTime, formatIQD } from "@/lib/utils";
@@ -56,17 +58,42 @@ type ExpiringRow = {
 
 const n = new Intl.NumberFormat("en-US");
 
-export default async function DashboardPage() {
+type TowerItem = { id: string; name: string; area: string | null };
+type TowerNumbers = { tower_id: string; subscribers: number; active: number; expiring: number; expired: number; debt: number; collected_month: number };
+
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ tower?: string }> }) {
   const staff = await requireStaff();
   const supabase = await createClient();
+  const sp = await searchParams;
+
+  const { data: towerList, error: towersError } = await supabase
+    .from("towers")
+    .select("id, name, area")
+    .eq("is_archived", false)
+    .order("name")
+    .returns<TowerItem[]>();
+  const towers = towerList ?? [];
+  const picked = sp.tower && z.uuid().safeParse(sp.tower).success ? towers.find((t) => t.id === sp.tower) : undefined;
+  // One tower only: open it directly.
+  const tower = picked ?? (towers.length === 1 ? towers[0] : undefined);
+
+  if (!tower) return <TowerPicker staff={staff} towers={towers} error={towersError?.message} />;
 
   const countDays = (d: number) =>
-    supabase.from("subscriber_overview").select("id", { count: "exact", head: true }).eq("is_archived", false).eq("days_left", d);
+    supabase
+      .from("subscriber_overview")
+      .select("id", { count: "exact", head: true })
+      .eq("is_archived", false)
+      .eq("tower_id", tower.id)
+      .eq("days_left", d);
   const [statsRes, renewalsRes, paymentsRes, expiringRes, todayRes, tomorrowRes] = await Promise.all([
-    supabase.rpc("dashboard_stats"),
+    supabase.rpc("dashboard_stats", { p_tower_id: tower.id }),
     supabase
       .from("renewals")
-      .select("id, created_at, new_end_date, price, amount_received, subscriptions(payments(amount, is_voided)), subscribers(full_name, code), profiles(full_name)")
+      .select(
+        "id, created_at, new_end_date, price, amount_received, subscriptions!inner(tower_id, payments(amount, is_voided)), subscribers(full_name, code), profiles(full_name)",
+      )
+      .eq("subscriptions.tower_id", tower.id)
       .order("created_at", { ascending: false })
       .limit(10)
       .returns<RenewalRow[]>(),
@@ -74,6 +101,7 @@ export default async function DashboardPage() {
       .from("payments")
       .select("id, paid_at, amount, receipt_no, subscribers(full_name, code), profiles!payments_received_by_fkey(full_name)")
       .eq("is_voided", false)
+      .eq("tower_id", tower.id)
       .order("paid_at", { ascending: false })
       .limit(10)
       .returns<PaymentRow[]>(),
@@ -81,6 +109,7 @@ export default async function DashboardPage() {
       .from("subscriber_overview")
       .select("id, code, full_name, phone, tower_name, end_date, days_left, status")
       .eq("is_archived", false)
+      .eq("tower_id", tower.id)
       .eq("status", "expiring")
       .order("end_date", { ascending: true })
       .limit(10)
@@ -88,6 +117,7 @@ export default async function DashboardPage() {
     countDays(0),
     countDays(1),
   ]);
+  const t = `&tower=${tower.id}`;
 
   const s = (statsRes.data ?? null) as DashboardStats | null;
   const loadError = statsRes.error?.message ?? renewalsRes.error?.message ?? paymentsRes.error?.message ?? expiringRes.error?.message;
@@ -101,19 +131,31 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader title={`أهلاً، ${staff.full_name}`} description={today} />
+      <PageHeader
+        title={tower.name}
+        description={`${today}${tower.area ? ` · ${tower.area}` : ""}`}
+        actions={
+          towers.length > 1 ? (
+            <Button asChild variant="outline" className="h-11">
+              <Link href="/">
+                <ArrowRightLeft /> تغيير البرج
+              </Link>
+            </Button>
+          ) : undefined
+        }
+      />
       {loadError && <Alert variant="destructive" className="mb-4">تعذر تحميل بعض البيانات: {loadError}</Alert>}
 
       {s && (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <StatCard label="إجمالي المشتركين" value={n.format(s.total)} icon={Users} href="/subscribers" sub={s.no_subscription ? `${n.format(s.no_subscription)} غير فعّال` : undefined} />
-          <StatCard label="المشتركين الفعالين" value={n.format(s.active)} icon={CircleCheck} tone="success" href="/subscribers?status=active" />
-          <StatCard label="الاشتراكات المنتهية" value={n.format(s.expired)} icon={CalendarX2} tone="danger" href="/subscribers?status=expired" />
-          <StatCard label="تنتهي خلال 3 أيام" value={n.format(s.expiring)} icon={AlarmClock} tone="warning" href="/subscribers?status=expiring" />
-          <StatCard label="عدد الأبراج" value={n.format(s.towers)} icon={RadioTower} href={staff.role !== "collector" ? "/towers" : undefined} />
+          <StatCard label="إجمالي المشتركين" value={n.format(s.total)} icon={Users} href={`/subscribers?tower=${tower.id}`} sub={s.no_subscription ? `${n.format(s.no_subscription)} غير فعّال` : undefined} />
+          <StatCard label="المشتركين الفعالين" value={n.format(s.active)} icon={CircleCheck} tone="success" href={`/subscribers?status=active${t}`} />
+          <StatCard label="الاشتراكات المنتهية" value={n.format(s.expired)} icon={CalendarX2} tone="danger" href={`/subscribers?status=expired${t}`} />
+          <StatCard label="تنتهي خلال 3 أيام" value={n.format(s.expiring)} icon={AlarmClock} tone="warning" href={`/subscribers?status=expiring${t}`} />
+          <StatCard label="البرج" value={tower.name} icon={RadioTower} href={staff.role !== "collector" ? `/towers/${tower.id}` : undefined} />
           <StatCard label="المقبوضات اليوم" value={formatIQD(s.collected_today)} icon={Banknote} tone="success" />
           <StatCard label="المقبوضات هذا الشهر" value={formatIQD(s.collected_month)} icon={TrendingUp} tone="success" />
-          <StatCard label="إجمالي الديون المستحقة" value={formatIQD(s.debt)} icon={HandCoins} tone="danger" sub={`${n.format(s.debtors)} مشترك مدين`} href="/subscribers?status=debt" />
+          <StatCard label="إجمالي الديون المستحقة" value={formatIQD(s.debt)} icon={HandCoins} tone="danger" sub={`${n.format(s.debtors)} مشترك مدين`} href={`/subscribers?status=debt${t}`} />
         </div>
       )}
 
@@ -126,11 +168,11 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
             {[
-              { label: "تنتهي اليوم", n: todayRes.count ?? 0, href: "/subscribers?status=today", cls: "border-danger/40 text-danger" },
-              { label: "تنتهي غداً", n: tomorrowRes.count ?? 0, href: "/subscribers?status=tomorrow", cls: "border-warning/50 text-warning" },
-              { label: "خلال 3 أيام", n: s.expiring, href: "/subscribers?status=expiring", cls: "border-warning/50 text-warning" },
-              { label: "منتهية", n: s.expired, href: "/subscribers?status=expired", cls: "border-danger/40 text-danger" },
-              { label: "عليهم ديون", n: s.debtors, href: "/subscribers?status=debt", cls: "border-danger/40 text-danger" },
+              { label: "تنتهي اليوم", n: todayRes.count ?? 0, href: `/subscribers?status=today${t}`, cls: "border-danger/40 text-danger" },
+              { label: "تنتهي غداً", n: tomorrowRes.count ?? 0, href: `/subscribers?status=tomorrow${t}`, cls: "border-warning/50 text-warning" },
+              { label: "خلال 3 أيام", n: s.expiring, href: `/subscribers?status=expiring${t}`, cls: "border-warning/50 text-warning" },
+              { label: "منتهية", n: s.expired, href: `/subscribers?status=expired${t}`, cls: "border-danger/40 text-danger" },
+              { label: "عليهم ديون", n: s.debtors, href: `/subscribers?status=debt${t}`, cls: "border-danger/40 text-danger" },
             ].map((a) => (
               <Link
                 key={a.label}
@@ -249,20 +291,66 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {staff.role === "admin" && s && s.towers === 0 && (
-        <Alert className="mt-6">
-          <RadioTower />
-          <div>
-            ابدأ بإضافة الأبراج والباقات:{" "}
-            <Link href="/towers" className="font-medium text-primary underline">
-              الأبراج
-            </Link>{" "}
-            ·{" "}
-            <Link href="/packages" className="font-medium text-primary underline">
-              الباقات
-            </Link>
-          </div>
-        </Alert>
+    </>
+  );
+}
+
+/** First screen of the home page: choose which tower's numbers to see. */
+async function TowerPicker({ staff, towers, error }: { staff: { full_name: string; role: string }; towers: TowerItem[]; error?: string }) {
+  const supabase = await createClient();
+  const { data } = towers.length ? await supabase.rpc("tower_stats") : { data: [] };
+  const byId = new Map(((data ?? []) as TowerNumbers[]).map((r) => [r.tower_id, r]));
+  return (
+    <>
+      <PageHeader title={`أهلاً، ${staff.full_name}`} description="اختر البرج لعرض إحصائياته" />
+      {error && <Alert variant="destructive" className="mb-4">تعذر تحميل الأبراج: {error}</Alert>}
+      {towers.length === 0 ? (
+        <>
+          <EmptyState icon={RadioTower} title="لا توجد أبراج بعد" />
+          {staff.role === "admin" && (
+            <Alert className="mt-4">
+              <RadioTower />
+              <div>
+                ابدأ بإضافة الأبراج والباقات:{" "}
+                <Link href="/towers" className="font-medium text-primary underline">
+                  الأبراج
+                </Link>{" "}
+                ·{" "}
+                <Link href="/packages" className="font-medium text-primary underline">
+                  الباقات
+                </Link>
+              </div>
+            </Alert>
+          )}
+        </>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {towers.map((tw) => {
+            const r = byId.get(tw.id);
+            return (
+              <Link
+                key={tw.id}
+                href={`/?tower=${tw.id}`}
+                className="flex items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:border-primary/40 hover:bg-accent/40"
+              >
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <RadioTower className="size-6" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-lg font-bold">{tw.name}</p>
+                  {tw.area && <p className="truncate text-xs text-muted-foreground">{tw.area}</p>}
+                  {r && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      <b className="tabular-nums text-foreground">{n.format(r.subscribers)}</b> مشترك ·{" "}
+                      <span className="text-success">{n.format(r.active)} فعال</span>
+                      {r.debt > 0 && <span className="text-danger"> · دين {formatIQD(r.debt)}</span>}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       )}
     </>
   );
