@@ -197,14 +197,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         )}
         {can(staff, "renew") && (
           <Button asChild size="lg" variant="outline" className="h-16 flex-col gap-1 text-xs sm:flex-row sm:text-sm">
-            <Link href="/subscribers">
+            <Link href={`/subscribers?tower=${tower.id}`}>
               <RefreshCw /> تجديد اشتراك
             </Link>
           </Button>
         )}
         {can(staff, "collect") && (
           <Button asChild size="lg" variant="outline" className="h-16 flex-col gap-1 text-xs sm:flex-row sm:text-sm">
-            <Link href="/subscribers?status=debt">
+            <Link href={`/subscribers?status=debt${t}`}>
               <Banknote /> تسجيل دفعة
             </Link>
           </Button>
@@ -290,7 +290,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </CardContent>
         </Card>
       </div>
-
     </>
   );
 }
