@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { resolvePeriod } from "@/lib/period";
 import { REPORTS, buildReport, type ReportKey } from "@/lib/reports";
 import { can } from "@/lib/types";
+import { cookies } from "next/headers";
+import { CURRENT_TOWER_COOKIE, towerIdOrNull } from "@/lib/current-tower";
 
 export const runtime = "nodejs";
 
@@ -21,7 +23,8 @@ export async function GET(request: Request) {
 
   let report;
   try {
-    report = await buildReport(supabase, key, { from, to }, sp.tower || null);
+    const tower = towerIdOrNull(sp.tower) ?? towerIdOrNull((await cookies()).get(CURRENT_TOWER_COOKIE)?.value);
+    report = await buildReport(supabase, key, { from, to }, tower);
   } catch (e) {
     return new Response((e as Error).message, { status: 500 });
   }

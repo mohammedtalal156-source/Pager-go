@@ -3,6 +3,7 @@ import { Banknote, HandCoins, Receipt, Scale } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { resolvePeriod } from "@/lib/period";
+import { requireCurrentTower } from "@/lib/current-tower-server";
 import { cn, formatDate, formatIQD } from "@/lib/utils";
 import { EXPENSE_CATEGORIES, type ExpenseCategory } from "@/lib/validation/expense";
 import { PageHeader } from "@/components/app/page-header";
@@ -43,8 +44,9 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
   const staff = await requireSection("finance");
   const sp = await searchParams;
   const { preset, from, to } = resolvePeriod(sp, "month");
-  const tower = sp.tower || null;
   const supabase = await createClient();
+  const { tower: current } = await requireCurrentTower(supabase, sp.tower);
+  const tower = current?.id ?? null;
 
   let expQ = supabase
     .from("expenses")
@@ -55,13 +57,12 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
     .limit(200);
   if (tower) expQ = expQ.eq("tower_id", tower);
 
-  const [sumRes, expRes, towersRes] = await Promise.all([
+  const [sumRes, expRes] = await Promise.all([
     supabase.rpc("finance_summary", { p_from: from, p_to: to, p_tower_id: tower }),
     expQ.returns<ExpenseRow[]>(),
-    supabase.from("towers").select("id, name").eq("is_archived", false).order("name"),
   ]);
   const s = sumRes.data as Summary | null;
-  const towers = towersRes.data ?? [];
+  const towers = current ? [{ id: current.id, name: current.name }] : [];
   const activeDays = (s?.daily ?? []).filter((d) => d.collected || d.expenses).reverse();
   const isAdmin = staff.role === "admin";
 
@@ -70,9 +71,9 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
       <PageHeader
         title="الحسابات"
         description={`${formatDate(from)} — ${formatDate(to)}${tower ? ` · ${towers.find((t) => t.id === tower)?.name ?? ""}` : ""}`}
-        actions={isAdmin && <AddExpenseButton towers={towers} />}
+        actions={isAdmin && <AddExpenseButton towers={towers} defaultTowerId={tower ?? undefined} />}
       />
-      <PeriodFilter preset={preset} from={from} to={to} towers={towers} />
+      <PeriodFilter preset={preset} from={from} to={to} towers={[]} />
       {(sumRes.error || expRes.error) && <Alert variant="destructive" className="mb-4">{sumRes.error?.message ?? expRes.error?.message}</Alert>}
       {tower && <p className="mb-3 text-xs text-muted-foreground">عند اختيار برج، تُحتسب مصروفات هذا البرج فقط (لا تدخل المصروفات العامة).</p>}
 

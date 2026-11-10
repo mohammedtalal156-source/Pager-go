@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { searchWords } from "@/lib/arabic";
 import { extractPole } from "@/lib/pole";
-import { CURRENT_TOWER_COOKIE, resolveTower } from "@/lib/current-tower";
+import { requireCurrentTower } from "@/lib/current-tower-server";
 import { formatDate, formatIQD } from "@/lib/utils";
-import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow, type Tower } from "@/lib/types";
+import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
 import { WhatsAppPhone } from "@/components/app/whatsapp-phone";
 import { StatusBadge } from "@/components/app/status-badge";
@@ -33,16 +31,8 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
   const page = Math.max(1, Number(sp.page) || 1);
   const supabase = await createClient();
 
-  // Only the chosen tower's subscribers (chosen on the home page, or here in the tower list).
-  const towersRes = await supabase
-    .from("towers")
-    .select("id, name, area")
-    .eq("is_archived", false)
-    .order("name")
-    .returns<Pick<Tower, "id" | "name" | "area">[]>();
-  const towerList = towersRes.data ?? [];
-  const tower = resolveTower(towerList, sp.tower, (await cookies()).get(CURRENT_TOWER_COOKIE)?.value);
-  if (!tower && towerList.length > 1) redirect("/");
+  // Only the tower chosen on the home page.
+  const { tower, towers: towerList } = await requireCurrentTower(supabase, sp.tower);
 
   let query = supabase
     .from("subscriber_overview")
@@ -130,7 +120,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
           </>
         }
       />
-      <SubscriberSearch towers={lists.towers} currentTower={tower?.id ?? ""} />
+      <SubscriberSearch />
       {subsRes.error && <Alert variant="destructive" className="mb-4">{subsRes.error.message}</Alert>}
 
       {subs.length === 0 ? (

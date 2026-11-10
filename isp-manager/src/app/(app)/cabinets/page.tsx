@@ -4,6 +4,7 @@ import { UtilityPole } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { groupByPole, mergePoles } from "@/lib/pole";
+import { requireCurrentTower } from "@/lib/current-tower-server";
 import { formatIQD } from "@/lib/utils";
 import { PageHeader } from "@/components/app/page-header";
 import { EmptyState } from "@/components/app/empty-state";
@@ -18,11 +19,14 @@ export default async function CabinetsPage() {
   const staff = await requireSection("cabinets");
   const isAdmin = staff.role === "admin";
   const supabase = await createClient();
+  const { tower } = await requireCurrentTower(supabase);
+  let subsQ = supabase
+    .from("subscriber_overview")
+    .select("pole, search_text, status, balance, tower_name")
+    .eq("is_archived", false);
+  if (tower) subsQ = subsQ.eq("tower_id", tower.id);
   const [subs, list] = await Promise.all([
-    supabase
-      .from("subscriber_overview")
-      .select("pole, search_text, status, balance, tower_name")
-      .eq("is_archived", false)
+    subsQ
       .range(0, 9999)
       .returns<Row[]>(),
     supabase.from("poles").select("name").is("hidden_at", null).range(0, 9999).returns<{ name: string }[]>(),
@@ -34,7 +38,7 @@ export default async function CabinetsPage() {
 
   return (
     <>
-      <PageHeader title="الكابينات" description={`${n.format(poles.length)} عامود`} />
+      <PageHeader title="الكابينات" description={`${tower ? `${tower.name} · ` : ""}${n.format(poles.length)} عامود`} />
       {error && <Alert variant="destructive" className="mb-4">{error.message}</Alert>}
       {isAdmin && <AddPoleForm />}
       {poles.length === 0 ? (

@@ -16,7 +16,7 @@ import { todayBaghdad } from "@/lib/arabic";
 import { EXPENSE_CATEGORIES, expenseSchema, type ExpenseInput, type ExpenseOutput } from "@/lib/validation/expense";
 import { addExpenseAction, voidExpenseAction } from "./actions";
 
-export function AddExpenseButton({ towers }: { towers: { id: string; name: string }[] }) {
+export function AddExpenseButton({ towers, defaultTowerId }: { towers: { id: string; name: string }[]; defaultTowerId?: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -28,19 +28,19 @@ export function AddExpenseButton({ towers }: { towers: { id: string; name: strin
           <DialogHeader>
             <DialogTitle>تسجيل مصروف</DialogTitle>
           </DialogHeader>
-          {open && <ExpenseForm towers={towers} onDone={() => setOpen(false)} />}
+          {open && <ExpenseForm towers={towers} defaultTowerId={defaultTowerId} onDone={() => setOpen(false)} />}
         </DialogContent>
       </Dialog>
     </>
   );
 }
 
-function ExpenseForm({ towers, onDone }: { towers: { id: string; name: string }[]; onDone: () => void }) {
+function ExpenseForm({ towers, defaultTowerId, onDone }: { towers: { id: string; name: string }[]; defaultTowerId?: string; onDone: () => void }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
   const form = useForm<ExpenseInput, unknown, ExpenseOutput>({
     resolver: zodResolver(expenseSchema),
-    defaultValues: { category: "electricity", amount: "", expense_date: todayBaghdad(), tower_id: "", description: "" },
+    defaultValues: { category: "electricity", amount: "", expense_date: todayBaghdad(), tower_id: defaultTowerId ?? "", description: "" },
   });
   const err = form.formState.errors;
   const onSubmit = form.handleSubmit((values) =>
@@ -74,7 +74,7 @@ function ExpenseForm({ towers, onDone }: { towers: { id: string; name: string }[
         </Field>
         <Field label="البرج" htmlFor="x-tower">
           <NativeSelect id="x-tower" {...form.register("tower_id")}>
-            <option value="">عام (كل الأبراج)</option>
+            {!defaultTowerId && <option value="">عام (كل الأبراج)</option>}
             {towers.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}

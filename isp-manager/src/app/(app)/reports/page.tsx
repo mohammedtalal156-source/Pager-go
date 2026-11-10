@@ -4,6 +4,7 @@ import { FileSpreadsheet } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { resolvePeriod } from "@/lib/period";
+import { requireCurrentTower } from "@/lib/current-tower-server";
 import { REPORTS, buildReport, displayCell, type Report, type ReportKey } from "@/lib/reports";
 import { cn, formatDate } from "@/lib/utils";
 import { PageHeader } from "@/components/app/page-header";
@@ -21,9 +22,9 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const key = (REPORTS.find((r) => r.key === sp.r)?.key ?? "daily") as ReportKey;
   const meta = REPORTS.find((r) => r.key === key)!;
   const { preset, from, to } = resolvePeriod(sp, key === "monthly" ? "year" : "month");
-  const tower = sp.tower || null;
   const supabase = await createClient();
-  const towersRes = await supabase.from("towers").select("id, name").eq("is_archived", false).order("name");
+  const { tower: current } = await requireCurrentTower(supabase, sp.tower);
+  const tower = current?.id ?? null;
 
   let report: Report | null = null;
   let error: string | null = null;
@@ -41,13 +42,13 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
     }
     return next.toString();
   };
-  const exportHref = `/reports/export?${qs({ r: key, p: preset, from, to })}`;
+  const exportHref = `/reports/export?${qs({ r: key, p: preset, from, to, tower })}`;
 
   return (
     <>
       <PageHeader
         title="التقارير"
-        description={meta.usesPeriod ? `${meta.label} · ${formatDate(from)} — ${formatDate(to)}` : `${meta.label} · حتى اليوم`}
+        description={`${current ? `${current.name} · ` : ""}${meta.usesPeriod ? `${meta.label} · ${formatDate(from)} — ${formatDate(to)}` : `${meta.label} · حتى اليوم`}`}
         actions={
           report && report.rows.length > 0 ? (
             <Button asChild variant="outline">
@@ -71,7 +72,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         ))}
       </div>
 
-      <PeriodFilter preset={preset} from={from} to={to} towers={towersRes.data ?? []} showPeriod={meta.usesPeriod} />
+      <PeriodFilter preset={preset} from={from} to={to} towers={[]} showPeriod={meta.usesPeriod} />
       {error && <Alert variant="destructive" className="mb-4">{error}</Alert>}
 
       {report && (

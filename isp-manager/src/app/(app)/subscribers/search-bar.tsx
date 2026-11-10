@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { NativeSelect } from "@/components/ui/native-select";
 import { cn } from "@/lib/utils";
 
 const STATUSES = [
@@ -19,7 +18,7 @@ const STATUSES = [
   ["debt", "عليهم ديون"],
 ] as const;
 
-export function SubscriberSearch({ towers, currentTower }: { towers: { id: string; name: string }[]; currentTower: string }) {
+export function SubscriberSearch() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -87,17 +86,6 @@ export function SubscriberSearch({ towers, currentTower }: { towers: { id: strin
             </button>
           ))}
         </div>
-        {towers.length > 1 && (
-          <div className="min-w-40">
-            <NativeSelect value={currentTower} onChange={(e) => push({ tower: e.target.value || null })} aria-label="البرج">
-              {towers.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
-                </option>
-              ))}
-            </NativeSelect>
-          </div>
-        )}
       </div>
     </div>
   );
