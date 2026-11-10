@@ -114,6 +114,8 @@ export type SubscriberRow = {
   tower_id: string;
   tower_name: string;
   pole: string | null;
+  /** Tower renews by calendar month (11/11 → 11/12) instead of days. */
+  tower_monthly?: boolean | null;
   area: string | null;
   address: string | null;
   package_id: string | null;

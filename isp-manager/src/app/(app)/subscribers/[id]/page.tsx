@@ -19,7 +19,7 @@ import { AdjustDebtButton, ArchiveSubscriberButton, CorrectPaymentButton, DatesB
 export const metadata: Metadata = { title: "تفاصيل المشترك" };
 
 const COLUMNS =
-  "id, code, full_name, phone, phone2, tower_id, tower_name, pole, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived";
+  "id, code, full_name, phone, phone2, tower_id, tower_name, pole, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived, tower_monthly";
 
 type Period = {
   id: string;

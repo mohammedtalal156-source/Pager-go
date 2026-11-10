@@ -21,7 +21,7 @@ export const metadata: Metadata = { title: "المشتركين" };
 
 const PAGE_SIZE = 50;
 const COLUMNS =
-  "id, code, full_name, phone, phone2, tower_id, tower_name, pole, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived";
+  "id, code, full_name, phone, phone2, tower_id, tower_name, pole, area, address, package_id, package_name, price, start_date, end_date, days_left, status, balance, collector_id, notes, is_archived, tower_monthly";
 
 type Search = { q?: string; status?: string; tower?: string; page?: string; archived?: string; new?: string };
 

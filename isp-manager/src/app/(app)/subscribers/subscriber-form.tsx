@@ -13,7 +13,7 @@ import { Field } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Alert } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { addDays, todayBaghdad } from "@/lib/arabic";
+import { periodEnd, todayBaghdad } from "@/lib/arabic";
 import { cn, formatIQD } from "@/lib/utils";
 import type { Collector, Package, SubscriberRow, Tower } from "@/lib/types";
 import {
@@ -26,7 +26,7 @@ import {
 } from "@/lib/validation/subscriber";
 import { createSubscriberAction, updateSubscriberAction } from "./actions";
 
-export type Lists = { towers: Pick<Tower, "id" | "name" | "area">[]; packages: Package[]; collectors: Collector[] };
+export type Lists = { towers: (Pick<Tower, "id" | "name" | "area"> & { monthly_period?: boolean })[]; packages: Package[]; collectors: Collector[] };
 
 export function AddSubscriberButton({ lists, autoOpen = false, defaultTowerId }: { lists: Lists; autoOpen?: boolean; defaultTowerId?: string }) {
   const [open, setOpen] = useState(autoOpen);
@@ -59,20 +59,22 @@ function CreateForm({ lists, defaultTowerId, onDone }: { lists: Lists; defaultTo
   const activePkgs = lists.packages.filter((p) => p.is_active);
   const firstPkg = activePkgs[0];
   const today = todayBaghdad();
+  const initialTower = defaultTowerId ?? (lists.towers.length === 1 ? lists.towers[0].id : "");
+  const monthlyTower = (id: unknown) => Boolean(lists.towers.find((t) => t.id === id)?.monthly_period);
   const form = useForm<CreateSubscriberInput, unknown, CreateSubscriberOutput>({
     resolver: zodResolver(createSubscriberSchema),
     defaultValues: {
       full_name: "",
       phone: "",
       phone2: "",
-      tower_id: defaultTowerId ?? (lists.towers.length === 1 ? lists.towers[0].id : ""),
+      tower_id: initialTower,
       pole: "",
       area: "",
       address: "",
       package_id: firstPkg?.id ?? "",
       price: firstPkg ? String(firstPkg.price) : "0",
       start_date: today,
-      end_date: firstPkg ? addDays(today, firstPkg.duration_days) : addDays(today, 30),
+      end_date: periodEnd(today, firstPkg?.duration_days ?? 30, monthlyTower(initialTower)),
       amount_paid: firstPkg ? String(firstPkg.price) : "0",
       collector_id: "",
       notes: "",
@@ -91,12 +93,12 @@ function CreateForm({ lists, defaultTowerId, onDone }: { lists: Lists; defaultTo
     if (!p) return;
     form.setValue("price", String(p.price));
     form.setValue("amount_paid", active ? String(p.price) : "0");
-    if (startDate) form.setValue("end_date", addDays(String(startDate), p.duration_days));
+    if (startDate) form.setValue("end_date", periodEnd(String(startDate), p.duration_days, monthlyTower(towerId)));
   }, [pkgId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const p = lists.packages.find((x) => x.id === pkgId);
-    if (startDate) form.setValue("end_date", addDays(String(startDate), p?.duration_days ?? 30));
-  }, [startDate]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (startDate) form.setValue("end_date", periodEnd(String(startDate), p?.duration_days ?? 30, monthlyTower(towerId)));
+  }, [startDate, towerId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const t = lists.towers.find((x) => x.id === towerId);
     if (t?.area && !form.getValues("area")) form.setValue("area", t.area);

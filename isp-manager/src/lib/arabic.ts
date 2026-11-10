@@ -59,6 +59,23 @@ export function addDays(isoDate: string, days: number) {
   return d.toISOString().slice(0, 10);
 }
 
+/** Same day n months later; a missing day becomes the month's last day (31/01 → 28/02), like the database. */
+export function addMonths(isoDate: string, months: number) {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  const target = new Date(Date.UTC(y, m - 1 + months, 1));
+  const last = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  target.setUTCDate(Math.min(d, last));
+  return target.toISOString().slice(0, 10);
+}
+
+/**
+ * End of a subscription period from `base`: `days` later, or for towers with
+ * calendar-month periods the same day `round(days / 30)` months later (11/11 → 11/12).
+ */
+export function periodEnd(base: string, days: number, monthly: boolean) {
+  return monthly ? addMonths(base, Math.max(1, Math.round(days / 30))) : addDays(base, days);
+}
+
 /** Office name and e-payment numbers printed at the end of every reminder. */
 export const REMINDER_FOOTER = [
   "مكتب الرؤيا",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Banknote, CheckCircle2, Loader2, MessageCircle, Phone, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Alert } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { addDays, todayBaghdad, whatsappReminder } from "@/lib/arabic";
+import { addDays, addMonths, todayBaghdad, whatsappReminder } from "@/lib/arabic";
 import { cn, formatDate, formatIQD } from "@/lib/utils";
 import type { Package, SubscriberPerms, SubscriberRow } from "@/lib/types";
 import { collectAction, renewAction } from "./actions";
@@ -96,11 +96,16 @@ function RenewForm({ sub, packages, isAdmin, onDone }: { sub: SubscriberRow; pac
 
   const today = todayBaghdad();
   const days = (pkg?.duration_days ?? 30) * periods;
-  const preview = useMemo(() => {
-    if (override) return { start: override, end: addDays(override, days) };
-    if (sub.end_date && sub.end_date >= today) return { start: addDays(sub.end_date, 1), end: addDays(sub.end_date, days) };
-    return { start: today, end: addDays(today, days) };
-  }, [override, sub.end_date, today, days]);
+  const pkgDays = pkg?.duration_days ?? 30;
+  const monthly = Boolean(sub.tower_monthly);
+  // Monthly towers: same day next month(s), as the database computes it.
+  const months = Math.max(1, Math.round(pkgDays / 30)) * periods;
+  const periodEndFrom = (base: string) => (monthly ? addMonths(base, months) : addDays(base, days));
+  const preview = override
+    ? { start: override, end: periodEndFrom(override) }
+    : sub.end_date && sub.end_date >= today
+      ? { start: addDays(sub.end_date, 1), end: periodEndFrom(sub.end_date) }
+      : { start: today, end: periodEndFrom(today) };
 
   const priceN = num(price);
   const receivedN = num(received);

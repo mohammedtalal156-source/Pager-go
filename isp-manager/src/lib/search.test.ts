@@ -113,3 +113,16 @@ test("current tower: asked tower, else remembered, else the only one", async () 
   assert.equal(resolveTower([a], null, null), a, "single tower opens directly");
   assert.equal(towerIdOrNull("all"), null);
 });
+
+test("monthly towers: same day next month, month-end clamped like the database", async () => {
+  const { addMonths, periodEnd } = await import("./arabic");
+  assert.equal(addMonths("2026-11-11", 1), "2026-12-11");
+  assert.equal(addMonths("2026-12-11", 1), "2027-01-11");
+  assert.equal(addMonths("2026-01-31", 1), "2026-02-28");
+  assert.equal(addMonths("2028-01-31", 1), "2028-02-29");
+  assert.equal(addMonths("2026-11-11", 2), "2027-01-11");
+  assert.equal(periodEnd("2026-11-11", 30, true), "2026-12-11");
+  assert.equal(periodEnd("2026-11-11", 30, false), "2026-12-11");
+  assert.equal(periodEnd("2026-01-01", 30, true), "2026-02-01");
+  assert.equal(periodEnd("2026-01-01", 30, false), "2026-01-31");
+});
