@@ -28,7 +28,7 @@ import { createSubscriberAction, updateSubscriberAction } from "./actions";
 
 export type Lists = { towers: Pick<Tower, "id" | "name" | "area">[]; packages: Package[]; collectors: Collector[] };
 
-export function AddSubscriberButton({ lists, autoOpen = false }: { lists: Lists; autoOpen?: boolean }) {
+export function AddSubscriberButton({ lists, autoOpen = false, defaultTowerId }: { lists: Lists; autoOpen?: boolean; defaultTowerId?: string }) {
   const [open, setOpen] = useState(autoOpen);
   return (
     <>
@@ -40,7 +40,7 @@ export function AddSubscriberButton({ lists, autoOpen = false }: { lists: Lists;
           <DialogHeader>
             <DialogTitle>إضافة مشترك</DialogTitle>
           </DialogHeader>
-          {open && <CreateForm lists={lists} onDone={() => setOpen(false)} />}
+          {open && <CreateForm lists={lists} defaultTowerId={defaultTowerId} onDone={() => setOpen(false)} />}
         </DialogContent>
       </Dialog>
     </>
@@ -49,7 +49,7 @@ export function AddSubscriberButton({ lists, autoOpen = false }: { lists: Lists;
 
 const digits = (v: unknown) => Number(String(v ?? "").replace(/[^\d]/g, "") || 0);
 
-function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
+function CreateForm({ lists, defaultTowerId, onDone }: { lists: Lists; defaultTowerId?: string; onDone: () => void }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
@@ -65,7 +65,7 @@ function CreateForm({ lists, onDone }: { lists: Lists; onDone: () => void }) {
       full_name: "",
       phone: "",
       phone2: "",
-      tower_id: lists.towers.length === 1 ? lists.towers[0].id : "",
+      tower_id: defaultTowerId ?? (lists.towers.length === 1 ? lists.towers[0].id : ""),
       pole: "",
       area: "",
       address: "",

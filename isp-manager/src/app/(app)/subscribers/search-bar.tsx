@@ -19,7 +19,7 @@ const STATUSES = [
   ["debt", "عليهم ديون"],
 ] as const;
 
-export function SubscriberSearch({ towers }: { towers: { id: string; name: string }[] }) {
+export function SubscriberSearch({ towers, currentTower }: { towers: { id: string; name: string }[]; currentTower: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -89,8 +89,7 @@ export function SubscriberSearch({ towers }: { towers: { id: string; name: strin
         </div>
         {towers.length > 1 && (
           <div className="min-w-40">
-            <NativeSelect value={params.get("tower") ?? ""} onChange={(e) => push({ tower: e.target.value || null })} aria-label="البرج">
-              <option value="">كل الأبراج</option>
+            <NativeSelect value={currentTower} onChange={(e) => push({ tower: e.target.value || null })} aria-label="البرج">
               {towers.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.name}

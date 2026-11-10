@@ -101,3 +101,15 @@ test("cabinets: listed poles 1..50 show even when empty; used poles always shown
   assert.equal(cards.find((c) => c.pole === "8")!.removable, true, "empty pole can be removed");
   assert.equal(cards.find((c) => c.pole === "75")!.removable, false);
 });
+
+test("current tower: asked tower, else remembered, else the only one", async () => {
+  const { resolveTower, towerIdOrNull } = await import("./current-tower");
+  const a = { id: "10000000-0000-0000-0000-00000000000a" };
+  const b = { id: "10000000-0000-0000-0000-00000000000b" };
+  assert.equal(resolveTower([a, b], b.id, a.id), b, "URL wins");
+  assert.equal(resolveTower([a, b], null, a.id), a, "remembered tower");
+  assert.equal(resolveTower([a, b], "x", "y"), undefined, "invalid ids: ask again");
+  assert.equal(resolveTower([a, b], "10000000-0000-0000-0000-0000000000ff", null), undefined, "unknown/archived tower: ask again");
+  assert.equal(resolveTower([a], null, null), a, "single tower opens directly");
+  assert.equal(towerIdOrNull("all"), null);
+});

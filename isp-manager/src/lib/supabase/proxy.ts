@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { getPublicEnv } from "@/lib/env";
+import { CURRENT_TOWER_COOKIE, towerIdOrNull } from "@/lib/current-tower";
 
 const PUBLIC_PATHS = ["/login", "/setup"];
 
@@ -38,6 +39,11 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/login";
     url.search = "";
     return NextResponse.redirect(url);
+  }
+  // Opening a page with ?tower=… (home page tower picker, tower filter) remembers that tower.
+  const tower = towerIdOrNull(request.nextUrl.searchParams.get("tower"));
+  if (signedIn && tower) {
+    response.cookies.set(CURRENT_TOWER_COOKIE, tower, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax", httpOnly: true, secure: true });
   }
   return response;
 }

@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { requireSection } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { searchWords } from "@/lib/arabic";
 import { extractPole } from "@/lib/pole";
+import { CURRENT_TOWER_COOKIE, resolveTower } from "@/lib/current-tower";
 import { formatDate, formatIQD } from "@/lib/utils";
 import { can, type Collector, type Package, type SubscriberPerms, type SubscriberRow, type Tower } from "@/lib/types";
 import { PageHeader } from "@/components/app/page-header";
@@ -30,6 +33,17 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
   const page = Math.max(1, Number(sp.page) || 1);
   const supabase = await createClient();
 
+  // Only the chosen tower's subscribers (chosen on the home page, or here in the tower list).
+  const towersRes = await supabase
+    .from("towers")
+    .select("id, name, area")
+    .eq("is_archived", false)
+    .order("name")
+    .returns<Pick<Tower, "id" | "name" | "area">[]>();
+  const towerList = towersRes.data ?? [];
+  const tower = resolveTower(towerList, sp.tower, (await cookies()).get(CURRENT_TOWER_COOKIE)?.value);
+  if (!tower && towerList.length > 1) redirect("/");
+
   let query = supabase
     .from("subscriber_overview")
     .select(COLUMNS, { count: "exact" })
@@ -40,7 +54,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
   const words = rest ? searchWords(rest) : [];
   for (const w of words) query = query.ilike("search_text", `%${w}%`);
   const term = [pole, ...words].filter(Boolean).join(" ");
-  if (sp.tower) query = query.eq("tower_id", sp.tower);
+  if (tower) query = query.eq("tower_id", tower.id);
   switch (sp.status) {
     case "active":
       query = query.in("status", ["active", "expiring"]);
@@ -72,9 +86,8 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
         : query.order("full_name");
   query = query.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
-  const [subsRes, towersRes, packagesRes, collectorsRes] = await Promise.all([
+  const [subsRes, packagesRes, collectorsRes] = await Promise.all([
     query.returns<SubscriberRow[]>(),
-    supabase.from("towers").select("id, name, area").eq("is_archived", false).order("name").returns<Pick<Tower, "id" | "name" | "area">[]>(),
     supabase.from("packages").select("id, name, price, duration_days, description, is_active").order("price").returns<Package[]>(),
     supabase.rpc("list_collectors"),
   ]);
@@ -82,7 +95,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
   const total = subsRes.count ?? 0;
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const lists = {
-    towers: towersRes.data ?? [],
+    towers: towerList,
     packages: packagesRes.data ?? [],
     collectors: (collectorsRes.data ?? []) as Collector[],
   };
@@ -104,7 +117,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
     <>
       <PageHeader
         title={sp.archived === "1" ? "المشتركين المؤرشفين" : "المشتركين"}
-        description={`${new Intl.NumberFormat("en-US").format(total)} نتيجة`}
+        description={`${tower ? `${tower.name} · ` : ""}${new Intl.NumberFormat("en-US").format(total)} نتيجة`}
         actions={
           <>
             <Link
@@ -113,11 +126,11 @@ export default async function SubscribersPage({ searchParams }: { searchParams: 
             >
               {sp.archived === "1" ? "المشتركين الحاليين" : "المؤرشفين"}
             </Link>
-            {perms.create && sp.archived !== "1" && <AddSubscriberButton lists={lists} autoOpen={sp.new === "1"} />}
+            {perms.create && sp.archived !== "1" && <AddSubscriberButton lists={lists} autoOpen={sp.new === "1"} defaultTowerId={tower?.id} />}
           </>
         }
       />
-      <SubscriberSearch towers={lists.towers} />
+      <SubscriberSearch towers={lists.towers} currentTower={tower?.id ?? ""} />
       {subsRes.error && <Alert variant="destructive" className="mb-4">{subsRes.error.message}</Alert>}
 
       {subs.length === 0 ? (
