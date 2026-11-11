@@ -14,6 +14,7 @@ import { cn, formatDate, formatIQD } from "@/lib/utils";
 import type { Package, SubscriberPerms, SubscriberRow } from "@/lib/types";
 import { collectAction, renewAction } from "./actions";
 import { EditSubscriberButton, type Lists } from "./subscriber-form";
+import { showRenewalNotice } from "@/components/app/renewal-notice";
 
 const digits = (v: string) =>
   v.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[^\d]/g, "");
@@ -86,8 +87,6 @@ function RenewForm({ sub, packages, isAdmin, onDone }: { sub: SubscriberRow; pac
   const [override, setOverride] = useState("");
   const [error, setError] = useState<string>();
   const [pending, startTransition] = useTransition();
-  // After a successful renewal: the WhatsApp message to send to the subscriber.
-  const [done, setDone] = useState<{ end: string; balance: number; wa: string | null }>();
 
   const syncAmounts = (nextUnit: number, nextPeriods: number) => {
     if (!priceTouched) {
@@ -135,36 +134,18 @@ function RenewForm({ sub, packages, isAdmin, onDone }: { sub: SubscriberRow; pac
           icon: <CheckCircle2 className="size-5 text-success" />,
         });
         const end = res.data?.end_date ?? preview.end;
-        setDone({
-          end,
-          balance: res.data?.balance ?? 0,
+        const balance = res.data?.balance ?? 0;
+        // Shown from the app root: the renewed row may leave a filtered list and unmount.
+        showRenewalNotice({
+          name: sub.full_name,
+          endText: formatDate(end),
+          balanceText: balance > 0 ? `المتبقي: ${formatIQD(balance)}` : "لا يوجد دين",
           wa: renewalMessage({ name: sub.full_name, phone: sub.phone, renewedOn: todayBaghdad(), endDate: end, price: priceN }),
         });
+        onDone();
       } else setError(res.error);
     });
   };
-
-  if (done) {
-    return (
-      <div className="grid gap-4 text-center">
-        <CheckCircle2 className="mx-auto size-12 text-success" />
-        <p className="text-lg font-bold">تم التجديد حتى {formatDate(done.end)}</p>
-        <p className="text-sm text-muted-foreground">{done.balance > 0 ? `المتبقي: ${formatIQD(done.balance)}` : "لا يوجد دين"}</p>
-        {done.wa ? (
-          <Button asChild size="lg" className="h-14 bg-[#25D366] text-lg text-white hover:bg-[#1ebe5b]">
-            <a href={done.wa} target="_blank" rel="noopener noreferrer" onClick={() => setTimeout(onDone, 300)}>
-              <MessageCircle /> إرسال رسالة التجديد بالواتساب
-            </a>
-          </Button>
-        ) : (
-          <Alert variant="warning">رقم المشترك غير صالح للواتساب، لا يمكن إرسال الرسالة.</Alert>
-        )}
-        <Button variant="outline" size="lg" onClick={onDone}>
-          إغلاق
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className="grid gap-4">
