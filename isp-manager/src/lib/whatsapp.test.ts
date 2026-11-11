@@ -115,3 +115,26 @@ test("reminder message: office template", () => {
   assert.doesNotMatch(expired, /تاريخ التفعيل/, "no activation line without a start date");
   assert.match(expired, /الزين كاش : 07704593597/);
 });
+
+test("renewal message: office template with dates and price", async () => {
+  const { renewalMessage } = await import("./arabic");
+  const url = renewalMessage({ name: "محمد طلال", phone: "07701234567", renewedOn: "2026-11-11", endDate: "2026-12-11", price: 25000 })!;
+  assert.ok(url.startsWith("https://wa.me/9647701234567?text="));
+  assert.equal(
+    decodeURIComponent(url.split("text=")[1]),
+    [
+      "مرحباً محمد طلال",
+      "تم تجديد اشتراك الانترنت الخاص بك اليوم بتاريخ 11-11-2026",
+      "وسينتهي الاشتراك بتاريخ: 11-12-2026",
+      "",
+      "سعر الاشتراك : 25,000 دينار",
+      "يتوفر الدفع الالكتروني عن طريق",
+      "الماستر : 7119171481",
+      "سوبر كي : 07704593597",
+      "زين كاش : 07704593597",
+      "",
+      "مع الشكر والتقدير",
+    ].join("\n"),
+  );
+  assert.equal(renewalMessage({ name: "x", phone: "123", renewedOn: "2026-11-11", endDate: "2026-12-11", price: 1 }), null);
+});

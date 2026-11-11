@@ -87,6 +87,33 @@ export const REMINDER_FOOTER = [
   "مع الشكر والتقدير",
 ].join("\n");
 
+/** 2026-11-11 → 11-11-2026 */
+export function dmy(isoDate: string) {
+  const [y, m, d] = isoDate.slice(0, 10).split("-");
+  return `${d}-${m}-${y}`;
+}
+
+const nf = new Intl.NumberFormat("en-US");
+
+/** WhatsApp message sent right after a renewal (office template). */
+export function renewalMessage(opts: { name: string; phone: string; renewedOn: string; endDate: string; price: number }) {
+  const msg = [
+    `مرحباً ${opts.name}`,
+    `تم تجديد اشتراك الانترنت الخاص بك اليوم بتاريخ ${dmy(opts.renewedOn)}`,
+    `وسينتهي الاشتراك بتاريخ: ${dmy(opts.endDate)}`,
+    "",
+    `سعر الاشتراك : ${nf.format(opts.price)} دينار`,
+    "يتوفر الدفع الالكتروني عن طريق",
+    "الماستر : 7119171481",
+    "سوبر كي : 07704593597",
+    "زين كاش : 07704593597",
+    "",
+    "مع الشكر والتقدير",
+  ].join("\n");
+  const number = toWhatsAppNumber(opts.phone);
+  return number ? `https://wa.me/${number}?text=${encodeURIComponent(msg)}` : null;
+}
+
 /** WhatsApp reminder in the office template (end date, activation date, payment numbers). */
 export function whatsappReminder(opts: {
   name: string;
