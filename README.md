@@ -98,3 +98,13 @@ tests/                 config.test.ts
 - Pure Remotion CSS/SVG animation driven by `useCurrentFrame()`, `interpolate()` and `spring()`. Three.js / React Three Fiber were tried and dropped: CSS 3D gives the same depth for phones and cards, keeps Arabic UI as real browser-shaped text, and renders reliably without a GPU.
 - Arabic text is split only on spaces, so letters always join correctly; containers are `dir="rtl"`, Latin fragments (QR, pagergo.pro, numbers) are bidi-isolated.
 - No network requests during render: all assets are local; the font comes from `node_modules`.
+
+## Landing page with Meta (Facebook) Pixel
+
+`landing/` is a standalone static page (Arabic, RTL) for Facebook ad traffic, with the ad video and a demo-request form.
+
+1. Put your Pixel ID in `landing/pixel-config.js` (`PIXEL_ID`), plus `SIGNUP_URL` and optionally `WHATSAPP`.
+2. Upload the whole `landing/` folder to any static host (Vercel, Netlify, your own server) or under pagergo.pro.
+3. Check it with the Meta Pixel Helper extension or Events Manager → Test events.
+
+Events sent: `PageView` (load), `ViewContent` (video played), `InitiateCheckout` (subscribe button), `Lead` (form submitted), `Contact` (WhatsApp click). With no Pixel ID the events are only logged to the browser console. The form has no backend: if `WHATSAPP` is set, it opens WhatsApp with the details filled in; otherwise the details are not stored anywhere.

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بيجر گو | Pager Go — البيجر الرقمي لمطعمك</title>
+  <meta name="description" content="بيجر گو: الزبون يمسح كود QR ويتابع طلبه من موبايله بدون تطبيق، ويوصله إشعار أول ما يصير جاهز.">
+  <meta property="og:title" content="بيجر گو — البيجر الرقمي لمطعمك">
+  <meta property="og:description" content="لا بيجر يضيع ولا بطارية تخلص. الزبون يمسح الكود ويعرف متى طلبه جاهز.">
+  <meta property="og:image" content="assets/poster.jpg">
+  <link rel="icon" href="assets/logo.jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="pixel-config.js"></script>
+  <script src="pixel.js"></script>
+  <style>
+    :root{--orange:#FF7A00;--hot:#FF4E1B;--soft:#FFB25B;--navy:#0A1230;--navy2:#121D46;--navy3:#1E2B63;--muted:#9AA6CF;--green:#22C55E;}
+    *{box-sizing:border-box}
+    [hidden]{display:none!important}
+    body{margin:0;font-family:Cairo,"Noto Sans Arabic",sans-serif;background:var(--navy);color:#fff;line-height:1.7}
+    a{color:inherit}
+    .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+    header{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;text-decoration:none}
+    .brand img{width:40px;height:40px;border-radius:10px;background:#fff}
+    .btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:800;text-decoration:none;border-radius:14px;padding:12px 22px;background:linear-gradient(135deg,var(--soft),var(--orange) 45%,var(--hot));color:#fff;box-shadow:0 8px 24px rgba(255,122,0,.3)}
+    .btn.ghost{background:transparent;border:2px solid var(--navy3);box-shadow:none}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;padding:24px 0 48px}
+    h1{font-size:clamp(30px,6vw,50px);line-height:1.25;margin:0 0 12px}
+    h1 span{color:var(--orange)}
+    .lead{color:var(--muted);font-size:18px;margin:0 0 24px}
+    .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+    video{width:100%;max-width:340px;aspect-ratio:9/16;display:block;margin:0 auto;border-radius:24px;border:6px solid var(--navy3);background:#000}
+    section{padding:48px 0}
+    h2{font-size:28px;margin:0 0 24px;text-align:center}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:var(--navy2);border:1px solid var(--navy3);border-radius:18px;padding:20px}
+    .card b{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--orange);margin-bottom:8px}
+    .card p{color:var(--muted);margin:4px 0 0}
+    .form-box{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;background:var(--navy2);border:1px solid var(--navy3);border-radius:24px;padding:28px}
+    .form-box img{width:180px}
+    form{display:grid;gap:12px}
+    label{font-weight:600;font-size:14px}
+    input{width:100%;font:inherit;padding:12px 14px;border-radius:12px;border:1px solid var(--navy3);background:var(--navy);color:#fff;margin-top:4px}
+    input:focus{outline:2px solid var(--orange)}
+    #form-done{color:var(--green);font-weight:800;font-size:18px}
+    .fine{color:var(--muted);font-size:13px;text-align:center}
+    footer{padding:24px 0 40px;color:var(--muted);text-align:center;font-size:14px}
+    @media (max-width:760px){
+      .hero{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+      .form-box{grid-template-columns:1fr}
+      .form-box img{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="#"><img src="assets/logo.jpeg" alt="">بيجر گو</a>
+      <a class="btn" data-signup="header" href="#">اشترك الآن</a>
+    </header>
+
+    <div class="hero">
+      <div>
+        <h1>البيجر <span>الرقمي</span> لمطعمك</h1>
+        <p class="lead">البيجر القديم يضيع، يتعطل، وبطاريته تخلص. مع بيجر گو الزبون يمسح كود QR من موبايله، بدون تطبيق، ويعرف بنفس اللحظة لما يصير طلبه جاهز.</p>
+        <div class="cta-row">
+          <a class="btn" href="#demo">اطلب تجربة مجانية</a>
+          <a class="btn ghost" id="whatsapp" href="#" hidden target="_blank" rel="noopener">راسلنا واتساب</a>
+        </div>
+      </div>
+      <video id="ad" src="assets/ad.mp4" poster="assets/poster.jpg" controls playsinline preload="metadata"></video>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <h2>شلون يشتغل؟</h2>
+      <div class="steps">
+        <div class="card"><b>1</b><h3>الكاشير يسوي الطلب</h3><p>يطلع رقم الطلب وكود QR على الوصل.</p></div>
+        <div class="card"><b>2</b><h3>الزبون يمسح الكود</h3><p>يشوف طلبه قيد التحضير، خطوة بخطوة.</p></div>
+        <div class="card"><b>3</b><h3>الموظف يدوس جاهز</h3><p>يوصل الزبون إشعار فوراً ويجي يستلم.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="demo">
+    <div class="wrap">
+      <div class="form-box">
+        <div>
+          <h2 style="text-align:right">اطلب تجربة لمطعمك</h2>
+          <form id="lead-form">
+            <label>الاسم<input name="name" required autocomplete="name"></label>
+            <label>اسم المطعم<input name="restaurant" required></label>
+            <label>رقم الهاتف<input name="phone" type="tel" required autocomplete="tel" dir="ltr" placeholder="07xx xxx xxxx"></label>
+            <button class="btn" type="submit">أرسل الطلب</button>
+          </form>
+          <p id="form-done" hidden>✓ وصلنا طلبك، راح نتواصل وياك قريباً.</p>
+        </div>
+        <img src="assets/mascot.png" alt="">
+      </div>
+      <p class="fine">يتطلب اتصال بالإنترنت وتفعيل الإشعارات، ويختلف العرض حسب الجهاز</p>
+    </div>
+  </section>
+
+  <footer>© بيجر گو · <a href="https://pagergo.pro">pagergo.pro</a></footer>
+</body>
+</html>
