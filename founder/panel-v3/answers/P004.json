@@ -1,0 +1,13 @@
+{
+  "id": "P004",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "trust",
+  "reason": "My Instagram page makes me pay a deposit and wait, so a first order with nothing up front, cash on delivery, is a risk I can take. I would try one small order of kids' clothes from a screenshot and compare the total with what my page charges.",
+  "objection": "21,000 IQD in fees on one kilo feels heavy for cheap kids' things, and I am used to my page. If the total comes out more than my page, I go back to them.",
+  "would_change_my_mind": "If my first order comes out more expensive than my usual page, or it arrives late, I will not order again.",
+  "price_too_cheap": 7000,
+  "price_cheap": 14000,
+  "price_expensive": 22000,
+  "price_too_expensive": 32000
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P013",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "trust",
+  "reason": "The first order is all cash on delivery, so I lose nothing if they are liars. I would put several small kids' things in one parcel to try them once, but after that the 30% deposit up front would stop me.",
+  "objection": "For small cheap things for the kids the fees eat everything: 13,000 a kilo plus the 3,000 minimum fee plus 5,000 delivery, so a 5,000 dinar toy ends up costing three times as much. And after the first order they want money before I see anything.",
+  "would_change_my_mind": "Keep cash on delivery for every order, not only the first one, with no deposit.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 19000,
+  "price_too_expensive": 27000
+}

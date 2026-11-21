@@ -1,0 +1,13 @@
+{
+  "id": "P008",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "habit",
+  "reason": "I already bring my stock through the Erbil company and they have mostly delivered fine, so I have no reason to move my shop's orders to a new name. And for most of what I sell I can walk into the Baghdad market today and have it on the shelf tonight, not in three weeks.",
+  "objection": "My business depends on goods arriving on time. A new service I have never used, even with Abu Ali's name on it, could hold up my stock, and my current company already works for me.",
+  "would_change_my_mind": "Seeing the trader account actually come in cheaper per kilo than my Erbil company on a real batch, with photos from the warehouse and arriving on time, maybe tried once with the free cash-on-delivery first order.",
+  "price_too_cheap": 8000,
+  "price_cheap": 15000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

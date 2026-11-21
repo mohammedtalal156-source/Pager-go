@@ -1,0 +1,13 @@
+{
+  "id": "P010",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "price",
+  "reason": "The first order is cash on delivery and Abu Ali's name is on it, so I'd send one small test batch of phone accessories to see the real landed cost per piece and if it arrives on time. If it doesn't beat my usual agent per piece, I go back to him.",
+  "objection": "13,000 a kilo by air eats my margin on anything heavier than cables and cases, and 2 to 3 weeks is slow when I need to restock. My agent is cheaper on cargo and I'm used to him.",
+  "would_change_my_mind": "",
+  "price_too_cheap": 8000,
+  "price_cheap": 14000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

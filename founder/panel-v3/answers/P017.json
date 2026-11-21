@@ -1,0 +1,13 @@
+{
+  "id": "P017",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "need",
+  "reason": "I need cheaper stock from China for my shop, and the first order is fully cash on delivery, so I risk nothing trying it once with a small batch of phone accessories. With Abu Ali's name on the receipt, I'll at least test it.",
+  "objection": "After the first order they want 30% up front to a name I don't know yet, and I don't pay before I hold the goods. Also 21,000 in fees on one kilo eats a lot of my resale margin, and drivers can never find my street.",
+  "would_change_my_mind": "If the 30% deposit stays after the first order with no option to stay fully cash on delivery, I'd stop after one try. Keeping it all cash on delivery for trusted repeat customers would make me a regular.",
+  "price_too_cheap": 8000,
+  "price_cheap": 15000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

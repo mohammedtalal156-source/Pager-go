@@ -1,0 +1,102 @@
+{
+ "n": 100,
+ "seed": 933083,
+ "customer": {
+  "business": "Baghdad Express (بغداد إكسبريس): a buy-for-me and shipping service from Chinese sites (Taobao, 1688, Pinduoduo) to Baghdad",
+  "target": "Baghdad residents, 18 to 45, who already shop online on Instagram, Shein-type apps or through agents, and want items from China that are not sold in Iraq or are cheaper there. Incomes are shown in US dollars per year (converted from monthly IQD at an assumed 1 USD = 1,450 IQD); the buyer lives and pays in IQD.",
+  "where": "Baghdad, Iraq",
+  "age": [
+   18,
+   45
+  ],
+  "segments": [
+   {
+    "name": "Young woman shopping for fashion, beauty and home items",
+    "share": 0.35,
+    "income": [
+     3300,
+     9900
+    ]
+   },
+   {
+    "name": "Young man buying electronics, accessories and car parts",
+    "share": 0.25,
+    "income": [
+     4100,
+     12400
+    ]
+   },
+   {
+    "name": "Parent buying kids' items and household goods",
+    "share": 0.25,
+    "income": [
+     5800,
+     16600
+    ]
+   },
+   {
+    "name": "Small shop owner who resells goods (clothes, accessories, phone accessories)",
+    "share": 0.15,
+    "income": [
+     12400,
+     41400
+    ]
+   }
+  ],
+  "behaviours": [
+   {
+    "name": "Instagram agent buyer",
+    "share": 0.2,
+    "how": "Already orders through Instagram/WhatsApp pages that buy from Shein or China for them, pays a deposit, waits weeks."
+   },
+   {
+    "name": "Cash on delivery only",
+    "share": 0.18,
+    "how": "Refuses to pay anything before the item is in their hands; has heard of people losing money to online pages."
+   },
+   {
+    "name": "Deal hunter",
+    "share": 0.15,
+    "how": "Compares prices between pages and the local market, will switch for a few thousand dinars."
+   },
+   {
+    "name": "Loyal to an existing service",
+    "share": 0.12,
+    "how": "Uses an established app or company (e.g. one based in Erbil) and has had mostly good experiences."
+   },
+   {
+    "name": "Watches TikTok reviews first",
+    "share": 0.12,
+    "how": "Only buys after seeing unboxing videos or a friend's recommendation."
+   },
+   {
+    "name": "Bulk buyer for a shop",
+    "share": 0.13,
+    "how": "Buys in quantity to resell; cares about landed cost per piece, reliability and delivery dates."
+   },
+   {
+    "name": "Urgent need",
+    "share": 0.1,
+    "how": "Needs a specific item (a part, a gift) that is not available in Baghdad and wants it as fast as possible."
+   }
+  ],
+  "objections": [
+   "Will extra fees appear when the parcel arrives in Iraq?",
+   "I don't trust paying in advance to a new name I've never heard of",
+   "It will take too long, I've waited weeks before",
+   "What if the item is wrong, fake or damaged? Can I return it?",
+   "The page I already use is cheaper or I'm used to it",
+   "Shipping per kilo makes small cheap items not worth it",
+   "I can find something similar in the Baghdad market today"
+  ],
+  "habits": [
+   "you scroll Instagram and TikTok every evening and save product posts",
+   "you pay with Zain Cash or cash, you don't have a foreign card",
+   "you live in a Baghdad district where delivery drivers sometimes struggle to find the address",
+   "your cousin once lost a deposit to an online page that disappeared",
+   "you visit Shorja or Karrada markets to compare prices",
+   "you order from a page on Instagram about once a month"
+  ]
+ },
+ "pitch": "Baghdad Express (بغداد إكسبريس), Baghdad, run in partnership with Abu Ali (a well-known wholesale trader in Shorja; his name is on every receipt and traders can ask him directly). Send us a link from Taobao, 1688 or Pinduoduo, or just a screenshot or Instagram photo and we find it for you, and we deliver it from China to your door.\nFixed written quote before you pay: item price, 8% buying fee (min 3,000 IQD), air shipping 13,000 IQD per kilo charged by real weight in 100 g steps, 5,000 IQD delivery in Baghdad. Several links go in one parcel with one delivery fee. The quote is final: if anything extra appears on arrival, we pay it. Example: 30,000 IQD shoes, 1 kg = about 51,000 IQD total (21,000 in fees).\nFirst order (up to 75,000 IQD): pay nothing up front, all cash on delivery. After that: a 30% deposit, the rest on delivery (Zain Cash, Qi Card or cash at our Shorja office).\nWe photograph your items in our China warehouse and you approve them before they ship. Air delivery about 2 to 3 weeks; if it takes more than 21 days, we refund our buying fee. Damaged, wrong or not like the photo: full refund within 3 days. Change-of-mind returns are not possible.\nFor shop owners: trader account with a 4% buying fee, a lower per-kilo rate from 10 kg a month, a cheaper slow cargo option, and a check of every batch in the warehouse.\n(Price questions below refer to Baghdad Express's total fees, in IQD, for one 1 kg order, not counting the item's own price.)"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P002",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "trust",
+  "reason": "Cash on delivery for the first order, a fixed written quote, and Abu Ali's name on the receipt means I risk almost nothing, so I would send one small test order of a few pieces to see if the landed cost and the 3-week date are real before I trust them with stock for my shop.",
+  "objection": "13,000 IQD a kilo by air eats my margin on cheap pieces I resell, and they don't say what the slow cargo or the trader per-kilo rate actually is. After the first order I have to put down 30% and wait weeks, so if they're late my shelf is empty.",
+  "would_change_my_mind": "",
+  "price_too_cheap": 7000,
+  "price_cheap": 14000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

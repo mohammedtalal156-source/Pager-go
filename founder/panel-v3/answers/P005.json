@@ -1,0 +1,13 @@
+{
+  "id": "P005",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "habit",
+  "reason": "I already use an Erbil service that has mostly treated me well, and for kids' things and household goods I can usually find something close enough in Shorja or Karrada today. With my money tight, paying 21,000 dinars in fees and waiting three weeks for a pair of shoes doesn't make sense when the market is right there.",
+  "objection": "The fees nearly match the price of the item itself, and I'd be leaving a service I already trust for a new name I haven't tried.",
+  "would_change_my_mind": "If my usual service couldn't get a specific thing my kids need that isn't sold in Baghdad, the cash-on-delivery first order would let me try it once without risk.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 16000,
+  "price_too_expensive": 22000
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P014",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "price",
+  "reason": "The first order is cash on delivery and Abu Ali's name is on the receipt, so I can test one small batch of kids' items with nothing at risk. But at 13,000 a kilo by air, my landed cost per piece is too high to resell at Shorja prices, so I would only continue if the trader rate and slow cargo work out cheaper.",
+  "objection": "I've waited weeks before. Refunding only the buying fee if it's late doesn't cover a shop that promised stock to customers, and air shipping per kilo eats my margin on cheap goods.",
+  "would_change_my_mind": "A written per-kilo price for the slow cargo and trader rate, with a firm delivery date, that brings my landed cost per piece below what I pay in Shorja.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 20000,
+  "price_too_expensive": 28000
+}

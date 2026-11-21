@@ -1,0 +1,13 @@
+{
+  "id": "P009",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "habit",
+  "reason": "The Instagram page I already buy accessories from gives me one price with delivery included, and I know them. Paying 21,000 in fees on top of a 30,000 item and waiting up to three weeks doesn't sound cheaper than what I'm used to.",
+  "objection": "Once you add the 8%, the 13,000 per kilo and the 5,000 delivery, I'm not sure I'm saving anything compared to my usual page or Shorja, and I have to wait 2 to 3 weeks.",
+  "would_change_my_mind": "If they quoted me a specific item, like a phone accessory or a car part I can't find here, and the total came out clearly cheaper than my page, I'd try the free cash-on-delivery first order.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 20000,
+  "price_too_expensive": 28000
+}
