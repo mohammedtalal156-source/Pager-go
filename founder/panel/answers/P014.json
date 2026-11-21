@@ -1,0 +1,13 @@
+{
+  "id": "P014",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy to resell, so I count the landed cost of every piece. 13,000 a kilo by air plus 8% on top eats my whole margin. I can find the same goods in Shorja, or bring them in by cargo with an agent for less.",
+  "objection": "This is built for one person buying one pair of shoes, not for a shop. I see no bulk rate or cheaper sea option, and 2 to 3 weeks is only an estimate. I've waited weeks before and had shelves empty when I promised customers stock.",
+  "would_change_my_mind": "A wholesale rate for big 1688 orders: a lower fee percentage and a cheaper per-kilo price for 20 kg and up, with a guaranteed delivery date.",
+  "price_too_cheap": 7000,
+  "price_cheap": 11000,
+  "price_expensive": 17000,
+  "price_too_expensive": 23000
+}

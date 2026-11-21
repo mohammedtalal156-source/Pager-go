@@ -1,0 +1,13 @@
+{
+  "id": "P005",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "habit",
+  "reason": "I already order through an agent company I trust and it has mostly worked out, so I have no reason to try a new name. And 21,000 in fees on 30,000 shoes is too much when I can find something close in Shorja today and touch it first.",
+  "objection": "Paying more than two thirds of the item price again just in fees, and handing money up front to a company nobody I know has used yet, then waiting three weeks for kids' things they might outgrow.",
+  "would_change_my_mind": "If a relative or neighbour ordered from them a few times without problems and the total fees came out clearly cheaper than my current service.",
+  "price_too_cheap": 6000,
+  "price_cheap": 11000,
+  "price_expensive": 17000,
+  "price_too_expensive": 23000
+}

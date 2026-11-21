@@ -1,0 +1,13 @@
+{
+  "id": "P034",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "I don't pay anyone before the thing is in my hands, and they want the item price and fee up front for a new page I've never heard of. On top of that it's 2 to 3 weeks, and 21,000 in fees on a 30,000 pair of shoes is a lot for my family.",
+  "objection": "Paying first to a new online service and then waiting weeks, with no way to know if the item or my money will ever show up.",
+  "would_change_my_mind": "Letting me pay everything in cash when the item arrives at my door, or a friend or relative I trust getting their order from them first.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 20000,
+  "price_too_expensive": 28000
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P079",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy in quantity to resell, and 13,000 a kilo by air plus 8% on top eats my whole margin on clothes and phone cases. My cargo agent and the Shorja wholesalers already get me cheaper landed cost per piece, even if it takes longer.",
+  "objection": "The landed cost per piece is too high for resale, and a refund only for damaged or wrong items does not help me if a whole batch is poor quality and I can't sell it.",
+  "would_change_my_mind": "A bulk rate for shop owners: a lower buying fee on big 1688 orders and a cheaper per-kilo option by sea or land, with a quality check on the whole batch in the warehouse.",
+  "price_too_cheap": 7000,
+  "price_cheap": 11000,
+  "price_expensive": 17000,
+  "price_too_expensive": 24000
+}

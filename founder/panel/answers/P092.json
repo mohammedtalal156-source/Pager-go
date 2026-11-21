@@ -1,0 +1,13 @@
+{
+  "id": "P092",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "21,000 dinars in fees on a 30,000 pair of shoes is almost as much as the shoes themselves. The Instagram page I order from already delivers kids' stuff to my door in a week, so I'd have to compare first, and I doubt this comes out cheaper.",
+  "objection": "The fees are too high for the small, cheap things I buy for the kids, and I have to pay before I see anything and then wait 2 to 3 weeks with no returns if I change my mind.",
+  "would_change_my_mind": "If the total with all fees came out clearly cheaper than my usual page for the same item, say at least 5,000 dinars less, I would try one order.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 20000
+}

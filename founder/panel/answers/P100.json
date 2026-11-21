@@ -1,0 +1,13 @@
+{
+  "id": "P100",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "habit",
+  "reason": "When I need something for the kids that I can't find in Baghdad, I message the Instagram page I already use. They know me, I know their prices, and I don't want to risk an urgent order on a new name I've never heard of.",
+  "objection": "21,000 in fees on a 30,000 item is a lot for my budget, and 2 to 3 weeks is too slow when I need the thing now. My usual page is cheaper or at least I'm used to it.",
+  "would_change_my_mind": "If they could get it to me in about a week and the fees were clearly lower than my usual page, I'd try one small order.",
+  "price_too_cheap": 6000,
+  "price_cheap": 12000,
+  "price_expensive": 18000,
+  "price_too_expensive": 25000
+}

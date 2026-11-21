@@ -1,0 +1,13 @@
+{
+  "id": "P046",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "It's a brand new page asking me to pay up front, and I haven't seen a single TikTok unboxing or a friend who used them. My cousin lost a deposit exactly like this, so I'll wait and watch first.",
+  "objection": "Paying the item price before anything ships to a service nobody I know has tried. What if the page disappears with my money like it did to my cousin?",
+  "would_change_my_mind": "Seeing real unboxing videos on TikTok from Baghdad girls, or a friend who got her order through them, so I know they actually deliver.",
+  "price_too_cheap": 7000,
+  "price_cheap": 13000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

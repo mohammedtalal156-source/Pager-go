@@ -1,0 +1,13 @@
+{
+  "id": "P045",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Shoes that cost 30,000 on Taobao end up at 51,000 at my door, and I can find something close in the local market or on an Instagram page for 30 to 35 thousand without waiting three weeks. For the small cheap things I actually want, the per-kilo shipping and the minimum fee eat the whole saving.",
+  "objection": "The fees are almost as much as the item itself. Shipping by the kilo makes small, cheap fashion and beauty items not worth it, so where is my saving?",
+  "would_change_my_mind": "If I could combine several small items into one shipment and pay shipping by actual weight, not a full kilo, so a few small pieces come to well under 10,000 in fees.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 20000
+}

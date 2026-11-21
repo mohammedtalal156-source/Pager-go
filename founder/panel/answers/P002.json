@@ -1,0 +1,13 @@
+{
+  "id": "P002",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy to resell, so I count the landed cost per piece. 13,000 a kilo by air plus 8% plus delivery makes every piece cost more than what I can find in Shorja, and there is nothing here for someone ordering in quantity.",
+  "objection": "The fees are built for one person buying one pair of shoes, not for a shop. At 21,000 IQD on a 30,000 item, my margin is gone before I put it on the shelf, and I have no proof yet that the dates will hold for my stock.",
+  "would_change_my_mind": "A wholesale rate for bulk orders from 1688: a lower price per kilo for big shipments and a lower buying fee, with a guaranteed delivery date.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 21000
+}

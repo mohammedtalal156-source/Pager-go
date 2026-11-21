@@ -1,0 +1,13 @@
+{
+  "id": "P021",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "habit",
+  "reason": "I already order from China through the agent page I use, they've delivered fine and I'm used to them. 21,000 dinar in fees on a 30,000 pair of shoes is a lot when I can find similar stuff in Shorja for less.",
+  "objection": "New name, nobody I know has used it, and I'd be paying them up front for something that takes 2 to 3 weeks. My current page already works.",
+  "would_change_my_mind": "If their total came in clearly cheaper than my usual page on a real item I want, like a car part or phone accessory not sold here, and a friend vouched for them.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 18000,
+  "price_too_expensive": 25000
+}

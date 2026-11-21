@@ -1,0 +1,13 @@
+{
+  "id": "P090",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I resell, so 21,000 in fees on a 30,000 item kills my margin before I even put it on the shelf. The agents I already use are cheaper per kilo when I group orders, and 2 to 3 weeks is not fast enough to beat them on anything.",
+  "objection": "The fees are almost as much as the item, and I've waited weeks before with agents who promised 2 to 3 weeks, so I don't trust that timeline either.",
+  "would_change_my_mind": "A lower per-kilo rate for bulk or repeat resellers, something like 8,000 to 9,000 per kilo, with a free first order to prove the delivery time.",
+  "price_too_cheap": 8000,
+  "price_cheap": 12000,
+  "price_expensive": 17000,
+  "price_too_expensive": 22000
+}

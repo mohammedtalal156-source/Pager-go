@@ -1,0 +1,13 @@
+{
+  "id": "P095",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy in quantity to resell, and 13,000 a kilo by air plus 8% kills my margin on every piece. The agent I already use moves my cargo cheaper, and I know him.",
+  "objection": "Paying the item and fee up front to a new page I've never dealt with. My cousin lost a deposit to a page that disappeared, and I can't afford to lose shop money.",
+  "would_change_my_mind": "A bulk rate for big orders (lower per-kilo or cheaper sea/cargo option) and being able to pay at a real office I can visit, after a small test order arrives on time.",
+  "price_too_cheap": 8000,
+  "price_cheap": 13000,
+  "price_expensive": 18000,
+  "price_too_expensive": 24000
+}

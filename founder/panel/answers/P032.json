@@ -1,0 +1,13 @@
+{
+  "id": "P032",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "It sounds more organised than my usual pages, but it's brand new and I still have to pay the item price up front to people I don't know. My cousin lost her deposit exactly like that, so I'll keep using the agent I already know until I hear about this from someone who got their order.",
+  "objection": "Paying first to a new service that could disappear. And if the item is fake or not what I wanted, I can't return it unless they agree it's damaged or wrong, and they decide that.",
+  "would_change_my_mind": "A friend or relative who actually received an order from them, or letting me pay everything on delivery for my first small order.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 20000,
+  "price_too_expensive": 28000
+}

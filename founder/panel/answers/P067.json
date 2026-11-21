@@ -1,0 +1,13 @@
+{
+  "id": "P067",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy cheap fashion and beauty pieces to resell, and at 13,000 IQD a kilo plus 8% the shipping eats my whole margin; the Shorja wholesalers bring stock in by sea and I can still undercut nothing with these numbers. This works for one pair of shoes for yourself, not for a shop.",
+  "objection": "Per-kilo air shipping makes small cheap items not worth it. When I add the fees to each piece, my landed cost ends up higher than what I can buy for in Shorja tomorrow, and I wait 2 to 3 weeks with no bulk or sea rate.",
+  "would_change_my_mind": "A bulk or sea-freight rate for resellers, something like 5,000 to 6,000 IQD a kilo on big orders with a lower buying fee, so my landed cost per piece beats the market.",
+  "price_too_cheap": 6000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 20000
+}

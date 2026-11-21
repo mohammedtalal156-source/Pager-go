@@ -1,0 +1,13 @@
+{
+  "id": "P027",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "I only pay when the thing is in my hands, and here I have to send the item price and fee first to a page I've never heard of and wait two or three weeks. I've heard too many stories of people sending Zain Cash and never seeing anything.",
+  "objection": "Paying up front to a new service and then waiting weeks with nothing in my hand. If it never comes or they disappear, who gives me my money back? And they say no returns unless it's damaged, so if the size is wrong for my kid I'm stuck.",
+  "would_change_my_mind": "Letting me pay everything cash on delivery, or a friend or relative I trust ordering from them first and getting their item.",
+  "price_too_cheap": 8000,
+  "price_cheap": 14000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

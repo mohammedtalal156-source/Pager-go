@@ -1,0 +1,13 @@
+{
+  "id": "P051",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy to resell, so I count landed cost per piece. At 13,000 a kilo by air plus 8% and delivery, cheap clothes and home items end up costing what I pay wholesale in the Baghdad market today, and I'd wait 2 to 3 weeks for it.",
+  "objection": "Air shipping per kilo eats my margin on bulk orders, and 2 to 3 weeks with only 'about' on the date is risky when I have customers waiting. No word on a bulk rate or a guaranteed delivery date.",
+  "would_change_my_mind": "A bulk or sea-freight rate for big 1688 orders that brings shipping well under 13,000 a kilo, with a firm delivery date.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 18000,
+  "price_too_expensive": 25000
+}

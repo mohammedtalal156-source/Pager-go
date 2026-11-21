@@ -1,0 +1,13 @@
+{
+  "id": "P048",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "need",
+  "reason": "When I need a specific item I can't find anywhere in Shorja or Karrada, I'll try one small order, mainly because the photo from the China warehouse lets me check it before it ships. Two to three weeks is slow for something urgent, and 21,000 in fees on a 30,000 item kills my margin for resale stock, so it would be one test order, not regular buying.",
+  "objection": "If it's fake or not what I ordered, will they really refund me, or will I chase them for weeks? I've already paid for the item up front and they say no returns if I just don't like it.",
+  "would_change_my_mind": "Faster delivery, around one week, and a lower fee for shop owners ordering several items at once so I could resell at a profit.",
+  "price_too_cheap": 8000,
+  "price_cheap": 14000,
+  "price_expensive": 24000,
+  "price_too_expensive": 35000
+}

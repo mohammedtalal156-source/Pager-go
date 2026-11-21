@@ -1,0 +1,13 @@
+{
+  "id": "P037",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "trust",
+  "reason": "My Instagram agents always surprise me with extra charges when the parcel lands, so a written quote with every fee and nothing extra on arrival is worth testing. I'd send one small order of phone accessories to see if the total really matches before I move my stock orders over.",
+  "objection": "They're new and I pay the item price up front. If the parcel takes six weeks instead of three, or they say it's heavier than I thought, my money is stuck and I can't restock on time.",
+  "would_change_my_mind": "If the first order comes in over the quote or late, I go back to my usual agent. A lower buying fee for resellers who order in bulk would make me move all my orders.",
+  "price_too_cheap": 8000,
+  "price_cheap": 15000,
+  "price_expensive": 25000,
+  "price_too_expensive": 32000
+}

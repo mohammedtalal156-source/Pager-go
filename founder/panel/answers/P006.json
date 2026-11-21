@@ -1,0 +1,13 @@
+{
+  "id": "P006",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I resell, so I need margin. 21,000 in fees on 30,000 shoes means I'd pay 51,000 for something I can pick up in Shorja for less today, and I'd wait three weeks for it. Plus I've never seen anyone on TikTok unbox an order from these guys.",
+  "objection": "The fees eat everything I could make reselling, and it's a new name with no reviews or unboxing videos, so I'd be paying up front to people I can't vouch for.",
+  "would_change_my_mind": "A lower per-kilo rate for bulk reseller orders, plus a few real unboxing videos from people I follow showing the stuff arrived as ordered.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 20000
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P074",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Most of what I buy is cables, phone accessories and small car bits, and 21,000 in fees on a 30,000 item is two-thirds on top. By the time it lands, the shops on Rasheed Street or another Instagram page usually have it close enough and I don't wait three weeks.",
+  "objection": "Shipping per kilo makes small cheap items not worth it, and I don't know if they round a 200 gram item up to a full kilo. Plus it's a new name, I'd rather stick with the agent I already know.",
+  "would_change_my_mind": "Letting me combine several small items into one shipment and charging by actual grams, so a batch of accessories costs me under about 12,000 in fees total.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 18000,
+  "price_too_expensive": 25000
+}

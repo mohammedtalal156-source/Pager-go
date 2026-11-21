@@ -1,0 +1,13 @@
+{
+  "id": "P010",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy in quantity to resell. 21,000 IQD of fees on a 30,000 item kills my margin before I even sell it. The agent I already use charges me less per kilo on bulk, and I'm used to how they work.",
+  "objection": "13,000 a kilo plus 8% is retail pricing for one person buying one pair of shoes. For a shop buying 20 or 50 pieces the landed cost per piece is too high, and I see no bulk rate or fixed delivery date.",
+  "would_change_my_mind": "A bulk or wholesale rate, something like under 8,000 IQD per kilo with a lower buying fee on big orders, plus a guaranteed delivery date.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 20000
+}

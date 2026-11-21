@@ -1,0 +1,274 @@
+{
+ "business": "Baghdad Express (بغداد إكسبريس): a buy-for-me and shipping service from Chinese sites (Taobao, 1688, Pinduoduo) to Baghdad",
+ "seed": 933083,
+ "dealt": 100,
+ "answered": 100,
+ "skipped": [],
+ "buys": 14,
+ "passes": 86,
+ "buy_rate": 0.14,
+ "by_segment": [
+  [
+   "Small shop owner who resells goods (clothes, accessories, phone accessories)",
+   15,
+   0.26666666666666666
+  ],
+  [
+   "Young man buying electronics, accessories and car parts",
+   25,
+   0.16
+  ],
+  [
+   "Young woman shopping for fashion, beauty and home items",
+   35,
+   0.14285714285714285
+  ],
+  [
+   "Parent buying kids' items and household goods",
+   25,
+   0.04
+  ]
+ ],
+ "by_behaviour": [
+  [
+   "Urgent need",
+   10,
+   0.5
+  ],
+  [
+   "Instagram agent buyer",
+   20,
+   0.4
+  ],
+  [
+   "Bulk buyer for a shop",
+   13,
+   0.07692307692307693
+  ],
+  [
+   "Watches TikTok reviews first",
+   12,
+   0.0
+  ],
+  [
+   "Cash on delivery only",
+   18,
+   0.0
+  ],
+  [
+   "Loyal to an existing service",
+   12,
+   0.0
+  ],
+  [
+   "Deal hunter",
+   15,
+   0.0
+  ]
+ ],
+ "by_income": [
+  [
+   "$10,000 and up",
+   43,
+   0.16279069767441862
+  ],
+  [
+   "under $8,000",
+   32,
+   0.15625
+  ],
+  [
+   "$8,000 to $10,000",
+   25,
+   0.08
+  ]
+ ],
+ "why_not": [
+  [
+   "trust",
+   41,
+   [
+    "It's a brand new service and I've never seen anyone on TikTok unbox something from them, so I'm not sending money up front to people I don't know. If a friend tries it first and it arrives fine, then maybe.",
+    "I only pay when the thing is in my hand. Here I have to send the item price and the fee before anything happens, to a new page I've never heard of, and my cousin already lost a deposit exactly like that."
+   ],
+   [
+    "P001",
+    "P003"
+   ]
+  ],
+  [
+   "price",
+   25,
+   [
+    "I buy to resell, so I count the landed cost per piece. 13,000 a kilo by air plus 8% plus delivery makes every piece cost more than what I can find in Shorja, and there is nothing here for someone ordering in quantity.",
+    "I resell, so I need margin. 21,000 in fees on 30,000 shoes means I'd pay 51,000 for something I can pick up in Shorja for less today, and I'd wait three weeks for it. Plus I've never seen anyone on TikTok unbox an order from these guys."
+   ],
+   [
+    "P002",
+    "P006"
+   ]
+  ],
+  [
+   "habit",
+   18,
+   [
+    "I already have an Instagram page I trust that brings me Shein things for the kids, I pay my deposit on WhatsApp and it comes. 21,000 just in fees on 30,000 shoes is too much for me, and I don't know how to find things on Taobao myself anyway.",
+    "I already order through an agent company I trust and it has mostly worked out, so I have no reason to try a new name. And 21,000 in fees on 30,000 shoes is too much when I can find something close in Shorja today and touch it first."
+   ],
+   [
+    "P004",
+    "P005"
+   ]
+  ],
+  [
+   "timing",
+   2,
+   [
+    "When I need something it's because I need it now, for a gift or for the kids, and 2 to 3 weeks is exactly the wait I've been burned by before. The written quote is nice, but on 13,000 a year I'd rather pay a bit more to an Instagram page that has it here sooner.",
+    "When I need something it is because I need it now, a gift or a part, and two to three weeks is exactly the waiting I already hate. On top of that I have to pay up front to a page I have never heard of."
+   ],
+   [
+    "P049",
+    "P065"
+   ]
+  ]
+ ],
+ "why_yes": [
+  [
+   "need",
+   6,
+   [
+    "I need this one item and I can't find it anywhere in Baghdad, and the written quote with no fees on arrival answers my biggest worry. I'd try it once with a small order, but I'm not happy that 2 to 3 weeks is the fastest it gets here.",
+    "I already wait weeks with Instagram agents and pay a deposit with no idea what the real fees are, so a written quote and a warehouse photo is worth trying. I'd do one small test order with a few phone accessories first, not stock for the shop."
+   ],
+   [
+    "P016",
+    "P038"
+   ]
+  ],
+  [
+   "trust",
+   5,
+   [
+    "My Instagram agents always surprise me with extra charges when the parcel lands, so a written quote with every fee and nothing extra on arrival is worth testing. I'd send one small order of phone accessories to see if the total really matches before I move my stock orders over.",
+    "The written quote with every fee and 'no extra fees on arrival' is exactly what my Instagram agent never gives me, so I would try one small order of kids' clothes to see if it is true. I will not move all my buying to a page I don't know until the first parcel arrives with no surprises."
+   ],
+   [
+    "P037",
+    "P059"
+   ]
+  ],
+  [
+   "price",
+   2,
+   [
+    "The Instagram pages I use never show me the breakdown, they just say a number and take a deposit, so a written quote with every fee and paying shipping only when it reaches my door is worth one try. I'd test it with one car part or accessory I can't find here, not something small and cheap.",
+    "I already pay deposits to Instagram agents and wait weeks, so this isn't new to me, and here I get a written quote with every fee and only pay shipping when it's at my door. I'd try one small order, like a phone accessory, paid in cash at their office so I can see they're real before trusting them with anything bigger."
+   ],
+   [
+    "P019",
+    "P024"
+   ]
+  ],
+  [
+   "convenience",
+   1,
+   [
+    "I already pay Instagram agents a deposit and wait weeks, and they never tell me all the fees up front, so a written quote, Zain Cash and paying shipping on arrival makes me willing to try once. I'd only do it for a bigger order of a few things together, not one cheap item."
+   ],
+   [
+    "P057"
+   ]
+  ]
+ ],
+ "flip": [
+  "Seeing real unboxing videos from Baghdad girls or a friend I trust ordering from them and getting her item right.",
+  "A wholesale rate for bulk orders from 1688: a lower price per kilo for big shipments and a lower buying fee, with a guaranteed delivery date.",
+  "Full cash on delivery, I pay nothing until it arrives, or friends I know who already got their orders from them.",
+  "If a mother I know ordered from them and it came on time, and the total for kids' clothes was clearly cheaper than my page, plus they found the item for me so I don't have to search Taobao.",
+  "If a relative or neighbour ordered from them a few times without problems and the total fees came out clearly cheaper than my current service.",
+  "A lower per-kilo rate for bulk reseller orders, plus a few real unboxing videos from people I follow showing the stuff arrived as ordered.",
+  "Letting me pay everything on delivery for my first order, or a trader I know in Shorja vouching that they've used them for months without problems.",
+  "A lower per-kilo rate for shop owners who order several kilos a month, and a trial order where I see the warehouse photos and the parcel arrives on time.",
+  "If they showed me a real quote that beats my usual page by at least 5,000 dinars on the same item, and a friend I trust ordered from them and got it.",
+  "A bulk or wholesale rate, something like under 8,000 IQD per kilo with a lower buying fee on big orders, plus a guaranteed delivery date.",
+  "Seeing real customers from Baghdad posting their unboxings and the warehouse photos on Instagram, with a friend or someone I follow saying they got their refund when something was wrong.",
+  "Seeing women I know, or a page with real customer videos and comments, get their orders delivered from them, or letting me pay everything on delivery for my first order.",
+  "Full cash on delivery, so I pay nothing until the item is at my door, and a neighbour or relative who already used them and got their order.",
+  "A wholesale rate for big 1688 orders: a lower fee percentage and a cheaper per-kilo price for 20 kg and up, with a guaranteed delivery date.",
+  "If a friend or relative ordered from them and got the item on time, and their total came in clearly cheaper than my usual service for the same item, I would try one small order.",
+  "Full cash on delivery for the first order, or a friend or another shop owner I know who has received several orders from them without problems.",
+  "Seeing a real unboxing video from someone I follow, or a friend ordering first and showing me it arrived like the photo.",
+  "Letting me pay everything cash on delivery, or my sister or a friend getting their order from them first so I see it's real.",
+  "If their total came in clearly cheaper than my usual page on a real item I want, like a car part or phone accessory not sold here, and a friend vouched for them.",
+  "If they charged shipping by the real weight with no full-kilo minimum and let me combine many small items in one shipment, and a friend I trust had already received an order from them.",
+  "Full cash on delivery, or at least a small deposit, with the rest paid at my door after I open the parcel. Friends who already got their orders from them would also help.",
+  "A friend or relative getting an order from them first, or letting me pay everything on delivery, or at least paying at a real office I can walk into.",
+  "Full cash on delivery, or a friend I trust who already got an order from them and it arrived.",
+  "Letting me pay everything cash on delivery, or a friend or relative I trust ordering from them first and getting their item.",
+  "If a friend or a page I trust had ordered through them and got their item, or if I could pay everything on delivery for my first order.",
+  "A friend or relative telling me they got their order from them, or letting me pay everything on delivery for my first order.",
+  "A wholesale rate for bulk orders, like cheaper per-kilo shipping or sea cargo for big boxes and a lower buying fee above a certain amount, plus a promise that they test the electronics in the warehouse photos before shipping.",
+  "Seeing real TikTok unboxing videos from Baghdad people who got their orders, or a friend telling me it worked for them.",
+  "A friend or relative who actually received an order from them, or letting me pay everything on delivery for my first small order.",
+  "Seeing real unboxing videos from Baghdad girls on TikTok, or a friend getting her order on time, plus a cheaper rate for small light items under a kilo.",
+  "Letting me pay everything in cash when the item arrives at my door, or a friend or relative I trust getting their order from them first.",
+  "Full cash on delivery, or at least a real office in Baghdad where I can pay in person and someone I know who already got their order from them.",
+  "If a friend or my sister ordered from them and it came on time, and the total for a small item came out cheaper than my usual page, I would try one order.",
+  "A friend ordering through them first, or TikTok unboxing videos from real Baghdad girls showing the item arrived as in the photo.",
+  "A clearly lower total than my current service on a small 200-300 gram order, shown side by side, plus a friend who used them and got the package on time.",
+  "Letting me pay everything cash on delivery, or a friend or relative telling me they ordered from you several times and got their stuff fine.",
+  "A wholesale rate for bulk 1688 orders: lower per-kilo price or sea/land cargo option, a reduced buying fee above a certain order size, and the warehouse actually testing items before shipping.",
+  "A friend or a TikTok creator I follow showing their order arriving from them, or letting me pay everything on delivery for my first order.",
+  "If I could combine several small items into one shipment and pay shipping by actual weight, not a full kilo, so a few small pieces come to well under 10,000 in fees.",
+  "Seeing real unboxing videos on TikTok from Baghdad girls, or a friend who got her order through them, so I know they actually deliver.",
+  "A friend or relative showing me an order they actually got from them, or real unboxing videos on TikTok of their deliveries in Baghdad.",
+  "A guaranteed fast option, like 7 to 10 days, with some money back if it arrives late.",
+  "Letting me pay everything cash on delivery, or a friend or relative I trust getting their order from them first without problems.",
+  "A bulk or sea-freight rate for big 1688 orders that brings shipping well under 13,000 a kilo, with a firm delivery date.",
+  "A lower per-kilo rate for bulk orders (say 10 kg and up) with a guaranteed delivery date.",
+  "A friend ordering through them first and getting a good item, plus cheaper fees on small light items so a 30,000 dinar order doesn't cost me 50,000.",
+  "If the total fees on a 1 kg order came down to around 12,000-13,000 so it is clearly cheaper than my usual page, and a friend or relative showed me an order that arrived fine.",
+  "Full cash on delivery, paying everything at my door, or a relative or neighbour who has ordered from them several times and got their things.",
+  "A much lower shipping rate or a free-shipping minimum for light items, plus paying everything only on delivery so I don't risk money with a new page.",
+  "If a friend or relative ordered from them and got their stuff on time, and the fees came out lower than my page for the same item.",
+  "If my current service let me down, or a friend or relative showed me their order arrived from Baghdad Express on time with no surprises.",
+  "A clearly lower per-kilo rate for bulk or repeat shop orders, plus a friend or other shop owner I trust telling me their orders arrived on time.",
+  "Full cash on delivery, or a friend I trust ordering from them a few times and actually getting his stuff on time.",
+  "Letting me pay everything on delivery for my first order, or friends I trust telling me they got their stuff from them.",
+  "A guaranteed delivery in under 10 days, or letting me pay everything on delivery, with a real office I can visit first.",
+  "A friend I trust ordering from them a few times without problems, and their total fees coming in clearly cheaper than my current service on the same item.",
+  "A bulk or sea-freight rate for resellers, something like 5,000 to 6,000 IQD a kilo on big orders with a lower buying fee, so my landed cost per piece beats the market.",
+  "If the fees on a 1 kg order came to about 12,000 dinars and a friend showed me a real order that came out cheaper than Shorja, I would try one order.",
+  "A friend or sister ordering from them first and showing me it arrived right, plus being allowed to return or exchange if it doesn't fit.",
+  "A bulk rate for 1688 orders, like a lower per-kilo price or sea shipping for big orders and a reduced buying fee above a set quantity, so my landed cost per piece drops to something I can resell at a profit.",
+  "If shipping was cheaper, like 7,000 or 8,000 a kilo, or I could combine many small kids' items in one parcel so the fees came to under 12,000 total, I would try one order.",
+  "If someone I know got an order from them, or if I could pay everything when it reaches my door. Then I'd try one small order.",
+  "Letting me combine several small items into one shipment and charging by actual grams, so a batch of accessories costs me under about 12,000 in fees total.",
+  "Seeing real unboxing videos from Baghdad moms on TikTok, or a friend getting her order on time with no extra charge at the door.",
+  "A friend or someone I follow getting their order from them on time, with the warehouse photo matching what arrived, and the driver actually finding my house.",
+  "Total fees around 10,000 dinars for a kilo, or a group order where shipping gets split so it's clearly cheaper than the market.",
+  "A bulk rate for shop owners: a lower buying fee on big 1688 orders and a cheaper per-kilo option by sea or land, with a quality check on the whole batch in the warehouse.",
+  "A bulk or reseller rate, with shipping well under 13,000 per kilo and a lower buying fee on bigger orders, so I can buy ten pieces and still make a profit.",
+  "Full cash on delivery for the first order, or a shop owner I know in the market telling me they've received several orders from them without problems.",
+  "People I know getting real orders from them first, or being able to pay everything on delivery for a first small order.",
+  "If someone I know ordered through them and got the item on time, and they helped me find the link myself through WhatsApp instead of me searching Chinese sites.",
+  "Let me pay everything cash on delivery, at least for the first order, or let me see a real shop or office and people I know who got their orders.",
+  "Seeing real unboxing videos from Baghdad people on TikTok, or a friend getting an order from them with no surprise fees, and being able to pay everything on delivery.",
+  "Letting me pay everything in cash at my door when the item arrives, or at least a friend or relative who ordered from them several times and got their items.",
+  "Full cash on delivery for everything, or a cousin or neighbour who has already received several orders from them without problems.",
+  "Full cash on delivery, nothing paid before it reaches my door, or at least a real office I can walk into and people I know who got their orders.",
+  "A cheaper bulk rate for big 1688 orders, like slower cargo shipping well under 13,000 a kilo and a lower buying fee on large orders, with a guaranteed delivery date.",
+  "A lower per-kilo rate for bulk or repeat resellers, something like 8,000 to 9,000 per kilo, with a free first order to prove the delivery time.",
+  "If the total with all fees came out clearly cheaper than my usual page for the same item, say at least 5,000 dinars less, I would try one order.",
+  "A friend or a page I follow ordering from them and showing the item arrived exactly as in the warehouse photo, plus a refund I could see them actually give.",
+  "A friend or an influencer I follow showing a real order that arrived, plus being able to pay everything on delivery for the first order.",
+  "A bulk rate for big orders (lower per-kilo or cheaper sea/cargo option) and being able to pay at a real office I can visit, after a small test order arrives on time.",
+  "Seeing their real office in Baghdad with my own eyes, or a friend I trust telling me they got their order on time, then I'd try one small cheap item first.",
+  "Seeing real TikTok unboxings from Baghdad mums or a friend telling me her order came on time and matched the photo.",
+  "If I could group lots of small items from different links into one shipment with one delivery fee, and see a cheap total quote for something like 300 grams before I pay.",
+  "If they could get it to me in about a week and the fees were clearly lower than my usual page, I'd try one small order."
+ ],
+ "purchases_first_month_per_buyer": 1.0,
+ "price_answers": 100
+}

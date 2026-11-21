@@ -1,0 +1,13 @@
+{
+  "id": "P080",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "21,000 dinars in fees on a 30,000 item leaves me nothing to resell it for, and I can walk into Shorja and find something close for less today without waiting three weeks. For my shop the numbers just don't work.",
+  "objection": "The shipping per kilo eats the whole margin, and I already have agents and wholesalers who bring goods from China cheaper in bulk.",
+  "would_change_my_mind": "A bulk or reseller rate, with shipping well under 13,000 per kilo and a lower buying fee on bigger orders, so I can buy ten pieces and still make a profit.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 17000,
+  "price_too_expensive": 23000
+}

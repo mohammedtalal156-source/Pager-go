@@ -1,0 +1,13 @@
+{
+  "id": "P070",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy to resell, so 21,000 IQD in fees on a 30,000 IQD item kills my margin before I even price it on the shelf. 13,000 IQD a kilo by air plus 8% is fine for one personal item, not for stock in quantity.",
+  "objection": "The landed cost per piece is too high for resale, and there's no bulk or sea-cargo rate or volume discount mentioned. I'm also not sure 2 to 3 weeks will hold reliably when I promise customers dates.",
+  "would_change_my_mind": "A bulk rate for 1688 orders, like a lower per-kilo price or sea shipping for big orders and a reduced buying fee above a set quantity, so my landed cost per piece drops to something I can resell at a profit.",
+  "price_too_cheap": 6000,
+  "price_cheap": 11000,
+  "price_expensive": 17000,
+  "price_too_expensive": 24000
+}

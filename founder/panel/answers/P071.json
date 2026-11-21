@@ -1,0 +1,13 @@
+{
+  "id": "P071",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I like that the quote shows every fee, but 21,000 in fees on 30,000 shoes is nearly the item price again. For kids' things and household stuff I can find something close in the local market or on an Instagram page for less, and I get it this week, not in three weeks.",
+  "objection": "The fees, mostly the 13,000 per kilo, eat the whole saving from China, and if the item is wrong in size or I change my mind I cannot return it, so I lose the money.",
+  "would_change_my_mind": "If shipping was cheaper, like 7,000 or 8,000 a kilo, or I could combine many small kids' items in one parcel so the fees came to under 12,000 total, I would try one order.",
+  "price_too_cheap": 5000,
+  "price_cheap": 10000,
+  "price_expensive": 15000,
+  "price_too_expensive": 20000
+}

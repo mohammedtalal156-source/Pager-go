@@ -1,0 +1,13 @@
+{
+  "id": "P030",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "I buy to resell, so every dinar on the landed cost comes out of my margin. 13,000 a kilo by air plus 8% on top, with no price for bulk, means I can't beat what the Shorja wholesalers already sell me off the shelf, and I'd wait 2 to 3 weeks for it.",
+  "objection": "There's no rate for quantity. If I bring in 50 chargers or a box of car parts, I don't know what it costs per piece. And if half the batch is fake or doesn't work, 'damaged or not as ordered' doesn't tell me who decides that or how fast I get my money back.",
+  "would_change_my_mind": "A wholesale rate for bulk orders, like cheaper per-kilo shipping or sea cargo for big boxes and a lower buying fee above a certain amount, plus a promise that they test the electronics in the warehouse photos before shipping.",
+  "price_too_cheap": 7000,
+  "price_cheap": 12000,
+  "price_expensive": 17000,
+  "price_too_expensive": 23000
+}

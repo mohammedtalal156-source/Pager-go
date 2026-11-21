@@ -1,0 +1,13 @@
+{
+  "id": "P026",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "I only pay cash when the thing is in my hand, and here I have to send the item price up front to a new page I never heard of. Plus 2 to 3 weeks is long, I've waited like that before and got nothing.",
+  "objection": "Paying first by Zain Cash to a new service and then maybe the item never comes or the page disappears with my money.",
+  "would_change_my_mind": "Full cash on delivery, or a friend I trust who already got an order from them and it arrived.",
+  "price_too_cheap": 5000,
+  "price_cheap": 12000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}
