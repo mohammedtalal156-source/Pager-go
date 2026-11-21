@@ -1,0 +1,13 @@
+{
+  "id": "P006",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "price",
+  "reason": "The first order is cash on delivery, so I'd try one small batch of phone accessories that aren't in Shorja yet and see if they sell in my shop. I lose nothing if it never shows up.",
+  "objection": "21,000 in fees on 1 kg eats my margin. For things I can already get in Shorja or Karrada today it isn't worth it, and waiting 2 to 3 weeks means a trend can be over before my stock lands.",
+  "would_change_my_mind": "A lower per-kilo rate for traders ordering in bulk, or a TikTok unboxing showing an order arriving complete and on time, would get me ordering every week.",
+  "price_too_cheap": 8000,
+  "price_cheap": 14000,
+  "price_expensive": 22000,
+  "price_too_expensive": 30000
+}

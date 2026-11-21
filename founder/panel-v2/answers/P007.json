@@ -1,0 +1,13 @@
+{
+  "id": "P007",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason": "My Erbil agent works fine and I'm not leaving them, but a first order with nothing paid up front costs me nothing to test, and I'm in Shorja anyway so I can ask Abu Ali myself. I'd send one small order of phone accessories and compare the total and the speed with my usual agent.",
+  "reason_code": "trust",
+  "objection": "After the first order I have to pay up front again to a new name, and 13,000 a kilo plus 8% plus delivery adds up fast on stock I need to resell at a margin; if my agent is cheaper or faster I'm not switching.",
+  "would_change_my_mind": "If the first order arrives on time and the total is clearly below what my Erbil agent charges, I would move part of my regular stock orders over.",
+  "price_too_cheap": 8000,
+  "price_cheap": 15000,
+  "price_expensive": 24000,
+  "price_too_expensive": 32000
+}

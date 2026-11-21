@@ -1,0 +1,13 @@
+{
+  "id": "P079",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "trust",
+  "reason": "The first order is cash on delivery and Abu Ali in Shorja vouches for it, so I'd send one small sample order of phone accessories I can't find in the market just to test their quality and timing. For real shop stock though, 13,000 a kilo by air kills my margin; my cargo agents bring it by the bag much cheaper.",
+  "objection": "Landed cost per piece is too high for resale, and if a whole batch comes wrong or fake, I'm not sure how fast and in full they really refund it after waiting three weeks.",
+  "would_change_my_mind": "A bulk rate for traders: lower per-kilo shipping on 10+ kilo orders or a sea/land cargo option, so the landed cost per piece beats what I get in Shorja.",
+  "price_too_cheap": 6000,
+  "price_cheap": 12000,
+  "price_expensive": 19000,
+  "price_too_expensive": 27000
+}

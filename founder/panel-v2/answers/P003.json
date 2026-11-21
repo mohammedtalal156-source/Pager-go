@@ -1,0 +1,13 @@
+{
+  "id": "P003",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "trust",
+  "reason": "The first order is cash on delivery, so I don't risk a dinar before I see it, and that's the only reason I'd try. I'd order once, something I can't find on Shein, and see if it actually comes.",
+  "objection": "After the first order they want me to pay up front by Zain Cash or at an office, and that's exactly how my cousin lost her deposit. Also 21,000 in fees on a 30,000 pair of shoes is almost as much as the shoes, so cheap small things aren't worth it.",
+  "would_change_my_mind": "If every order stayed cash on delivery, not just the first one, I'd keep using it instead of trying once.",
+  "price_too_cheap": 5000,
+  "price_cheap": 12000,
+  "price_expensive": 20000,
+  "price_too_expensive": 28000
+}
